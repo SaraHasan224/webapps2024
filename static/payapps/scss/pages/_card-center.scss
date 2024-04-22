@@ -1,0 +1,148 @@
+.card-bx{
+	position:relative;
+	z-index: 1;
+	border-radius:$radius;
+	overflow:hidden;
+	padding: 8px 35px;
+	display:flex;
+	.card-info{
+		padding-top: 30px;
+		flex:1;
+		h2{
+			font-size:36px;
+		}
+	}
+	.change-btn{
+		writing-mode: tb;
+		position:relative;
+		font-weight:600;
+		background:$white;
+		color:$black;
+		border-radius:1.25rem;
+		transform: rotate(-180deg);
+		font-size:17px;
+		padding:20px 23px;
+		.reload-icon{
+			height:53px;
+			width:53px;
+			line-height:53px;
+			background:#fafafa;
+			color:#969ba0;
+			border-radius:1.25rem;
+			text-align:center;
+			font-size:20px;
+			margin:10px -15px -10px;
+			float:right;
+			@include transitionMedium;
+			i{
+				@include transitionSlow;
+			}
+		}
+		.up-ico{
+			margin-bottom: 20px;
+			color:#9fa4a6;
+		}
+		&:after{
+			content:"";
+			position:absolute;
+			right:10px;
+			z-index: -1;
+			top:50%;
+			transform:translateY(-50%);
+			width:100%;
+			height:90%;
+			border-radius:inherit;
+			background:rgba($white,0.3);
+		}
+	}
+	.pattern-img{
+		z-index: -1;
+		position:absolute;
+		height:100%;
+		width:100%;
+		object-fit:cover;
+		content:"";
+		top: 0;
+		left: 0;
+	}
+	@include respond ('phone'){
+		padding: 15px 15px;
+		.card-info{
+			padding-top:15px;
+			h2{
+				font-size:30px;
+			}
+		} 
+		.change-btn{
+			padding: 15px 15px;
+		}
+	}
+}
+
+.card-slider{
+	margin-bottom:30px;
+	&.owl-carousel{
+		.owl-item {
+			transform:scale(0.85);
+			@include transitionMedium;
+			.card-info{
+				img{
+					width:62px;
+					position: absolute;
+					top: 20px;
+					right: 16px;
+				}
+			}
+		}
+	}
+	.card-bx{
+		height: 224px;
+		@include respond ('phone'){
+			height:220px;
+		}
+	}
+}
+.bg-green{
+	background:#50D37D;	
+}
+.bg-orange{
+	background:#F87C22;		
+}
+.bg-blue{
+	background:#F87C22;	
+}
+.bg-purpel{
+	background:#6418C3;		
+}
+.pieChart2{
+	position:relative;
+	img{
+		position: absolute;
+		top: 6.5rem;
+		left: 9rem;	
+	}
+}
+.dashboard-select{
+	border-radius:20px;
+	border-color:var(--primary);
+	font-size:18px;
+	font-weight:700;
+	color:var(--primary);
+	padding: 0 1.5rem;
+    padding-right: 3rem;
+    line-height: 3.5rem;
+    height: 3.5rem;
+	background:var(--rgba-primary-1);
+	&:after{
+		border-color:var(--primary);	
+	}
+	&:hover{
+		border-color:var(--primary);	
+	}
+}
+.card-type{
+	padding: 0 25px;	
+	&:hover{
+		background:var(--rgba-primary-1);	
+	}	
+}

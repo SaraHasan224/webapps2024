@@ -1,0 +1,110 @@
+.select-client{
+	 box-shadow: 0 14px 28px rgba(0,0,0,0.10);
+	 padding:1.875rem 1rem;
+	 border-radius:0.875rem;
+}
+.invoice{
+	.form-control{
+		border-color:#D7D7D7;	
+		border-width:2px;
+	}	
+}
+.item-desription{
+	span{
+		font-weight:600;	
+	}	
+}
+.item-desription1{
+	span{
+		font-weight:600;	
+		font-size:1.125rem;
+	}		
+}
+
+.dz-dropzone-box{
+		padding: 0;
+		border: 0;
+		display: flex;
+		align-items: start;
+		flex-flow: wrap;
+		.upload-btn{
+			i{
+				height:54px;
+				width:54px;
+				background:var(--primary);
+				border-radius:14px;
+				line-height:56px;
+				color:$white;
+			}	
+		}
+		.light.btn-primary:hover,{
+			background:var(--rgba-primary-1);	
+		}
+		.btn-primary:focus{
+				
+		}
+		.light.btn-primary{
+			border-width:2px;
+			border-style:dashed; 
+			border-color:#C2C2C2;
+			margin-right:4rem;
+			margin-bottom:1rem;
+			box-shadow:none;
+		}
+	}
+	.dz-dropzone-box .dz-default{
+		display:none;
+	}
+	.dz-dropzone-box .dropzone-items{
+		display: flex;
+		.file-icon{
+			i{
+				height:54px;
+				width:54px;
+				background:var(--rgba-primary-1);
+				border-radius:14px;
+				line-height:56px;
+				text-align:center;
+				font-size:20px;
+				color:var(--primary);
+			}	
+		}
+		.dropzone-toolbar{
+			.dropzone-delete{
+				top: -6px;
+				right: -7px;
+				position:absolute;
+				height: 24px;
+				width: 24px;
+				text-align: center;
+				line-height: 24px;
+				color: white;
+				font-size: 18px;
+				border-radius: 50%;
+				background: red;
+			}	
+		}
+	}
+	.dz-dropzone-box .dropzone-item{
+		background:transparent;
+		display: flex;
+		padding: 18px 21px;
+		border-radius: 6px;
+		border:2px solid var(--primary);
+		border-radius: 1.25rem;
+		min-width: 260px;
+		position: relative;
+		margin-right:1rem;
+	}
+	.dz-dropzone-box .dropzone-item .dropzone-toolbar{
+		cursor:pointer;
+		margin-left: 8px;
+	}
+	.dz-dropzone-box .dropzone-item .dropzone-filename{
+		font-size: 14px;
+	}
+	.dz-dropzone-box .dropzone-item .dropzone-filename strong{
+		font-size: 12px;
+		font-weight: 600;
+		opacity: 0.9;
+	}

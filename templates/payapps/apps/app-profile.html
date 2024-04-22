@@ -1,0 +1,164 @@
+{% extends 'payapps/elements/layouts/admin.html' %}
+{% load static %}
+        
+{% block additional_css %}
+{% endblock %}
+        
+{% block content %}
+<!--**********************************
+	Content body start
+***********************************-->
+<div class="content-body">
+	<div class="container-fluid">
+		
+		
+		<div class="row page-titles">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item active"><a href="javascript:void(0)">App</a></li>
+				<li class="breadcrumb-item"><a href="javascript:void(0)">Profile</a></li>
+			</ol>
+		</div>
+		<!-- row -->
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="profile card card-body px-3 pt-3 pb-0">
+					<div class="profile-head">
+						<div class="profile-info">
+							<div class="profile-details">
+								<div class="profile-name px-3 pt-2">
+									<h4 class="text-primary mb-0">Mitchell C. Shay</h4>
+									<p>UX / UI Designer</p>
+								</div>
+								<div class="profile-email px-2 pt-2">
+									<h4 class="text-muted mb-0">info@example.com</h4>
+									<p>Email</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xl-4">
+				<div class="row">
+					<div class="col-xl-12">
+						<div class="card">
+							<div class="card-body">
+								<div class="profile-statistics">
+									<div class="text-center">
+										<div class="row">
+											<div class="col">
+												<h3 class="m-b-0">150</h3><span>Follower</span>
+											</div>
+											<div class="col">
+												<h3 class="m-b-0">140</h3><span>Place Stay</span>
+											</div>
+											<div class="col">
+												<h3 class="m-b-0">45</h3><span>Reviews</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xl-8">
+				<div class="card">
+					<div class="card-body">
+						<div class="profile-tab">
+							<div class="custom-tab-1">
+								<ul class="nav nav-tabs">
+									<li class="nav-item"><a href="#profile-settings" data-bs-toggle="tab" class="nav-link active show">Setting</a>
+									</li>
+								</ul>
+								<div class="tab-content">
+									<div id="profile-settings" class="tab-pane fade active show">
+										<div class="pt-3">
+											<div class="settings-form">
+												<h4 class="text-primary">Account Setting</h4>
+												<form>
+													<div class="row">
+														<div class="mb-3 col-md-6">
+															<label class="form-label">Email</label>
+															<input type="email" placeholder="Email" class="form-control">
+														</div>
+														<div class="mb-3 col-md-6">
+															<label class="form-label">Password</label>
+															<input type="password" placeholder="Password" class="form-control">
+														</div>
+													</div>
+													<div class="mb-3">
+														<label class="form-label">Address</label>
+														<input type="text" placeholder="1234 Main St" class="form-control">
+													</div>
+													<div class="mb-3">
+														<label class="form-label">Address 2</label>
+														<input type="text" placeholder="Apartment, studio, or floor" class="form-control">
+													</div>
+													<div class="row">
+														<div class="mb-3 col-md-6">
+															<label class="form-label">City</label>
+															<input type="text" class="form-control">
+														</div>
+														<div class="mb-3 col-md-4">
+															<label class="form-label">State</label>
+															<select class="form-control default-select wide" id="inputState">
+																<option selected="">Choose...</option>
+																<option>Option 1</option>
+																<option>Option 2</option>
+																<option>Option 3</option>
+															</select>
+														</div>
+														<div class="mb-3 col-md-2">
+															<label class="form-label">Zip</label>
+															<input type="text" class="form-control">
+														</div>
+													</div>
+													<div class="mb-3">
+														<div class="form-check custom-checkbox">
+															<input type="checkbox" class="form-check-input" id="gridCheck">
+															<label class="form-check-label form-label" for="gridCheck"> Check me out</label>
+														</div>
+													</div>
+													<button class="btn btn-primary" type="submit">Sign
+														in</button>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- Modal -->
+							<div class="modal fade" id="replyModal">
+								<div class="modal-dialog modal-dialog-centered" role="document">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title">Post Reply</h5>
+											<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+										</div>
+										<div class="modal-body">
+											<form>
+												<textarea class="form-control" rows="4">Message</textarea>
+											</form>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-danger light" data-bs-dismiss="modal">btn-close</button>
+											<button type="button" class="btn btn-primary">Reply</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--**********************************
+	Content body end
+***********************************-->
+{% endblock %}

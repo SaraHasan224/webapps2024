@@ -1,0 +1,233 @@
+{% extends 'payapps/elements/layouts/admin.html' %}
+{% load static %}
+        
+{% block additional_css %}
+{% endblock %}
+        
+{% block content %}
+<!--**********************************
+	Content body start
+***********************************-->
+<div class="content-body">
+	<!-- row -->
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-xl-12">
+				<div class="card">
+					<div class="card-body">
+						<h4 class="fs-24 font-w800">SELECT CLIENT</h4>
+						<div class="row  border-bottom pb-4 mb-4">
+							<div class="col-xl-3">
+								<div class="select-client">
+									<div class="d-flex align-items-center">
+										<div>
+											<svg width="61" height="61" viewBox="0 0 61 61" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<rect width="61" height="61" rx="20" fill="url(#paint0_linear2)"/>
+												<defs>
+												<linearGradient id="paint0_linear2" x1="68.1765" y1="5.38235" x2="30.5" y2="61" gradientUnits="userSpaceOnUse">
+												<stop offset="1" stop-color="#E023FF"/>
+												</linearGradient>
+												</defs>
+											</svg>
+										</div>
+										<div class="ms-3">
+											<h4 class="fs-20 font-w700">Kleonium Studios</h4>
+											<span class="font-w700">Creative Agency</span>
+										</div>
+										<i class="fas fa-sort-down ms-auto"></i>
+									</div>
+								</div>
+							</div>
+							<div class="col-xl-3">
+								<div class="d-flex">
+									<div class="me-4">
+										<i class="fas fa-map-marker-alt text-primary fs-18 mt-1"></i>
+									</div>
+									<div>
+										<span class="mb-2 font-w600">ADDRESS</span>
+										<span class="d-block fs-18 font-w600">Franklin Avenue Street <br>
+											New York, ABC 5562<br>
+											United State
+										</span>
+									</div>	
+								</div>
+							</div>
+							<div class="col-xl-3">
+								<div class="d-flex">
+									<div class="me-4">
+										<i class="fas fa-envelope fs-18 mt-1 text-primary"></i>
+									</div>
+									<div>
+										<span class="mb-2 font-w600">Email</span>
+										<span class="d-block fs-18 font-w600">kleoinumstudios@mail.com</span>
+									</div>	
+								</div>
+							</div>
+							<div class="col-xl-3">
+								<div class="d-flex">
+									<div class="me-4">
+										<i class="fas fa-phone-alt fs-18 mt-1 text-primary"></i>
+									</div>
+									<div>
+										<span class="mb-2 font-w600">TELEPHONE</span>
+										<span class="d-block fs-18 font-w600">(012) 3456 789</span>
+									</div>	
+								</div>
+							</div>
+						</div>
+						<h4 class="fs-24 font-w800">GENERAL</h4>
+						<div class="row mb-4">
+							<div class="col-xl-4">
+								<div class="form-group invoice">
+									<label>INVOICE NO</label>
+										<input type="text" class="form-control"  placeholder="#INV-123124124">
+								</div>
+							</div>
+							<div class="col-xl-4">
+								<div class="form-group invoice">
+									<label>AMOUNT (USD)</label>
+										<input type="text" class="form-control"  placeholder="5,000 ">
+								</div>
+							</div>
+							<div class="col-xl-4">
+								<div class="form-group invoice">
+									<label>DUE DATE</label>
+									<input size="16" type="date" class="form-control">
+								</div>
+							</div>
+						</div>
+						<h4 class="fs-24 font-w800">Item Desription</h4>
+						<div class="my-5">
+							<div class="d-flex justify-content-between item-desription mb-3">
+								<span>ITEM DESCRIPTION</span>
+								<span>DURATION</span>
+								<span class="me-4">RATE</span>
+								<span>AMOUNT</span>
+							</div>
+							<div class="d-flex justify-content-between item-desription1 border-bottom pb-3">
+								<span>Desgin System</span>
+								<span class="ms-1">12th</span>
+								<span>75.00</span>
+								<span>$ 900.00</span>
+							</div>
+							<div class="d-flex justify-content-between item-desription1 border-bottom pb-3 mt-3">
+								<span>Wireframing</span>
+								<span class="ms-4">64th</span>
+								<span>60.00</span>
+								<span>$ 360.00</span>
+							</div>
+						</div>
+						<h4 class="fs-18 font-w600 mb-5">Type description here...</h4>
+						<h4 class="fs-24 font-w800">Attach File</h4>
+						<div class="row mt-4 ">
+							<div class="col-xl-6">
+								<div class="dropzone dropzone-multi dz-dropzone-box d-flex" id="kt_dropzone_5">
+									<div class="dropzone-panel mb-lg-0 mb-2">
+										<a  href="javascript:void(0);" class="dropzone-select btn btn-primary light font-weight-bold btn-lg">
+											<div class="d-flex upload-btn">
+												<i class="fas fa-cloud-upload-alt me-3"></i>
+												<div>
+													<span class="fs-18 font-w600 d-block text-primary text-start">Upload Files</span>
+													<span class="text-primary">PDF, DOC, PPT, JPG, PNG</span>
+												</div>
+											</div>
+										</a>
+									</div>
+									<div class="dropzone-items">
+										<div class="dropzone-item" style="display:none">
+											<div class="file-icon">
+												<i class="fas fa-file-alt me-3"></i>
+											</div>
+											<div class="dropzone-file">
+												<div class="dropzone-filename" title="some_image_file_name.jpg' %}">
+													<p data-dz-name="" class="fs-18 font-w600 mb-0">some_image_file_name.jpg</p>
+													
+													<span data-dz-size="" class="fs-16 font-w600 text-primary">340kb</span>
+												</div>
+												<div class="dropzone-error" data-dz-errormessage=""></div>
+											</div>
+											<div class="dropzone-progress">
+												<div class="progress">
+													<div class="progress-bar bg-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-dz-uploadprogress=""></div>
+												</div>
+											</div>
+											<div class="dropzone-toolbar">
+												<span class="dropzone-delete" data-dz-remove="">
+													<i class="fas fa-times"></i>
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-xl-6">
+								<div class="text-end mt-4">
+									<a href="javascript:void(0);" class="btn btn-primary btn-lg me-3">SEND INVOICE</a>
+									<a href="javascript:void(0);" class="btn btn-primary light btn-lg">SAVE TO LATER</a>
+								</div>
+							</div>
+						</div>
+					
+					</div>
+				</div>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+<!--**********************************
+	Content body end
+***********************************-->
+{% endblock %}
+
+{% block additional_js %}
+<script>
+	function DZ_dropzone() {
+
+		Dropzone.autoDiscover = false;
+			// set the dropzone container id
+			var id = '#kt_dropzone_5';
+
+			// set the preview element template
+			var previewNode = $(id + " .dropzone-item");
+			previewNode.id = "";
+			var previewTemplate = previewNode.parent('.dropzone-items').html();
+			previewNode.remove();
+
+		var myDropzone5 = new Dropzone(id, { // Make the whole body a dropzone
+			autoProcessQueue: false,
+			url: "https://keenthemes.com/dsadas", // Set the url for your upload script location
+			parallelUploads: 20,
+			maxFilesize: 1, // Max filesize in MB
+			previewTemplate: previewTemplate,
+			previewsContainer: id + " .dropzone-items", // Define the container to display the previews
+			clickable: id + " .dropzone-select" // Define the element that should be used as click trigger to select files.
+		});
+
+			myDropzone5.on("addedfile", function(file) {
+				// Hookup the start button
+				$(document).find( id + ' .dropzone-item').css('display', '');
+			});
+
+			// Update the total progress bar
+			myDropzone5.on("totaluploadprogress", function(progress) {
+				$( id + " .progress-bar").css('width', progress + "%");
+			});
+
+			myDropzone5.on("sending", function(file) {
+				// Show the total progress bar when upload starts
+				$( id + " .progress-bar").css('opacity', "1");
+			});
+
+			// Hide the total progress bar when nothing's uploading anymore
+			myDropzone5.on("complete", function(progress) {
+				var thisProgressBar = id + " .dz-complete";
+				setTimeout(function(){
+					$( thisProgressBar + " .progress-bar, " + thisProgressBar + " .progress").css('opacity', '0');
+				}, 300)
+			});
+	}
+	DZ_dropzone();
+</script>
+{% endblock %}

@@ -1,0 +1,153 @@
+.accordion{
+	&.style-1{
+		.accordion-item{
+			border-bottom:1px solid $border-color;
+			margin-bottom:0;
+			&:last-child{
+				border-bottom:0;
+			}
+		}
+		.accordion-header{
+			border:0;
+			display: flex;
+			flex-flow:wrap;
+			align-items: center;
+			background:var(--primary);
+			justify-content: space-between;
+			@include transitionFast;
+			border-radius:1rem 1rem 0 0;
+			border-bottom:1px solid #425e71;
+			padding:18px 4.0625rem 5px 30px;
+			&>span{
+				color:$white;
+				font-size:16px;
+				font-weight:600;
+			}
+			.user-info{
+				color:$white;
+				a{
+					color:$white;
+				}
+			}
+			.accordion-header-indicator:before{
+				content:"\f0dd";
+				font-family: 'Font Awesome 5 Free';
+				font-size:20px;
+				color:#fff;
+			}
+			.profile-image{	
+				position:relative;
+				margin-right:20px;
+				img{
+					height:63px;
+					width:63px;
+					border-radius:3rem;
+					@include transitionFast;
+				}
+				span{
+					height:36px;
+					width:36px;
+					line-height:28px;
+					text-align:center;
+					display:inline-block;
+					border:2px solid $white;
+					border-radius:3rem;
+					position: absolute;
+					bottom: -2px;
+					right: -10px;
+				}
+			}
+			&.collapsed{
+				background:transparent;
+				border-bottom:0;
+				&>span{
+					color:$black;
+				}
+				.user-info{
+					color:$black;
+					a{
+						color:$black;
+					}
+				}
+				.accordion-header-indicator:before{
+					content:"\f0da";
+					color:#d3d6e4;
+				}
+				.profile-image{	
+					img{
+						height:63px;
+						width:63px;
+						border-radius:50%;
+					}
+				}
+			}
+			&>*{
+				padding-right:15px;
+				margin-bottom:15px;
+			}
+		}
+		.accordion-body-text{
+			padding:1.5rem 1.75rem 0.625rem 1.75rem;
+		}
+		.accordion_body{
+			border-radius: 0 0 1rem 1rem;
+			@include transitionFast;
+			&.show{
+				@include transitionFast;
+				/* background:var(--primary); */
+				.payment-details{
+					
+				}				
+			}
+			.payment-details{
+				display:flex;
+				flex-flow:wrap;
+				justify-content:space-between;
+				.info{
+					display:flex;
+					padding: 8px 15px;
+					align-items:center;
+					background:#EEEEEE;
+					border-radius:1rem;
+				}
+				span{
+					font-size:1rem;
+				}
+			}
+		}
+	}
+}
+.action{
+	z-index: 1;
+    height: auto;
+	border-radius:1.25rem;
+	padding: 2rem 2rem;
+	position:relative;
+	background: rgba(34, 81, 248, 1);
+	&:after{
+		z-index: -1;
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		content: "";
+		top: 0;
+		left: 0;
+		background-image: url(../images/pattern/pattern7.png);
+		background-size: cover;
+		background-position: inherit;
+		background-repeat: no-repeat;	
+	}
+}
+.invoice-list{
+	display:flex;
+	align-items:center;
+	padding: 20px 30px;
+	border-bottom:1px solid $border-color;
+	&:last-child{
+		border-bottom:0;
+	}
+	img{
+		height:50px;
+		width:50px;
+	}
+}
