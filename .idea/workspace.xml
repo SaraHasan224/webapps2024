@@ -5,10 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="78d895f7-70a4-4897-97f0-ffc8494320d9" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/templates/payapps/layout/form_template.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/payapps/layout/list_template.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/payapps/payment/payees.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/payapps/payment/transaction-history.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/payapps/payment/wallet-topup.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/payapps/payment/wallet.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/payapps/permissions/add.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/payapps/permissions/edit.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/payapps/permissions/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/payapps/roles/add.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/payapps/roles/edit.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/payapps/roles/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/payapps/users/edit.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/payapps/users/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/register/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/register/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/auth/pages/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/auth/pages/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapps2024/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/webapps2024/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payapp/payapp_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/payapp/payapp_views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payapp/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/payapp/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/payapps/vendor/jquery-smartwizard/test/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/payapps/vendor/jquery-smartwizard/test/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/payapps/elements/sidebar.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payapps/elements/sidebar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/payapps/forms/form-editor.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/payapps/forms/form-element.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payapps/users/add.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/payapps/forms/form-pickers.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/payapps/forms/form-validation.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/payapps/forms/form-wizard.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/payapps/transaction-history.html" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,7 +74,7 @@
     "django.template.preview.state": "SHOW_EDITOR",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/Masters/Spring Semester/Web applications and services/webapps2024/conversion",
+    "last_opened_file_path": "D:/Masters/Spring Semester/Web applications and services/webapps2024/templates/payapps/permissions",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -65,13 +86,14 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\Masters\Spring Semester\Web applications and services\webapps2024\conversion" />
-      <recent name="D:\Masters\Spring Semester\Web applications and services\webapps2024\templates\auth" />
-      <recent name="D:\Masters\Spring Semester\Web applications and services\webapps2024\api" />
-      <recent name="D:\Masters\Spring Semester\Web applications and services\webapps2024\payapp" />
+      <recent name="D:\Masters\Spring Semester\Web applications and services\webapps2024\templates\payapps\permissions" />
+      <recent name="D:\Masters\Spring Semester\Web applications and services\webapps2024\templates\payapps\roles" />
+      <recent name="D:\Masters\Spring Semester\Web applications and services\webapps2024\templates\payapps\users" />
       <recent name="D:\Masters\Spring Semester\Web applications and services\webapps2024\templates\payapps" />
+      <recent name="D:\Masters\Spring Semester\Web applications and services\webapps2024\conversion" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Masters\Spring Semester\Web applications and services\webapps2024\templates\payapps\payment" />
       <recent name="D:\Masters\Spring Semester\Web applications and services\webapps2024\conversion" />
       <recent name="D:\Masters\Spring Semester\Web applications and services\webapps2024\templates\auth" />
       <recent name="D:\Masters\Spring Semester\Web applications and services\webapps2024\webapps2024" />
@@ -113,7 +135,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1713782571939</updated>
-      <workItem from="1713782572833" duration="37258000" />
+      <workItem from="1713782572833" duration="42206000" />
     </task>
     <servers />
   </component>

@@ -38,26 +38,20 @@
                     <span class="nav-text">Admin Management</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="{% url 'payapp:app-profile' %}">Users</a></li>
-                    <li><a href="{% url 'payapp:app-profile' %}">Roles</a></li>
-                    <li><a href="{% url 'payapp:app-profile' %}">Permissions</a></li>
+                    <li><a href="{% url 'payapp:users-list' %}">Users</a></li>
+                    <li><a href="{% url 'payapp:roles-list' %}">Roles</a></li>
+                    <li><a href="{% url 'payapp:permission-list' %}">Permissions</a></li>
                 </ul>
             </li>
-            <li><a class="has-arrow " href="javascript:void()" aria-expanded="false">
-                    <i class="fab fa-bootstrap"></i>
-                    <span class="nav-text">Bootstrap</span>
-                </a>
-                <ul aria-expanded="false">
-                    <li><a href="{% url 'payapp:ui-accordion' %}">Accordion</a></li>
-                    <li><a href="{% url 'payapp:ui-alert' %}">Alert</a></li>
-                    <li><a href="{% url 'payapp:ui-badge' %}">Badge</a></li>
-                    <li><a href="{% url 'payapp:ui-button' %}">Button</a></li>
-                    <li><a href="{% url 'payapp:ui-modal' %}">Modal</a></li>
-                    <li><a href="{% url 'payapp:ui-button-group' %}">Button Group</a></li>
-                    <li><a href="{% url 'payapp:ui-list-group' %}">List Group</a></li>
-                    <li><a href="{% url 'payapp:ui-card' %}">Cards</a></li>
-                    <li><a href="{% url 'payapp:ui-tab' %}">Tab</a></li>
-                </ul>
+            <li><a href="{% url 'payapp:my-wallet' %}" class="" aria-expanded="false">
+                <i class="fas fa-file-alt"></i>
+                <span class="nav-text">My Wallet</span>
+            </a>
+            </li>
+            <li><a href="{% url 'payapp:my-payees' %}" class="" aria-expanded="false">
+                <i class="fas fa-user-check"></i>
+                <span class="nav-text">My Payees</span>
+            </a>
             </li>
             <li><a href="{% url 'payapp:topup-wallet' %}" class="" aria-expanded="false">
                 <i class="fas fa-heart"></i>
@@ -68,16 +62,6 @@
                 <i class="fas fa-chart-line"></i>
                 <span class="nav-text">Transaction History</span>
             </a>
-            </li>
-            <li><a class="has-arrow " href="javascript:void()" aria-expanded="false">
-                    <i class="fas fa-file-alt"></i>
-                    <span class="nav-text">Forms</span>
-                </a>
-                <ul aria-expanded="false">
-                    <li><a href="{% url 'payapp:form-element' %}">Form Elements</a></li>
-                    <li><a href="{% url 'payapp:form-pickers' %}">Pickers</a></li>
-                    <li><a href="{% url 'payapp:form-validation' %}">Form Validate</a></li>
-                </ul>
             </li>
         </ul>
         

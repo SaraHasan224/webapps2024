@@ -3,7 +3,7 @@ describe('SmartWizard Default Options', function() {
 
     beforeEach(function(){
         jasmine.getFixtures().fixturesPath = 'base/test';
-        loadFixtures('test-template.html');
+        loadFixtures('test-form_template.html');
 
         el = $('#smartwizard');
         el.smartWizard();
@@ -35,7 +35,7 @@ describe('SmartWizard Navigation', function() {
 
     beforeEach(function(){
         jasmine.getFixtures().fixturesPath = 'base/test';
-        loadFixtures('test-template.html');
+        loadFixtures('test-form_template.html');
 
         el = $('#smartwizard');
         el.smartWizard();
