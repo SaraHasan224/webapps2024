@@ -117,12 +117,3 @@ def form_validation(request):
         "page_title":"Form Validation"
     }
     return render(request,'payapps/forms/form-validation.html',context)
-
-def page_register(request):
-    return render(request,'payapps/pages/register.html')
-
-def page_login(request):
-    return render(request,'payapps/pages/login.html')
-
-def page_forgot_password(request):
-    return render(request,'payapps/pages/page-forgot-password.html')

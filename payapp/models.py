@@ -91,7 +91,7 @@ class Transaction(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
 
 class Currency(models.Model):
-    name = models.IntegerField()
+    name = models.CharField(max_length=100)
     iso_code = models.CharField(max_length=5)
     code = models.CharField(max_length=5)
     curr_rate = models.DecimalField(max_digits=11, decimal_places=2)

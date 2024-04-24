@@ -30,8 +30,4 @@ urlpatterns = [
     path('form-element/',payapp_views.form_element,name="form-element"),
     path('form-pickers/',payapp_views.form_pickers,name="form-pickers"),
     path('form-validation/',payapp_views.form_validation,name="form-validation"),
-
-    path('login/',payapp_views.page_login,name="login"),
-    path('register/',payapp_views.page_register,name="register"),
-    path('page-forgot-password/',payapp_views.page_forgot_password,name="page-forgot-password"),
 ]
