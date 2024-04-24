@@ -46,6 +46,7 @@
 									</div>
                                     <h4 class="text-center mb-4">Sign in your account</h4>
                                     <form action="{% url 'payapp:index' %}">
+                                        {% csrf_token %}
                                         <div class="mb-3">
                                             <label class="mb-1"><strong>Email</strong></label>
                                             <input type="email" class="form-control" value="hello@example.com">
