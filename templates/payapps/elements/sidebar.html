@@ -7,7 +7,9 @@
                     <img src="{% static 'payapps/images/profile/pic1.jpg' %}" alt=""/>
                     <div class="d-flex align-items-center sidebar-info">
                         <div>
-                            <span class="font-w700 d-block mb-2">Eren Yeager</span>
+                            {% if user.is_authenticated %}
+                                <span class="font-w700 d-block mb-2">{{ user.username }}</span>
+                            {% endif %}
                             <small class="text-end font-w400">Super Admin</small>
                         </div>
                         <i class="fas fa-sort-down ms-4"></i>
