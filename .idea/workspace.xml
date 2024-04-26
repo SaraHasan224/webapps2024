@@ -5,28 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="78d895f7-70a4-4897-97f0-ffc8494320d9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/register/decorators.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/general/alert.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/registration/logout.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/payapp/forms.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/payapp/signals.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/qodana.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/payapp/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/payapp/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payapp/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payapp/migrations/0002_alter_user_phone.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payapp/migrations/0003_alter_invoice_invoice_no.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payapp/migrations/0004_rename_payees_payee_rename_roles_role_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payapp/migrations/0005_currency.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payapp/migrations/0006_alter_currency_name.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/payapp/apps.py" beforeDir="false" afterPath="$PROJECT_DIR$/payapp/apps.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/payapp/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/payapp/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/payapp/payapp_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/payapp/payapp_views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/payapp/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/payapp/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/register/decorators.py" beforeDir="false" afterPath="$PROJECT_DIR$/register/decorators.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/register/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/register/forms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/register/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/register/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/payapps/elements/layouts/main.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payapps/elements/layouts/main.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/payapps/elements/sidebar.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payapps/elements/sidebar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/payapps/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payapps/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/registration/sign_up.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/registration/sign_up.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapps.sqlite3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/payapps/users/add.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payapps/users/add.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/payapps/users/edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payapps/users/edit.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapps.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/webapps.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapps2024/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/webapps2024/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/webapps2024/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/webapps2024/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -49,6 +43,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="QODANA_PROBLEMS_VIEW_TAB" />
@@ -85,6 +82,23 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="QodanaHighlightedReportService">
+    <option name="localRunNotPublishedPersistedInfo">
+      <LocalReportPersistedInfo>
+        <option name="path" value="C:\Users\sarah\AppData\Local\Temp\qodana_output\qodana.sarif.json" />
+        <option name="reportGuid" value="606babb6-be63-441b-822e-05a59a507de6" />
+        <option name="reportName" value="webapps2024/qodana/2024-04-26" />
+      </LocalReportPersistedInfo>
+    </option>
+  </component>
+  <component name="QodanaIsSelectedPersistenceService">
+    <option name="selectedOrLoading" value="true" />
+  </component>
+  <component name="QodanaReportsService">
+    <option name="descriptions">
+      <ReportDescription localRun="true" path="C:\Users\sarah\AppData\Local\Temp\qodana_output\qodana.sarif.json" reportGuid="606babb6-be63-441b-822e-05a59a507de6" reportId="webapps2024/qodana/2024-04-26" />
+    </option>
+  </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\Masters\Spring Semester\Web applications and services\webapps2024\templates\payapps" />
@@ -138,32 +152,48 @@
       <updated>1713782571939</updated>
       <workItem from="1713782572833" duration="47293000" />
       <workItem from="1714051575457" duration="121000" />
-      <workItem from="1714055180247" duration="15315000" />
+      <workItem from="1714055180247" duration="30809000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/conversion/views.py</url>
-          <line>2</line>
-          <option name="timeStamp" value="2" />
+          <dependency id="0" />
+          <url>file://$PROJECT_DIR$/payapp/payapp_views.py</url>
+          <line>84</line>
+          <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/register/views.py</url>
-          <line>36</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/register/views.py</url>
-          <line>52</line>
-          <option name="timeStamp" value="4" />
+          <dependency leave-enabled="true" master-id="0" />
+          <url>file://$PROJECT_DIR$/payapp/payapp_views.py</url>
+          <line>82</line>
+          <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>
+      <breakpoints-dialog>
+        <breakpoints-dialog>
+          <selected-grouping-rules>
+            <grouping-rule id="XBreakpointGroupingByClassRule" />
+            <grouping-rule id="by-file" />
+          </selected-grouping-rules>
+        </breakpoints-dialog>
+      </breakpoints-dialog>
     </breakpoint-manager>
   </component>
 </project>

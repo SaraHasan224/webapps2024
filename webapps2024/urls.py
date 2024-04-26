@@ -26,8 +26,8 @@ handler400 = 'payapp.views.page_error_400'
 urlpatterns = [
     # Other URL patterns...
     path('admin/', admin.site.urls),
-    path('conversion/', include('conversion.urls', namespace='conversion')),
     path('', include('payapp.urls', namespace='payapp')),
     path('', include('register.urls', namespace='auth')),
+    path('conversion/', include('conversion.urls', namespace='conversion')),
 ]
 

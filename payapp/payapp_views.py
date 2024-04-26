@@ -1,6 +1,9 @@
-from django.shortcuts import render
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
+from payapp.forms import UserForm
+from payapp.models import Profile, Currency
 from register.decorators import allowed_users, admin_only
 
 
@@ -48,32 +51,69 @@ def app_profile(request):
 # Admin Management
 
 @login_required(login_url='auth:login')
-@allowed_users(allowed_roles=['admin'])
 def users_list(request):
     context = {
         "page_title": "Users",
         'page_main_heading': "Users List",
         "page_main_description": "Manage users of your application",
-        "show_add_new_btn": True
+        "show_add_new_btn": True,
     }
     return render(request, 'payapps/users/index.html', context)
 
 
+def users_show(request):
+    user = User.objects.all()
+    return render(request, "payapps/users/show.html", {'user': user})
+
+
 @login_required(login_url='auth:login')
-@allowed_users(allowed_roles=['admin'])
-@admin_only
+# @admin_only
 def users_add(request):
+    if request.method == "POST":
+        form = UserForm(request.POST)
+        if form.is_valid():
+            # Cleaned data
+            first_name = form.cleaned_data.get("first_name")
+            last_name = form.cleaned_data.get("last_name")
+            username = form.cleaned_data.get("username")
+            email = form.cleaned_data.get("email")
+            password1 = form.cleaned_data.get("password1")
+            password2 = form.cleaned_data.get("password2")
+            # curr = form.cleaned_data.get("currency")
+            # print(curr)
+            # currency = Currency.objects.get(iso_code=curr)
+            # print(currency)
+            # Additional data cleaning and processing if needed
+            user = User.objects.create_user(
+                first_name=form.cleaned_data.get("first_name"),
+                last_name=form.cleaned_data.get("last_name"),
+                username=form.cleaned_data.get("username"),
+                email=form.cleaned_data.get("email"),
+                password=form.cleaned_data.get("password1"),
+            )
+            # Profile.objects.create(
+            #     user=user,
+            #     currency_id=currency.id).save()
+            try:
+                # Save user to the database
+                user = form.save()
+                return redirect('/show')
+            except:
+                pass
+    else:
+        form = UserForm()
+
     context = {
         "page_title": "Users",
         'parent_module': "User",
         'child_module': "Add New",
-        'form_title': "Add New User Form"
+        'form_title': "Add New User Form",
+        'form': form
     }
     return render(request, 'payapps/users/add.html', context)
 
 
 @login_required(login_url='auth:login')
-@allowed_users(allowed_roles=['admin'])
 @admin_only
 def users_edit(request, id):
     context = {
@@ -81,13 +121,29 @@ def users_edit(request, id):
         'parent_module': "User",
         'child_module': "Edit New",
         'form_title': "Edit User Form",
-        'id': id
+        'id': id,
     }
-    return render(request, 'payapps/users/edit.html', context)
+    if request.method == "POST":
+        users = User.objects.get(id=id)
+        form = UserForm(request.POST, instance=users)
+        if form.is_valid():
+            form.save()
+            return redirect("/show")
+    else:
+        user = User.objects.get(id=id)
+        context['user'] = user
+        return render(request, 'payapps/users/edit.html', context)
 
 
 @login_required(login_url='auth:login')
-@allowed_users(allowed_roles=['admin'])
+@admin_only
+def users_destroy(request, id):
+    user = User.objects.get(id=id)
+    user.delete()
+    return redirect("/show")
+
+
+@login_required(login_url='auth:login')
 @admin_only
 def roles_list(request):
     context = {
@@ -100,7 +156,6 @@ def roles_list(request):
 
 
 @login_required(login_url='auth:login')
-@allowed_users(allowed_roles=['admin'])
 @admin_only
 def roles_add(request):
     context = {
@@ -113,7 +168,6 @@ def roles_add(request):
 
 
 @login_required(login_url='auth:login')
-@allowed_users(allowed_roles=['admin'])
 @admin_only
 def roles_edit(request, id):
     context = {
@@ -126,7 +180,6 @@ def roles_edit(request, id):
 
 
 @login_required(login_url='auth:login')
-@allowed_users(allowed_roles=['admin'])
 @admin_only
 def permission_list(request):
     context = {
@@ -139,7 +192,6 @@ def permission_list(request):
 
 
 @login_required(login_url='auth:login')
-@allowed_users(allowed_roles=['admin'])
 @admin_only
 def permission_add(request):
     context = {
@@ -152,7 +204,6 @@ def permission_add(request):
 
 
 @login_required(login_url='auth:login')
-@allowed_users(allowed_roles=['admin'])
 @admin_only
 def permissions_edit(request, id):
     context = {

@@ -13,6 +13,7 @@ urlpatterns = [
     path('dashboard/', payapp_views.dashboard, name="dashboard"),
     # Admin Management
     path('users/list/', payapp_views.users_list, name="users-list"),
+    path('users/show/', payapp_views.users_show, name="users-show"),
     path('users/add-new', payapp_views.users_add, name="users-add-new"),
     path('users/edit/<str:id>', payapp_views.users_edit, name="users-edit"),
 

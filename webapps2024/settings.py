@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'payapp',
+    # 'payapp.apps.PayappConfig',
     'register',
     'conversion',
     'rest_framework',

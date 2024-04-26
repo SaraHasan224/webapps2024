@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 
+from payapp.models import Profile, Currency
+
 
 class RegistrationForm(UserCreationForm):
     CURRENCIES = (
@@ -21,16 +23,30 @@ class RegistrationForm(UserCreationForm):
     last_name = forms.CharField(required=True, label='Last name ', widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': 'Enter your last name '}))
 
-    # def save(self, commit=True):
-    #     user = super(UserCreationForm, self).save(commit=False)
-    #     user.currency = self.cleaned_data["currency"]
-    #     if commit:
-    #         user.save()
-    #     return user
-
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2', 'currency']
+        fields = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2']
+
+    # def save(self, commit=True):
+    #     user = super().save(commit=False)
+    #     user.save()
+    #
+    #     try:
+    #         currency = Currency.objects.get(iso_code=self.cleaned_data['currency'])
+    #     except Currency.DoesNotExist:
+    #         raise ValueError("One of the currency codes does not exist in the database")
+    #     if currency.curr_rate == 0:
+    #         raise ValueError("Conversion rate for the source currency is zero")
+    #
+    #     # profile = Profile.objects.create(user=user, currency=currency.id)
+    #     return user
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = '__all__'
+        exclude = ['user']
 
 
 class EditProfile(UserChangeForm):
