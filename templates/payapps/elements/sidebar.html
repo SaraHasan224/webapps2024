@@ -10,7 +10,13 @@
                             {% if user.is_authenticated %}
                                 <span class="font-w700 d-block mb-2">{{ user.username }}</span>
                             {% endif %}
-                            <small class="text-end font-w400">Super Admin</small>
+                            <small class="text-end font-w400">
+                            {% if user.is_superuser %}
+                                Super Admin
+                            {% else %}
+                                User
+                            {% endif %}
+                            </small>
                         </div>
                         <i class="fas fa-sort-down ms-4"></i>
                     </div>
@@ -39,7 +45,7 @@
                 <span class="nav-text">Dashboard</span>
             </a>
             </li>
-
+            {% if user.is_superuser %}
             <li><a class="has-arrow " href="javascript:void()" aria-expanded="false">
                 <i class="fas fa-info-circle"></i>
                     <span class="nav-text">Admin Management</span>
@@ -50,6 +56,8 @@
                     <li><a href="{% url 'payapp:permission-list' %}">Permissions</a></li>
                 </ul>
             </li>
+            {% endif %}
+            {% if not user.is_superuser %}
             <li><a href="{% url 'payapp:my-wallet' %}" class="" aria-expanded="false">
                 <i class="fas fa-file-alt"></i>
                 <span class="nav-text">My Wallet</span>
@@ -65,11 +73,21 @@
                 <span class="nav-text">Wallet Topup</span>
             </a>
             </li>
-            <li><a href="{% url 'payapp:transaction-history' %}" class="" aria-expanded="false">
-                <i class="fas fa-chart-line"></i>
-                <span class="nav-text">Transaction History</span>
-            </a>
-            </li>
+            {%  endif %}
+            {% if user.is_superuser %}
+                <li><a href="{% url 'payapp:transaction-history' %}" class="" aria-expanded="false">
+                    <i class="fas fa-chart-line"></i>
+                    <span class="nav-text">Transaction History</span>
+                </a>
+                </li>
+            {% else %}
+
+                <li><a href="{% url 'payapp:transaction-history' %}" class="" aria-expanded="false">
+                    <i class="fas fa-chart-line"></i>
+                    <span class="nav-text">My Transaction History</span>
+                </a>
+                </li>
+            {% endif %}
         </ul>
         
         <div class="copyright">

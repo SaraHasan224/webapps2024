@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 
 def index(request):
@@ -8,6 +9,8 @@ def index(request):
     return render(request, 'payapps/home.html', context)
 
 
+
+@login_required(login_url='auth:login')
 def dashboard(request):
     context = {
         "page_title": "Dashboard"
@@ -16,13 +19,17 @@ def dashboard(request):
 
 
 # Profile
+
+@login_required(login_url='auth:login')
 def app_profile(request):
     context = {
         "page_title": "App Profile"
     }
-    return render(request, 'payapps/apps/app-profile.html', context)
+    return render(request, 'payapps/profile/app-profile.html', context)
 
 # Admin Management
+
+@login_required(login_url='auth:login')
 def users_list(request):
     context = {
         "page_title": "Users",
@@ -33,6 +40,8 @@ def users_list(request):
     return render(request, 'payapps/users/index.html', context)
 
 
+
+@login_required(login_url='auth:login')
 def users_add(request):
     context = {
         "page_title": "Users",
@@ -43,6 +52,8 @@ def users_add(request):
     return render(request, 'payapps/users/add.html', context)
 
 
+
+@login_required(login_url='auth:login')
 def users_edit(request, id):
     context = {
         "page_title": "Users",
@@ -54,6 +65,8 @@ def users_edit(request, id):
     return render(request, 'payapps/users/edit.html', context)
 
 
+
+@login_required(login_url='auth:login')
 def roles_list(request):
     context = {
         "page_title": "Roles",
@@ -64,6 +77,8 @@ def roles_list(request):
     return render(request, 'payapps/roles/index.html', context)
 
 
+
+@login_required(login_url='auth:login')
 def roles_add(request):
     context = {
         "page_title": "Roles",
@@ -74,6 +89,8 @@ def roles_add(request):
     return render(request, 'payapps/roles/add.html', context)
 
 
+
+@login_required(login_url='auth:login')
 def roles_edit(request, id):
     context = {
         "page_title": "Roles",
@@ -84,6 +101,8 @@ def roles_edit(request, id):
     return render(request, 'payapps/roles/edit.html', context)
 
 
+
+@login_required(login_url='auth:login')
 def permission_list(request):
     context = {
         "page_title": "Permissions",
@@ -94,6 +113,8 @@ def permission_list(request):
     return render(request, 'payapps/permissions/index.html', context)
 
 
+
+@login_required(login_url='auth:login')
 def permission_add(request):
     context = {
         "page_title": "Permissions",
@@ -104,6 +125,8 @@ def permission_add(request):
     return render(request, 'payapps/permissions/add.html', context)
 
 
+
+@login_required(login_url='auth:login')
 def permissions_edit(request, id):
     context = {
         "page_title": "Permission",
@@ -115,6 +138,9 @@ def permissions_edit(request, id):
 
 
 # Transaction
+
+
+@login_required(login_url='auth:login')
 def transaction_history(request):
     context = {
         "page_title": "Transaction History",
@@ -125,6 +151,8 @@ def transaction_history(request):
 
 
 # Topup
+
+@login_required(login_url='auth:login')
 def topup(request):
     context = {
         "page_title": "Top up",
@@ -132,6 +160,9 @@ def topup(request):
         "page_main_description": "Easily add funds, manage balance, and top up wallet"
     }
     return render(request, 'payapps/payment/wallet-topup.html', context)
+
+
+@login_required(login_url='auth:login')
 def my_payees(request):
     context = {
         "page_title": "My Payees",
@@ -140,6 +171,8 @@ def my_payees(request):
     }
     return render(request, 'payapps/payment/payees.html', context)
 
+
+@login_required(login_url='auth:login')
 def my_wallet(request):
     context = {
         "page_title": "My Wallet",
@@ -149,6 +182,8 @@ def my_wallet(request):
     return render(request, 'payapps/payment/wallet.html', context)
 
 
+
+@login_required(login_url='auth:login')
 def create_invoices(request):
     context = {
         "page_title": "Create Invoices"

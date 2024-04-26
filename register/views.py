@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import RegistrationForm
+from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
@@ -20,6 +22,19 @@ def page_register(request):
     else:
         form = RegistrationForm()
     return render(request, 'registration/sign_up.html', {'form': form})
+
+
+@login_required(login_url='auth:login')
+def edit_profile(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('payapp:dashboard')
+    else:
+        form = RegistrationForm()
+    return render(request, 'payapps/profile/app-profile.html', {'form': form})
 
 
 def logout_user(request):
