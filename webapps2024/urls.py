@@ -24,9 +24,10 @@ handler403 = 'payapp.views.page_error_403'
 handler400 = 'payapp.views.page_error_400'
 
 urlpatterns = [
-    path('', include('payapp.urls', namespace='payapp')),
-    # path('admin/', admin.site.urls),
-    path('', include('register.urls', namespace='auth')),
+    # Other URL patterns...
+    path('admin/', admin.site.urls),
     path('conversion/', include('conversion.urls', namespace='conversion')),
+    path('', include('payapp.urls', namespace='payapp')),
+    path('', include('register.urls', namespace='auth')),
 ]
 

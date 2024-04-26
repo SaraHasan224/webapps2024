@@ -1,47 +1,21 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 
-# Create your models here.
-class User(models.Model):
-    STATUS_OPTIONS = [
-        ('1', 'Active'),
-        ('0', 'In Active'),
-    ]
-    username = models.CharField(max_length=255, unique=True)
-    phone = models.CharField(max_length=50)
-    currency_id = models.IntegerField()
-    email = models.CharField(max_length=255, unique=True)
-    password = models.CharField(max_length=255)
-    status = models.CharField(max_length=1, default='0', choices=STATUS_OPTIONS)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
+# class CustomUser(AbstractUser):
+#     CURRENCIES_OPTIONS = (
+#         ('USD', 'USD - US Dollars'),
+#         ('GBP', 'GBP - British pounds sterling'),
+#         ('EUR', 'EUR - Euro'),
+#     )
+#
+#     currency = models.CharField(max_length=3, default='0', choices=CURRENCIES_OPTIONS)
 
 
 class Wallet(models.Model):
     user_id = models.BigIntegerField()
-    amount = models.DecimalField(default=0,decimal_places=2, max_digits=11)
+    amount = models.DecimalField(default=0, decimal_places=2, max_digits=11)
     currency_id = models.IntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
-
-
-class Role(models.Model):
-    name = models.CharField(max_length=255)
-    guard = models.IntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
-
-
-class Permission(models.Model):
-    name = models.CharField(max_length=255)
-    group = models.IntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
-
-
-class RoleHasPermission(models.Model):
-    role_id = models.IntegerField()
-    permission_id = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
@@ -89,6 +63,7 @@ class Transaction(models.Model):
     status = models.SmallIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+
 
 class Currency(models.Model):
     name = models.CharField(max_length=100)

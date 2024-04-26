@@ -17,14 +17,6 @@
                                     <h4 class="text-center mb-4">Sign in your account</h4>
                                     {% load crispy_forms_tags %}
                                     <form action="{% url 'auth:login' %}" method="POST">
-                                        <div class="mb-3">
-                                            <label class="mb-1"><strong>Email</strong></label>
-                                            <input type="email" class="form-control" value="hello@example.com">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="mb-1"><strong>Password</strong></label>
-                                            <input type="password" class="form-control" value="Password">
-                                        </div>
                                         {% csrf_token %}{{ form|crispy }}
 
                                         <div class="row d-flex justify-content-between mt-4 mb-2">

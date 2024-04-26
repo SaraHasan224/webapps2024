@@ -9,6 +9,7 @@ urlpatterns = [
     # path('', views.index),
     # Dashboard Start
     path('', payapp_views.index, name="index"),
+
     path('dashboard/', payapp_views.dashboard, name="dashboard"),
     # Admin Management
     path('users/list/', payapp_views.users_list, name="users-list"),

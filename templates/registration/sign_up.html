@@ -14,24 +14,16 @@
 										<a href="{% url 'payapp:index' %}"><img src="{% static 'payapps/images/portal-icon.png' %}" alt=""></a>
 									</div>
                                     <h4 class="text-center mb-4">Sign up your account</h4>
+                                    {% include 'general/alert.html' %}
+                                    {% for message in messages %}
+                                        <div id="messages" class="alert alert-primary alert-dismissible alert-alt fade show">
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+                                            </button>
+                                            <strong>Success!</strong> Message has been sent.
+                                        </div>
+                                    {% endfor %}
                                     {% load crispy_forms_tags %}
                                     <form action="{% url 'auth:register' %}" method="post">
-                                        <div class="mb-3">
-                                            <label class="mb-1"><strong>Username</strong></label>
-                                            <input type="text" class="form-control" placeholder="username">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="mb-1"><strong>Email</strong></label>
-                                            <input type="email" class="form-control" placeholder="hello@example.com">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="mb-1"><strong>Phone number</strong></label>
-                                            <input type="text" class="form-control" value="+44 xxxxxx">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="mb-1"><strong>Password</strong></label>
-                                            <input type="password" class="form-control" value="Password">
-                                        </div>
                                         <div class="mb-5">
                                             <label class="mb-1"><strong>Currency</strong></label>
                                             <select class="me-sm-2 default-select form-control wide" id="inlineFormCustomSelect">

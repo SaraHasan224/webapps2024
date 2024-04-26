@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
+from register.decorators import allowed_users, admin_only
+
 
 def index(request):
     context = {
@@ -9,27 +11,44 @@ def index(request):
     return render(request, 'payapps/home.html', context)
 
 
-
 @login_required(login_url='auth:login')
 def dashboard(request):
-    context = {
-        "page_title": "Dashboard"
+    my_wallet = {
+        'usd': 2478,
+        'gbp': 983,
+        'eur': 1256,
     }
-    return render(request, 'payapps/index.html', context)
+    my_balance = 497
+    my_payess = {
+        '1': 'ayesha',
+        '2': 'Sami',
+    }
+    my_transactions = {}
+    context = {
+        "page_title": "Dashboard",
+        "myPayees": my_payess,
+        "myBalance": my_balance,
+        "myWallet": my_wallet,
+        "myTransactions": my_transactions,
+    }
+    return render(request, 'payapps/dashboard.html', context)
 
 
 # Profile
 
 @login_required(login_url='auth:login')
+# @allowed_users(allowed_roles=['customer'])
 def app_profile(request):
     context = {
         "page_title": "App Profile"
     }
     return render(request, 'payapps/profile/app-profile.html', context)
 
+
 # Admin Management
 
 @login_required(login_url='auth:login')
+@allowed_users(allowed_roles=['admin'])
 def users_list(request):
     context = {
         "page_title": "Users",
@@ -40,8 +59,9 @@ def users_list(request):
     return render(request, 'payapps/users/index.html', context)
 
 
-
 @login_required(login_url='auth:login')
+@allowed_users(allowed_roles=['admin'])
+@admin_only
 def users_add(request):
     context = {
         "page_title": "Users",
@@ -52,8 +72,9 @@ def users_add(request):
     return render(request, 'payapps/users/add.html', context)
 
 
-
 @login_required(login_url='auth:login')
+@allowed_users(allowed_roles=['admin'])
+@admin_only
 def users_edit(request, id):
     context = {
         "page_title": "Users",
@@ -65,8 +86,9 @@ def users_edit(request, id):
     return render(request, 'payapps/users/edit.html', context)
 
 
-
 @login_required(login_url='auth:login')
+@allowed_users(allowed_roles=['admin'])
+@admin_only
 def roles_list(request):
     context = {
         "page_title": "Roles",
@@ -77,8 +99,9 @@ def roles_list(request):
     return render(request, 'payapps/roles/index.html', context)
 
 
-
 @login_required(login_url='auth:login')
+@allowed_users(allowed_roles=['admin'])
+@admin_only
 def roles_add(request):
     context = {
         "page_title": "Roles",
@@ -89,8 +112,9 @@ def roles_add(request):
     return render(request, 'payapps/roles/add.html', context)
 
 
-
 @login_required(login_url='auth:login')
+@allowed_users(allowed_roles=['admin'])
+@admin_only
 def roles_edit(request, id):
     context = {
         "page_title": "Roles",
@@ -101,8 +125,9 @@ def roles_edit(request, id):
     return render(request, 'payapps/roles/edit.html', context)
 
 
-
 @login_required(login_url='auth:login')
+@allowed_users(allowed_roles=['admin'])
+@admin_only
 def permission_list(request):
     context = {
         "page_title": "Permissions",
@@ -113,8 +138,9 @@ def permission_list(request):
     return render(request, 'payapps/permissions/index.html', context)
 
 
-
 @login_required(login_url='auth:login')
+@allowed_users(allowed_roles=['admin'])
+@admin_only
 def permission_add(request):
     context = {
         "page_title": "Permissions",
@@ -125,8 +151,9 @@ def permission_add(request):
     return render(request, 'payapps/permissions/add.html', context)
 
 
-
 @login_required(login_url='auth:login')
+@allowed_users(allowed_roles=['admin'])
+@admin_only
 def permissions_edit(request, id):
     context = {
         "page_title": "Permission",
@@ -153,6 +180,7 @@ def transaction_history(request):
 # Topup
 
 @login_required(login_url='auth:login')
+@allowed_users(allowed_roles=['customer'])
 def topup(request):
     context = {
         "page_title": "Top up",
@@ -163,6 +191,7 @@ def topup(request):
 
 
 @login_required(login_url='auth:login')
+@allowed_users(allowed_roles=['customer'])
 def my_payees(request):
     context = {
         "page_title": "My Payees",
@@ -173,6 +202,7 @@ def my_payees(request):
 
 
 @login_required(login_url='auth:login')
+@allowed_users(allowed_roles=['customer'])
 def my_wallet(request):
     context = {
         "page_title": "My Wallet",
@@ -182,8 +212,8 @@ def my_wallet(request):
     return render(request, 'payapps/payment/wallet.html', context)
 
 
-
 @login_required(login_url='auth:login')
+@allowed_users(allowed_roles=['customer'])
 def create_invoices(request):
     context = {
         "page_title": "Create Invoices"
