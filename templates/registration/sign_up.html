@@ -1,0 +1,52 @@
+{% extends 'registration/main.html' %}
+{% load static %}
+
+{% block auth_content %}
+    <div class="authincation h-100" style="overflow: auto">
+        <div class="container h-100">
+            <div class="row justify-content-center h-100 align-items-center">
+                <div class="col-md-6">
+                    <div class="authincation-content">
+                        <div class="row no-gutters">
+                            <div class="col-xl-12">
+                                <div class="auth-form">
+									<div class="text-center mb-3">
+										<a href="{% url 'payapp:index' %}"><img src="{% static 'payapps/images/portal-icon.png' %}" alt=""></a>
+									</div>
+                                    <h4 class="text-center mb-4">Sign up your account</h4>
+                                    {% include 'general/alert.html' %}
+                                    {% for message in messages %}
+                                        <div id="messages" class="alert alert-primary alert-dismissible alert-alt fade show">
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+                                            </button>
+                                            <strong>Success!</strong> Message has been sent.
+                                        </div>
+                                    {% endfor %}
+                                    {% load crispy_forms_tags %}
+                                    <form action="{% url 'auth:register' %}" method="post">
+                                        <div class="mb-5">
+                                            <label class="mb-1"><strong>Currency</strong></label>
+                                            <select class="me-sm-2 default-select form-control wide" id="inlineFormCustomSelect">
+                                                <option selected>Currency...</option>
+                                                <option value="1">One</option>
+                                                <option value="2">Two</option>
+                                                <option value="3">Three</option>
+                                            </select>
+                                        </div>
+                                        {% csrf_token %}{{ form|crispy }}
+                                        <div class="text-center mt-6" style="margin-top: 6rem !important;">
+                                            <button type="submit" class="btn btn-primary btn-block">Sign me up</button>
+                                        </div>
+                                    </form>
+                                    <div class="new-account mt-3">
+                                        <p>Already have an account? <a class="text-primary" href="{% url 'auth:login' %}">Sign in</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

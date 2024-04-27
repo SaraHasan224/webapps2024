@@ -1,0 +1,251 @@
+
+
+//heart Blast Effect
+
+.heart {
+	width: 60px;
+	height: 60px;
+	display: inline-block;
+	background: url(../images/like.png);
+	cursor: pointer;
+	margin: -25px -15px; }
+  
+.heart-blast {
+	background-position: -1680px 0 !important;
+	transition: background 1s steps(28);
+ }
+.header-left{
+	.search-area{
+		.form-control,
+		.input-group-text{
+			background:#F6F6F6;
+		}
+	}
+}
+.plus-box{
+	background:$secondary;
+    color: #fff;
+    font-size: 0.875rem;
+    padding: 2rem 2rem;
+    overflow: hidden;
+    margin: 0 1.875rem;
+    border-radius: 1.125rem;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    margin-top: 2.5rem;
+	position: relative;
+	&:before{
+		position:absolute;
+		content:"";
+		top: 1.2rem;
+		left: 1rem;
+		background-image: url(../images/dots1.png);
+		background-repeat: no-repeat;
+		height: 3rem;
+		width: 3rem;
+	}
+	@include respond ('laptop'){
+		margin:1.25rem 1.25rem;
+	}
+}
+.plus-icon{
+	a{
+		height:3.563rem;
+		width:3.563rem;
+		background:$secondary;
+		display: block;
+		border-radius: 3.563rem;
+		line-height: 3.563rem;
+		margin-left: 2rem;
+		font-size: 1.5rem;
+		text-align: center;
+		color:$white;
+		@include respond('tab-land'){
+			height:2.563rem;
+			width:2.563rem;	
+			line-height: 2.563rem;
+			font-size: 1rem;
+		}
+		@include respond ('phone'){
+			margin-left:0;
+		}
+		
+	}	
+	@include respond ('phone'){
+		display:none;
+	}
+}
+.invoices{
+	margin-left:2rem;
+	h4{
+		font-size:2rem;
+		font-weight:800;
+	}
+	span{
+		font-size:1rem;
+		font-weight:600;
+	}
+	@include respond('laptop'){
+		margin-left:1rem;
+		span{
+			font-size:0.7rem;	
+		}
+	}
+	@include respond('tab-port'){
+		h4{
+			font-size:1.5rem;	
+		}	
+			
+	}
+}
+.donut-chart-sale small{
+	font-size: 16px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    display: flex;
+    align-items: center;
+    top: 0;
+    justify-content: center;
+    font-weight: 600;	
+}
+
+.toggle-switch{
+	margin: 0 0.75rem;
+	.custome{
+		&:before{
+			border: 0;
+			background: #D8D8D8;
+			width: 40px;
+			border-radius: 20px !important;
+			height: 16px;
+			left: -50px;
+			-webkit-transition: all 0.5s;
+			-ms-transition: all 0.5s;
+			transition: all 0.5s;
+		
+		}	
+	}	
+}
+.user-bx{
+	background:var(--rgba-primary-1);
+	border-radius:1rem;
+	display:flex;
+	align-items:center;
+	padding:0.625rem 1.125rem;
+	margin: 0 -1.125rem;
+	img{
+		height:3.75rem;
+		width:3.75rem;
+		margin-right:1rem;
+		border-radius:1rem;
+	}
+	&>div{
+		flex:1;
+	}
+	.user-name{
+		font-size:1rem;
+		margin-bottom:0;
+	}
+	.meta{
+		font-size:0.75rem;
+	}
+	.check-icon{
+		height:1.875rem;
+		width:1.875rem;
+		line-height:1.875rem;
+		font-size:1.25rem;
+		background:var(--primary);
+		color:$white;
+		border-radius:50%;
+		text-align:center;
+	}
+	@include respond ('phone'){
+		margin:0;
+	}
+}
+.user-list{
+	display:flex;
+	overflow: hidden;
+	li{
+		height:60px;
+		width:60px;
+		min-width:60px;
+		overflow: hidden;
+		border:3px solid $white;
+		border-radius:60px;
+		margin-right: -15px;
+		img{
+			height: 100%;
+			width: 100%;
+			object-fit: cover;
+		}
+	}
+}
+.amount-input{
+	font-size:30px;
+	color:$black;
+	border:0;
+	text-align:center;
+	&:hover,&:focus{
+		color:$black;
+	}
+}
+.default-progress{
+	height:20px;
+}
+.transactions-tab{
+	.card-tabs{
+		.nav-tabs{
+			border:0;
+			background:var(--rgba-primary-1);
+			border-radius:$radius;
+		
+			.nav-link{
+				border : 0;	
+				font-size:1rem;
+				font-weight:600;
+				background:none;
+				padding:0.9rem 1rem;
+				border-radius:$radius;
+				&.active{
+					background:var(--primary);	
+					color:$white;
+				}
+			}
+		}	
+	}
+}	
+.bg-gradient1{
+	background: linear-gradient(227.32deg, #AC39D5 -5.2%, #D539C5 73.99%);
+}
+.bg-gradient2{
+	background: linear-gradient(204.11deg, #40D5A8 15.46%, #40BAD5 95.79%);	
+}
+.bg-gradient3{
+	background: linear-gradient(221.17deg, #FF827A 5.91%, #FFA825 97.67%);	
+}
+.bg-gradient4{
+	background: linear-gradient(198.93deg, #461EE7 12.77%, #1EB6E7 94.68%);	
+}
+.bg-gradient5{
+	background: linear-gradient(90deg, #3CA64D 50%, #3EE75A 100%);
+}	
+.ck.ck-editor__main>.ck-editor__editable{
+	height:250px;	
+}
+.invoices-btn{
+	a {
+		font-size:1.125rem;
+		font-weight:700;
+	}	
+}
+.logo-abbr{
+	path{
+		fill:var(--primary);	
+	}
+	.logo-text{
+		fill:$white;		
+	}
+}

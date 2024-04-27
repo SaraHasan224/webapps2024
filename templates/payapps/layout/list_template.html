@@ -1,0 +1,42 @@
+{% extends 'payapps/elements/layouts/admin.html' %}
+{% load static %}
+
+{% block additional_css %}
+{% endblock %}
+
+{% block content %}
+    <!--**********************************
+        Content body start
+    ***********************************-->
+    <div class="content-body">
+        <!-- row -->
+        <div class="container-fluid">
+            <div class="d-flex mb-3">
+                <div class="mb-3 align-items-center me-auto">
+                    <h4 class="fs-24 font-w800">{{ page_main_heading }}</h4>
+                    <span class="fs-12">{{ page_main_description }}</span>
+                </div>
+                {% if show_add_new_btn %}
+                    <a href="javascript:void(0);" class="btn btn-outline-primary mb-3"><i class="fa fa-plus-circle me-3 scale3"></i>Add New</a>
+                {% endif %}
+            </div>
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="table-responsive fs-14">
+                        <!--**********************************
+                            Listing table body start
+                        ***********************************-->
+                        {% block list_content %}
+                        {% endblock %}
+                        <!--**********************************
+                            Listing table body end
+                        ***********************************-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--**********************************
+        Content body end
+    ***********************************-->
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'payapps/layout/form_template.html' %}
+{% load static %}
+        
+{% block additional_css %}
+{% endblock %}
+
+{% block form_content %}
+    {% load crispy_forms_tags %}
+    <form action="{% url 'payapp:users-add-new' %}" method="POST">
+    {% csrf_token %}{{ form|crispy }}
+    <div class="mb-3 row float-md-right">
+        <div class="col-sm-10 text-right">
+            <button type="submit" class="btn btn-primary">Sign in</button>
+        </div>
+    </div>
+</form>
+{% endblock %}

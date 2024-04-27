@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static custom_tags %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="keywords" content=""/>
+    <meta name="author" content="DexignLab"/>
+    <meta name="robots" content=""/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{{ dz_array.public.description }}"/>
+    <meta property="og:title" content="{{ dz_array.public.og_title }}"/>
+    <meta property="og:description" content="{{ dz_array.public.og_description }}"/>
+    <meta property="og:image" content="{{ dz_array.public.og_image }}"/>
+    <meta name="format-detection" content="telephone=no">
+
+    <style data-mode="XL" data-visited="true">@media (min-width: 1200px) {
+        .u-block-fe40-1 {
+            min-height: 649px;
+            background-image: none;
+        }
+
+        .u-block-fe40-3 {
+            width: calc(((100% - 1140px) / 2) + 1140px);
+            margin-top: 0;
+            margin-right: auto;
+            margin-bottom: 0;
+            margin-left: 0;
+        }
+
+        .u-block-fe40-6 {
+            min-height: 649px;
+            background-image: none;
+        }
+
+        .u-block-fe40-7 {
+            padding-top: 30px;
+            padding-bottom: 30px;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .u-block-fe40-17 {
+            height: 589px;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        .u-block-fe40-4 {
+            min-height: 649px;
+            background-image: none;
+        }
+
+        .u-block-fe40-5 {
+            padding-top: 60px;
+            padding-left: 50px;
+            padding-right: 50px;
+            padding-bottom: 40px;
+        }
+
+        .u-block-fe40-11 {
+            text-transform: uppercase;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-top: 0;
+            margin-bottom: 0;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .u-block-fe40-8 {
+            font-size: 4.375rem;
+            text-transform: none;
+            font-weight: 700;
+            margin-top: 31px;
+            margin-left: 0;
+            margin-right: 0;
+            margin-bottom: 0;
+        }
+
+        .u-block-fe40-12 {
+            line-height: 2;
+            margin-top: 20px;
+            margin-left: 0;
+            margin-right: 0;
+            margin-bottom: 0;
+        }
+
+        .u-block-fe40-15 {
+            font-style: italic;
+            margin-top: 19px;
+            margin-left: 0;
+            margin-right: 0;
+            margin-bottom: 0;
+        }
+
+        .u-block-fe40-16 {
+            font-style: italic;
+            border-style: solid;
+            padding-top: 0;
+            padding-bottom: 0;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .u-block-fe40-13 {
+            background-image: none;
+            border-style: solid;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            margin-top: 31px;
+            margin-right: auto;
+            margin-bottom: 0;
+            margin-left: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .u-block-fe40-14 {
+            width: 78px;
+            height: 78px;
+            margin-top: 42px;
+            margin-right: auto;
+            margin-bottom: 0;
+            margin-left: 0;
+        }
+    }</style>
+    <style data-mode="LG" data-visited="true">@media (max-width: 1199px) and (min-width: 992px) {
+        .u-block-fe40-1 {
+            background-image: none;
+            min-height: 535px;
+        }
+
+        .u-block-fe40-3 {
+            width: calc(((100% - 940px) / 2) + 940px);
+            margin-top: 0;
+            margin-right: auto;
+            margin-bottom: 0;
+            margin-left: 0;
+        }
+
+        .u-block-fe40-6 {
+            background-image: none;
+            background-position: 50% 50%;
+            min-height: 505px;
+        }
+
+        .u-block-fe40-7 {
+            padding-top: 30px;
+            padding-left: 0;
+            padding-right: 0;
+            padding-bottom: 30px;
+        }
+
+        .u-block-fe40-17 {
+            height: 459px;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        .u-block-fe40-4 {
+            background-image: none;
+            min-height: 580px;
+        }
+
+        .u-block-fe40-5 {
+            padding-top: 60px;
+            padding-left: 37px;
+            padding-right: 37px;
+            padding-bottom: 40px;
+        }
+
+        .u-block-fe40-11 {
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 0;
+            margin-bottom: 0;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .u-block-fe40-8 {
+            text-transform: none;
+            font-weight: 700;
+            margin-top: 31px;
+            margin-left: 0;
+            margin-right: 0;
+            margin-bottom: 0;
+            font-size: 4.375rem;
+        }
+
+        .u-block-fe40-12 {
+            margin-top: 20px;
+            margin-left: 0;
+            margin-right: 0;
+            margin-bottom: 0;
+            line-height: 2;
+        }
+
+        .u-block-fe40-15 {
+            font-style: italic;
+            margin-top: 19px;
+            margin-left: 0;
+            margin-right: 0;
+            margin-bottom: 0;
+        }
+
+        .u-block-fe40-16 {
+            font-style: italic;
+            border-style: solid;
+            padding-top: 0;
+            padding-bottom: 0;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .u-block-fe40-13 {
+            background-image: none;
+            border-style: solid;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            margin-top: 31px;
+            margin-right: auto;
+            margin-bottom: 0;
+            margin-left: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .u-block-fe40-14 {
+            width: 78px;
+            height: 78px;
+            margin-top: 42px;
+            margin-right: auto;
+            margin-bottom: 0;
+            margin-left: 0;
+        }
+    }</style>
+    <style data-mode="MD" data-visited="true">@media (max-width: 991px) and (min-width: 768px) {
+        .u-block-fe40-1 {
+            background-image: none;
+            min-height: 410px;
+        }
+
+        .u-block-fe40-3 {
+            width: calc(((100% - 720px) / 2) + 720px);
+            margin-top: 0;
+            margin-right: auto;
+            margin-bottom: 0;
+            margin-left: 0;
+        }
+
+        .u-block-fe40-6 {
+            background-image: none;
+            background-position: 70.59% 50%;
+            min-height: 387px;
+        }
+
+        .u-block-fe40-7 {
+            padding-top: 30px;
+            padding-left: 0;
+            padding-right: 0;
+            padding-bottom: 30px;
+        }
+
+        .u-block-fe40-17 {
+            height: 352px;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        .u-block-fe40-4 {
+            background-image: none;
+            min-height: 444px;
+        }
+
+        .u-block-fe40-5 {
+            padding-top: 30px;
+            padding-left: 30px;
+            padding-right: 30px;
+            padding-bottom: 30px;
+        }
+
+        .u-block-fe40-11 {
+            font-weight: 400;
+            text-transform: uppercase;
+            margin-top: 0;
+            margin-bottom: 0;
+            margin-left: 0;
+            margin-right: 0;
+            letter-spacing: 2px;
+        }
+
+        .u-block-fe40-8 {
+            text-transform: none;
+            font-weight: 700;
+            font-size: 3.75rem;
+            margin-top: 31px;
+            margin-left: 0;
+            margin-right: 0;
+            margin-bottom: 0;
+        }
+
+        .u-block-fe40-12 {
+            margin-top: 20px;
+            margin-left: 0;
+            margin-right: 0;
+            margin-bottom: 0;
+            line-height: 2;
+        }
+
+        .u-block-fe40-15 {
+            font-style: italic;
+            margin-top: 19px;
+            margin-left: 0;
+            margin-right: 0;
+            margin-bottom: 0;
+        }
+
+        .u-block-fe40-16 {
+            font-style: italic;
+            border-style: solid;
+            padding-top: 0;
+            padding-bottom: 0;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .u-block-fe40-13 {
+            background-image: none;
+            border-style: solid;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            margin-top: 31px;
+            margin-right: auto;
+            margin-bottom: 0;
+            margin-left: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .u-block-fe40-14 {
+            width: 78px;
+            height: 78px;
+            margin-top: 42px;
+            margin-right: auto;
+            margin-bottom: 0;
+            margin-left: 0;
+        }
+    }</style>
+    <style data-mode="SM" data-visited="true">@media (max-width: 767px) and (min-width: 576px) {
+        .u-block-fe40-1 {
+            background-image: none;
+            min-height: 613px;
+        }
+
+        .u-block-fe40-3 {
+            width: calc(((100% - 540px) / 2) + 540px);
+            margin-top: 0;
+            margin-right: auto;
+            margin-bottom: 0;
+            margin-left: 0;
+        }
+
+        .u-block-fe40-6 {
+            background-image: none;
+            background-position: 70.59% 50%;
+            min-height: 412px;
+            order: 1;
+        }
+
+        .u-block-fe40-7 {
+            padding-top: 20px;
+            padding-left: 30px;
+            padding-right: 30px;
+            padding-bottom: 10px;
+        }
+
+        .u-block-fe40-17 {
+            height: 386px;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        .u-block-fe40-4 {
+            background-image: none;
+            min-height: 768px;
+            order: 0;
+        }
+
+        .u-block-fe40-5 {
+            padding-top: 50px;
+            padding-bottom: 50px;
+            padding-left: 50px;
+            padding-right: 50px;
+        }
+
+        .u-block-fe40-11 {
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 0;
+            margin-bottom: 0;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .u-block-fe40-8 {
+            text-transform: none;
+            font-weight: 700;
+            font-size: 3.75rem;
+            margin-top: 31px;
+            margin-left: 0;
+            margin-right: 0;
+            margin-bottom: 0;
+        }
+
+        .u-block-fe40-12 {
+            line-height: 2;
+            margin-top: 20px;
+            margin-left: 0;
+            margin-right: 0;
+            margin-bottom: 0;
+        }
+
+        .u-block-fe40-15 {
+            font-style: italic;
+            margin-top: 19px;
+            margin-left: 0;
+            margin-right: 0;
+            margin-bottom: 0;
+        }
+
+        .u-block-fe40-16 {
+            font-style: italic;
+            border-style: solid;
+            padding-top: 0;
+            padding-bottom: 0;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .u-block-fe40-13 {
+            background-image: none;
+            border-style: solid;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            margin-top: 31px;
+            margin-right: auto;
+            margin-bottom: 0;
+            margin-left: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .u-block-fe40-14 {
+            width: 78px;
+            height: 78px;
+            margin-top: 42px;
+            margin-right: auto;
+            margin-bottom: 0;
+            margin-left: 0;
+        }
+    }</style>
+    <style data-mode="XS" data-visited="true">@media (max-width: 575px) {
+        .u-block-fe40-1 {
+            background-image: none;
+            min-height: 423px;
+        }
+
+        .u-block-fe40-3 {
+            width: calc(((100% - 340px) / 2) + 340px);
+            margin-top: 0;
+            margin-right: auto;
+            margin-bottom: 0;
+            margin-left: 0;
+        }
+
+        .u-block-fe40-6 {
+            background-image: none;
+            background-position: 70.59% 50%;
+            min-height: 259px;
+            order: 1;
+        }
+
+        .u-block-fe40-7 {
+            padding-top: 20px;
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-bottom: 30px;
+        }
+
+        .u-block-fe40-17 {
+            height: 257px;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        .u-block-fe40-4 {
+            background-image: none;
+            min-height: 484px;
+            order: 0;
+        }
+
+        .u-block-fe40-5 {
+            padding-top: 30px;
+            padding-right: 30px;
+            padding-bottom: 30px;
+            padding-left: 50px;
+        }
+
+        .u-block-fe40-11 {
+            font-weight: 400;
+            text-transform: uppercase;
+            margin-top: 0;
+            margin-bottom: 0;
+            margin-left: 0;
+            margin-right: 0;
+            letter-spacing: 2px;
+        }
+
+        .u-block-fe40-8 {
+            text-transform: none;
+            font-weight: 700;
+            font-size: 3.4375rem;
+            margin-top: 31px;
+            margin-left: 0;
+            margin-right: 0;
+            margin-bottom: 0;
+        }
+
+        .u-block-fe40-12 {
+            margin-top: 20px;
+            margin-left: 0;
+            margin-right: 0;
+            margin-bottom: 0;
+            line-height: 2;
+        }
+
+        .u-block-fe40-15 {
+            font-style: italic;
+            margin-top: 19px;
+            margin-left: 0;
+            margin-right: 0;
+            margin-bottom: 0;
+        }
+
+        .u-block-fe40-16 {
+            font-style: italic;
+            border-style: solid;
+            padding-top: 0;
+            padding-bottom: 0;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .u-block-fe40-13 {
+            background-image: none;
+            border-style: solid;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            margin-top: 31px;
+            margin-right: auto;
+            margin-bottom: 0;
+            margin-left: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .u-block-fe40-14 {
+            width: 78px;
+            height: 78px;
+            margin-top: 42px;
+            margin-right: auto;
+            margin-bottom: 0;
+            margin-left: 0;
+        }
+    }</style>
+
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="{% static 'payapps/images/home/favicon.ico' %}" />
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="{% static 'payapps/css/home_styles.css' %}" rel="stylesheet" />
+
+    <!-- PAGE TITLE HERE -->
+    <title>{{ dz_array.public.title }}</title>
+
+    <!-- FAVICONS ICON -->
+    <link rel="shortcut icon" type="image/png" href="{% static dz_array.public.favicon  %}" />
+    {% for cssurl in dz_array.pagelevel.payapps.payapps_views.css|getdata:request.path %}
+        <link rel="stylesheet" href="{% static cssurl %}" >
+    {% endfor %}
+    {% for cssurl in dz_array.global.css %}
+        <link rel="stylesheet" href="{% static cssurl %}">
+    {% endfor %}
+    {% block additional_css %}
+    {% endblock %}
+
+</head>
+
+<body class="vh-100">
+
+<!--*******************
+    Preloader start
+********************-->
+<div id="preloader">
+    <div class="lds-ripple">
+        <div></div>
+        <div></div>
+    </div>
+</div>
+<!--*******************
+    Preloader end
+********************-->
+
+
+<!-- Responsive navbar-->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container px-5">
+        <a class="navbar-brand" href="#!">{{ dz_array.public.title }}</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                {% if user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'payapp:dashboard' %}">Dashboard</a></li>
+                    <li class="nav-item">You are already logged in. Would you like to <a class="nav-link active" aria-current="page" href="{% url 'auth:logout' %}">Logout? </a></li>
+                {% else %}
+                   <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'auth:login' %}">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'auth:register' %}">Sign Up</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- Header-->
+<header class="bg-dark py-5">
+    <div class="container px-5">
+        <div class="row gx-5 justify-content-center">
+            <div class="col-lg-6">
+                <div class="text-center my-5">
+                    <h1 class="display-5 fw-bolder text-white mb-2">Present your business in a whole new way</h1>
+                    <p class="lead text-white-50 mb-4">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit!</p>
+                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                        <a class="btn btn-primary btn-lg px-4 me-sm-3" href="#features">Get Started</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!--**********************************
+    Main wrapper start
+***********************************-->
+<div id="main-wrapper">
+
+    <!-- Features section-->
+    <section class="py-5 border-bottom" id="features">
+        <div class="container px-5 my-5">
+            <div class="row gx-5">
+                <div class="col-lg-4 mb-5 mb-lg-0">
+                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="bi bi-collection"></i></div>
+                    <h2 class="h4 fw-bolder">Featured title</h2>
+                    <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+                    <a class="text-decoration-none" href="#!">
+                        Call to action
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="col-lg-4 mb-5 mb-lg-0">
+                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="bi bi-building"></i></div>
+                    <h2 class="h4 fw-bolder">Featured title</h2>
+                    <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+                    <a class="text-decoration-none" href="#!">
+                        Call to action
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="col-lg-4">
+                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="bi bi-toggles2"></i></div>
+                    <h2 class="h4 fw-bolder">Featured title</h2>
+                    <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+                    <a class="text-decoration-none" href="#!">
+                        Call to action
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Footer-->
+
+
+    <!--**********************************
+        Footer start
+    ***********************************-->
+
+    {% include 'payapps/elements/footer.html' %}
+    <!--**********************************
+        Footer end
+    ***********************************-->
+
+
+</div>
+<!--**********************************
+    Main wrapper end
+***********************************-->
+
+<!--**********************************
+    Scripts
+***********************************-->
+
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="{% static 'payapps/js/home/scripts.js' %}"></script>
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+<!-- * *                               SB Forms JS                               * *-->
+<!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+<script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+
+<!-- Required vendors -->
+
+{% for jsurl in dz_array.global.js.top %}
+    <script src="{% static jsurl %}"></script>
+{% endfor %}
+
+{% for jsurl in dz_array.pagelevel.payapps.payapps_views.js|getdata:request.path %}
+    <script src="{% static jsurl %}"></script>
+{% endfor %}
+
+{% for jsurl in dz_array.global.js.bottom %}
+    <script src="{% static jsurl %}"></script>
+{% endfor %}
+
+{% block additional_js %}
+{% endblock %}
+
+</body>
+</html>
