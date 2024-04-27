@@ -19,433 +19,63 @@
                 </div>
             </th>
             <th>ID Invoice</th>
-            <th>Date</th>
-            <th>Recipient</th>
-            <th>Email</th>
-            <th>Service Type</th>
+            <th>Transaction Date</th>
+            <th>Sender</th>
+            <th>Receiver</th>
+            <th>Amount Requested</th>
+            <th>Amount Sent</th>
+            <th>Comment</th>
             <th>Status</th>
             <th></th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2">
-                    <label class="form-check-label" for="flexCheckDefault2">
-                    </label>
-                </div>
-            </td>
-            <td><span class="text-black font-w500">#123412451</span></td>
-            <td><span class="text-black text-nowrap">#June 1, 2020, 08:22 AM</span></td>
-            <td>
-                <div class="d-flex align-items-center">
-                    <img src="{% static 'payapps/images/avatar/1.jpg' %}" alt="" class="rounded me-3" width="50">
-                    <div>
-                        <h6 class="fs-16 text-black font-w600 mb-0 text-nowrap">XYZ Store ID</h6>
-                        <span class="fs-14">Online Shop</span>
+
+        {% for transaction in transactions %}
+            <tr>
+
+                <td>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2">
+                        <label class="form-check-label" for="flexCheckDefault2">
+                        </label>
                     </div>
-                </div>
-            </td>
-            <td><span class="text-black">xyzstore@mail.com</span></td>
-            <td><span class="text-black">Server Maintenance </span></td>
-            <td><a href="javascript:void(0)" class="btn btn-success light">Completed</a></td>
-            <td>
-                <div class="dropdown">
-                    <a href="javascript:void(0);" class="btn-link" data-bs-toggle="dropdown" aria-expanded="false">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                        <a class="dropdown-item" href="javascript:void(0);">Edit</a>
+                </td>
+                <td><span class="text-black font-w500">#{{ transaction.id }}</span></td>
+                <td><span class="text-black text-nowrap">#{{  transaction.created_at}}</span></td>
+
+                <td>
+                    <div class="d-flex align-items-center">
+                        <img src="{% static 'payapps/images/avatar/1.jpg' %}" alt="" class="rounded me-3" width="50">
+                        <div>
+                            <h6 class="fs-16 text-black font-w600 mb-0 text-nowrap">{{ transaction.sender.username }}</h6>
+                            <span class="fs-14">{{ transaction.sender.first_name }} {{ transaction.sender.last_name }}</span>
+                            <br/>
+                            <span class="fs-14">Prev bal: {{ transaction.sender_curr.iso_code}} {{ transaction.sender_prev_bal }}</span>
+                            <br/>
+                            <span class="fs-14">Current bal: {{ transaction.sender_curr.iso_code}} {{ transaction.sender_cur_bal }}</span>
+                        </div>
                     </div>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault3">
-                    <label class="form-check-label" for="flexCheckDefault3">
-                    </label>
-                </div>
-            </td>
-            <td><span class="text-black font-w500">#123412451</span></td>
-            <td><span class="text-black text-nowrap">#June 1, 2020, 08:22 AM</span></td>
-            <td>
-                <div class="d-flex align-items-center">
-                    <img src="{% static 'payapps/images/avatar/2.jpg' %}" alt="" class="rounded me-3" width="50">
-                    <div>
-                        <h6 class="fs-16 text-black font-w600 mb-0 text-nowrap">Hawkins Jr.</h6>
-                        <span class="fs-14">@hawkins</span>
+                </td>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <img src="{% static 'payapps/images/avatar/1.jpg' %}" alt="" class="rounded me-3" width="50">
+                        <div>
+                            <h6 class="fs-16 text-black font-w600 mb-0 text-nowrap">{{ transaction.receiver.username }}</h6>
+                            <span class="fs-14">{{ transaction.receiver.first_name }} {{ transaction.receiver.last_name }}</span>
+                            <br/>
+                            <span class="fs-14">Prev bal: {{ transaction.receiver_curr.iso_code}} {{ transaction.receiver_prev_bal }}</span>
+                            <br/>
+                            <span class="fs-14">Current bal: {{ transaction.receiver_curr.iso_code}} {{ transaction.receiver_cur_bal }}</span>
+                        </div>
                     </div>
-                </div>
-            </td>
-            <td><span class="text-black">hawkins@mail.com</span></td>
-            <td><span class="text-black">Clean Up </span></td>
-            <td><a href="javascript:void(0)" class="btn btn-success light">Completed</a></td>
-            <td>
-                <div class="dropdown">
-                    <a href="javascript:void(0);" class="btn-link" data-bs-toggle="dropdown" aria-expanded="false">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                        <a class="dropdown-item" href="javascript:void(0);">Edit</a>
-                    </div>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault4">
-                    <label class="form-check-label" for="flexCheckDefault4">
-                    </label>
-                </div>
-            </td>
-            <td><span class="text-black font-w500">#123412451</span></td>
-            <td><span class="text-black text-nowrap">#June 1, 2020, 08:22 AM</span></td>
-            <td>
-                <div class="d-flex align-items-center">
-                    <img src="{% static 'payapps/images/avatar/3.jpg' %}" alt="" class="rounded me-3" width="50">
-                    <div>
-                        <h6 class="fs-16 text-black font-w600 mb-0 text-nowrap">Kevin Samuel</h6>
-                        <span class="fs-14">@kevin</span>
-                    </div>
-                </div>
-            </td>
-            <td><span class="text-black">kevin@mail.com</span></td>
-            <td><span class="text-black">Upgrade Component </span></td>
-            <td><a href="javascript:void(0)" class="btn btn-danger light">Pending</a></td>
-            <td>
-                <div class="dropdown">
-                    <a href="javascript:void(0);" class="btn-link" data-bs-toggle="dropdown" aria-expanded="false">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                        <a class="dropdown-item" href="javascript:void(0);">Edit</a>
-                    </div>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault5">
-                    <label class="form-check-label" for="flexCheckDefault5">
-                    </label>
-                </div>
-            </td>
-            <td><span class="text-black font-w500">#123412451</span></td>
-            <td><span class="text-black text-nowrap">#June 1, 2020, 08:22 AM</span></td>
-            <td>
-                <div class="d-flex align-items-center">
-                    <img src="{% static 'payapps/images/avatar/4.jpg' %}" alt="" class="rounded me-3" width="50">
-                    <div>
-                        <h6 class="fs-16 text-black font-w600 mb-0 text-nowrap">Jons Sitepu</h6>
-                        <span class="fs-14">@jonsitepu</span>
-                    </div>
-                </div>
-            </td>
-            <td><span class="text-black">jons@mail.com</span></td>
-            <td><span class="text-black">Server Maintenance  </span></td>
-            <td><a href="javascript:void(0)" class="btn btn-dark light">Canceled</a></td>
-            <td>
-                <div class="dropdown">
-                    <a href="javascript:void(0);" class="btn-link" data-bs-toggle="dropdown" aria-expanded="false">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                        <a class="dropdown-item" href="javascript:void(0);">Edit</a>
-                    </div>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault6">
-                    <label class="form-check-label" for="flexCheckDefault6">
-                    </label>
-                </div>
-            </td>
-            <td><span class="text-black font-w500">#123412451</span></td>
-            <td><span class="text-black text-nowrap">#June 1, 2020, 08:22 AM</span></td>
-            <td>
-                <div class="d-flex align-items-center">
-                    <img src="{% static 'payapps/images/avatar/5.jpg' %}" alt="" class="rounded me-3" width="50">
-                    <div>
-                        <h6 class="fs-16 text-black font-w600 mb-0 text-nowrap">Brian Harefa</h6>
-                        <span class="fs-14">@brianharefa</span>
-                    </div>
-                </div>
-            </td>
-            <td><span class="text-black">brian@mail.com</span></td>
-            <td><span class="text-black">Clean Up</span></td>
-            <td><a href="javascript:void(0)" class="btn btn-danger light">Pending</a></td>
-            <td>
-                <div class="dropdown">
-                    <a href="javascript:void(0);" class="btn-link" data-bs-toggle="dropdown" aria-expanded="false">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                        <a class="dropdown-item" href="javascript:void(0);">Edit</a>
-                    </div>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault7">
-                    <label class="form-check-label" for="flexCheckDefault7">
-                    </label>
-                </div>
-            </td>
-            <td><span class="text-black font-w500">#123412451</span></td>
-            <td><span class="text-black text-nowrap">#June 1, 2020, 08:22 AM</span></td>
-            <td>
-                <div class="d-flex align-items-center">
-                    <img src="{% static 'payapps/images/avatar/6.jpg' %}" alt="" class="rounded me-3" width="50">
-                    <div>
-                        <h6 class="fs-16 text-black font-w600 mb-0 text-nowrap">David Here</h6>
-                        <span class="fs-14">@davidhere</span>
-                    </div>
-                </div>
-            </td>
-            <td><span class="text-black">davidhere@mail.com</span></td>
-            <td><span class="text-black">Upgrade Component </span></td>
-            <td><a href="javascript:void(0)" class="btn btn-dark light">Canceled</a></td>
-            <td>
-                <div class="dropdown">
-                    <a href="javascript:void(0);" class="btn-link" data-bs-toggle="dropdown" aria-expanded="false">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                        <a class="dropdown-item" href="javascript:void(0);">Edit</a>
-                    </div>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault8">
-                    <label class="form-check-label" for="flexCheckDefault8">
-                    </label>
-                </div>
-            </td>
-            <td><span class="text-black font-w500">#123412451</span></td>
-            <td><span class="text-black text-nowrap">#June 1, 2020, 08:22 AM</span></td>
-            <td>
-                <div class="d-flex align-items-center">
-                    <img src="{% static 'payapps/images/avatar/7.jpg' %}" alt="" class="rounded me-3" width="50">
-                    <div>
-                        <h6 class="fs-16 text-black font-w600 mb-0 text-nowrap">Fanny Stefanus</h6>
-                        <span class="fs-14">@fannystefan</span>
-                    </div>
-                </div>
-            </td>
-            <td><span class="text-black">fannystevan@mail.com</span></td>
-            <td><span class="text-black">Clean Up</span></td>
-            <td><a href="javascript:void(0)" class="btn btn-success light">Completed</a></td>
-            <td>
-                <div class="dropdown">
-                    <a href="javascript:void(0);" class="btn-link" data-bs-toggle="dropdown" aria-expanded="false">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                        <a class="dropdown-item" href="javascript:void(0);">Edit</a>
-                    </div>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault9">
-                    <label class="form-check-label" for="flexCheckDefault9">
-                    </label>
-                </div>
-            </td>
-            <td><span class="text-black font-w500">#123412451</span></td>
-            <td><span class="text-black text-nowrap">#June 1, 2020, 08:22 AM</span></td>
-            <td>
-                <div class="d-flex align-items-center">
-                    <img src="{% static 'payapps/images/avatar/8.jpg' %}" alt="" class="rounded me-3" width="50">
-                    <div>
-                        <h6 class="fs-16 text-black font-w600 mb-0 text-nowrap">XYZ Store ID</h6>
-                        <span class="fs-14">Online Shop</span>
-                    </div>
-                </div>
-            </td>
-            <td><span class="text-black">xyzstore@mail.com</span></td>
-            <td><span class="text-black">Server Maintenance </span></td>
-            <td><a href="javascript:void(0)" class="btn btn-success light">Completed</a></td>
-            <td>
-                <div class="dropdown">
-                    <a href="javascript:void(0);" class="btn-link" data-bs-toggle="dropdown" aria-expanded="false">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                        <a class="dropdown-item" href="javascript:void(0);">Edit</a>
-                    </div>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault10">
-                    <label class="form-check-label" for="flexCheckDefault10">
-                    </label>
-                </div>
-            </td>
-            <td><span class="text-black font-w500">#123412451</span></td>
-            <td><span class="text-black text-nowrap">#June 1, 2020, 08:22 AM</span></td>
-            <td>
-                <div class="d-flex align-items-center">
-                    <img src="{% static 'payapps/images/avatar/5.jpg' %}" alt="" class="rounded me-3" width="50">
-                    <div>
-                        <h6 class="fs-16 text-black font-w600 mb-0 text-nowrap">XYZ Store ID</h6>
-                        <span class="fs-14">Online Shop</span>
-                    </div>
-                </div>
-            </td>
-            <td><span class="text-black">xyzstore@mail.com</span></td>
-            <td><span class="text-black">Server Maintenance </span></td>
-            <td><a href="javascript:void(0)" class="btn btn-danger light">Pending</a></td>
-            <td>
-                <div class="dropdown">
-                    <a href="javascript:void(0);" class="btn-link" data-bs-toggle="dropdown" aria-expanded="false">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                        <a class="dropdown-item" href="javascript:void(0);">Edit</a>
-                    </div>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault11">
-                    <label class="form-check-label" for="flexCheckDefault11">
-                    </label>
-                </div>
-            </td>
-            <td><span class="text-black font-w500">#123412451</span></td>
-            <td><span class="text-black text-nowrap">#June 1, 2020, 08:22 AM</span></td>
-            <td>
-                <div class="d-flex align-items-center">
-                    <img src="{% static 'payapps/images/avatar/1.jpg' %}" alt="" class="rounded me-3" width="50">
-                    <div>
-                        <h6 class="fs-16 text-black font-w600 mb-0 text-nowrap">XYZ Store ID</h6>
-                        <span class="fs-14">Online Shop</span>
-                    </div>
-                </div>
-            </td>
-            <td><span class="text-black">xyzstore@mail.com</span></td>
-            <td><span class="text-black">Server Maintenance </span></td>
-            <td><a href="javascript:void(0)" class="btn btn-success light">Completed</a></td>
-            <td>
-                <div class="dropdown">
-                    <a href="javascript:void(0);" class="btn-link" data-bs-toggle="dropdown" aria-expanded="false">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                        <a class="dropdown-item" href="javascript:void(0);">Edit</a>
-                    </div>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault12">
-                    <label class="form-check-label" for="flexCheckDefault12">
-                    </label>
-                </div>
-            </td>
-            <td><span class="text-black font-w500">#123412451</span></td>
-            <td><span class="text-black text-nowrap">#June 1, 2020, 08:22 AM</span></td>
-            <td>
-                <div class="d-flex align-items-center">
-                    <img src="{% static 'payapps/images/avatar/1.jpg' %}" alt="" class="rounded me-3" width="50">
-                    <div>
-                        <h6 class="fs-16 text-black font-w600 mb-0 text-nowrap">XYZ Store ID</h6>
-                        <span class="fs-14">Online Shop</span>
-                    </div>
-                </div>
-            </td>
-            <td><span class="text-black">xyzstore@mail.com</span></td>
-            <td><span class="text-black">Server Maintenance </span></td>
-            <td><a href="javascript:void(0)" class="btn btn-success light">Completed</a></td>
-            <td>
-                <div class="dropdown">
-                    <a href="javascript:void(0);" class="btn-link" data-bs-toggle="dropdown" aria-expanded="false">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                        <a class="dropdown-item" href="javascript:void(0);">Edit</a>
-                    </div>
-                </div>
-            </td>
-        </tr>
+                </td>
+                <td class="text-center"><span class="text-black">{{ transaction.requested_currency.iso_code }}{{ transaction.amount_requested}}</span></td>
+                <td class="text-center"><span class="text-black">{{ transaction.sent_currency.iso_code }}{{ transaction.amount_sent}} </span></td>
+                <td class="text-left"><span class="text-black">{{ transaction.comment }} </span></td>
+                <td><a href="javascript:void(0)" class="btn btn-success light">{{ transaction.status }}</a></td>
+            </tr>
+        {% endfor %}
         </tbody>
     </table>
     <!--**********************************

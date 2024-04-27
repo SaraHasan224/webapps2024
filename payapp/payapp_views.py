@@ -223,7 +223,8 @@ def transaction_history(request):
     context = {
         "page_title": "Transaction History",
         "page_main_heading": "Wallet Transaction History",
-        "page_main_description": "Easily add view, your wallet transaction history"
+        "page_main_description": "Easily add view, your wallet transaction history",
+        'transactions': Transaction.objects.all()
     }
     return render(request, 'payapps/payment/transaction-history.html', context)
 

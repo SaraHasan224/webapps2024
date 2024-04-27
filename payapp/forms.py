@@ -1,5 +1,6 @@
 from django import forms
-from .models import User, Currency, Wallet
+from django.views.generic import ListView
+from .models import User, Currency, Wallet, Transaction
 
 
 class UserForm(forms.ModelForm):
@@ -84,3 +85,8 @@ class WalletTopupForm(forms.ModelForm):
             'requested_currency',
             'amount'
         ]
+
+class TransactionListView(ListView):
+    model = Transaction
+    template_name = 'transaction-history.html'  # Specify the template for rendering the transaction-history list
+    context_object_name = 'users'     # Specify the context object name to use in the template

@@ -150,7 +150,23 @@ class Transaction(models.Model):
     )
     receiver_prev_bal = models.DecimalField(max_digits=11, decimal_places=2, null=True)
     receiver_cur_bal = models.DecimalField(max_digits=11, decimal_places=2, null=True)
+    requested_currency = models.ForeignKey(
+        Currency,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="requested_currency",
+        unique=False
+    )
     amount_requested = models.DecimalField(max_digits=11, decimal_places=2, null=True)
+    sent_currency = models.ForeignKey(
+        Currency,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="sent_currency",
+        unique=False
+    )
     amount_sent = models.DecimalField(max_digits=11, decimal_places=2, null=True)
     comment = models.CharField(max_length=1000, null=True)
     status = models.SmallIntegerField()
