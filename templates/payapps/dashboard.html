@@ -110,6 +110,39 @@
                                     <div class="row">
                                         <div class="col-xl-7  col-xxl-12 col-md-7">
                                             <div class="row">
+                                                <div class="items">
+                                                    <div class="card-bx bg-orange pb-2">
+                                                        <img class="pattern-img"
+                                                             src="{% static 'payapps/images/pattern/wave2.png' %}"
+                                                             alt="">
+                                                        <div class="card-info text-white">
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="me-auto">
+                                                                    <p class="mb-1 fs-18 font-w700">Main
+                                                                        Balance</p>
+                                                                    <h2 class="fs-32 font-w800  text-white mb-5">
+                                                                        {{ wallet.currency.iso_code }}{{ wallet.amount }}</h2>
+                                                                </div>
+                                                                <img src="{% static 'payapps/images/pattern/circle.png' %}"
+                                                                     class="mb-4" alt="">
+                                                            </div>
+                                                            <div class="d-flex">
+                                                                <div class="me-sm-5 me-3">
+                                                                    <p class="fs-14 mb-1">CARD NUMBER</p>
+                                                                    <span>**** **** **** {{ wallet.wallet_number|slice:"10:16" }}</span>
+                                                                </div>
+                                                                <div>
+                                                                    <p class="fs-14 mb-1">CARD HOLDER</p>
+                                                                    <span>{{ user.first_name }} {{ user.last_name }}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-7  col-xxl-12 col-md-7">
+                                            <div class="row">
                                                 <div class="card-header border-0 pb-0">
                                                     <div>
                                                         <h4 class="mb-2 font-w700">Request Transfer</h4>

@@ -2,8 +2,9 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
-from payapp.forms import UserForm
-from payapp.models import Profile, Wallet, Transaction, Payee
+from payapp.forms import UserForm, WalletTopupForm
+from payapp.helpers import get_exchange_rate, percentage
+from payapp.models import Profile, Wallet, Transaction, Payee, Currency
 from register.decorators import allowed_users, admin_only
 
 
@@ -229,13 +230,63 @@ def transaction_history(request):
 
 # Topup
 
+
 @login_required(login_url='auth:login')
 @allowed_users(allowed_roles=['customer'])
 def topup(request):
+    if request.method == "POST":
+        form = WalletTopupForm(request.POST)
+        if form.is_valid():
+            # Cleaned data
+            selected_currency = form.cleaned_data.get("requested_currency")
+            amount = form.cleaned_data.get("amount")
+
+            print('form')
+            print(form)
+            print('selected_currency')
+            print(selected_currency)
+            print('amount')
+            print(amount)
+            currency = Currency.objects.get(id=selected_currency)
+            print('currency')
+            print(currency)
+            try:
+                # Find user wallet first
+                wallet = Wallet.objects.get(user_id=request.user.id)
+                print('wallet')
+                print(wallet)
+                selected_currency = currency.iso_code
+                base_currency = wallet.currency.iso_code
+                # Check user base currency and convert the amount
+                if selected_currency != base_currency:
+                    conversion = get_exchange_rate(base_currency, amount, base_currency, request.user.id)
+                    print(conversion)
+                    wallet_amt = conversion.get("converted_amt")
+                else:
+                    wallet_amt = amount
+
+                my_wallet_amt = wallet.amount
+
+                updated_wallet_amount = float(my_wallet_amt)+float(wallet_amt)
+                withdrawal_limit = percentage(10, updated_wallet_amount)
+
+                wallet.amount = updated_wallet_amount
+                wallet.withdrawal_limit = updated_wallet_amount - withdrawal_limit
+                wallet.save()
+                return redirect('payapp:my-wallet')
+            except Exception as e:
+                return f"Error: {e}"
+        return redirect('payapp:my-wallet')
+    else:
+        form = WalletTopupForm()
     context = {
         "page_title": "Top up",
         "page_main_heading": "Wallet Top up",
-        "page_main_description": "Easily add funds, manage balance, and top up wallet"
+        "page_main_description": "Easily add funds, manage balance, and top up wallet",
+        'parent_module': "Wallet",
+        'child_module': "Top up",
+        'form_title': "Wallet Top up",
+        'form': form
     }
     return render(request, 'payapps/payment/wallet-topup.html', context)
 
@@ -254,7 +305,6 @@ def my_payees(request):
 @login_required(login_url='auth:login')
 @allowed_users(allowed_roles=['customer'])
 def my_wallet(request):
-
     wallet = Wallet.objects.get(user_id=request.user.id)
     context = {
         "page_title": "My Wallet",

@@ -54,11 +54,9 @@ def get_exchange_rate(base_currency_code, base_rate, target_currency_code, userI
 
 def assign_wallet_on_registration(user, profile):
     try:
-        base_currency_charge = 1000.75
+        base_currency_charge = 1000.00
         base_currency = 'GBP'
         user_currency = profile.currency.iso_code
-        print('user_currency')
-        print(user_currency)
 
         user_id = profile.user_id
         if user_currency != base_currency:
@@ -70,14 +68,7 @@ def assign_wallet_on_registration(user, profile):
 
         withdrawal_limit = percentage(10, wallet_amt)
         currency = Currency.objects.get(iso_code=user_currency)
-        print('withdrawal_limit')
-        print(withdrawal_limit)
-        print('user.id')
-        print(user.id)
-        print('wallet_amt')
-        print(wallet_amt)
-        print('currency')
-        print(currency.iso_code)
+
         wallet = Wallet.objects.create()
         wallet.user_id = user.id
         wallet.wallet_number = random_with_n_digits(14)

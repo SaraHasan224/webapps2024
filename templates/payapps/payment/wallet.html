@@ -41,7 +41,7 @@
                             </div>
                             <div class="me-3 pb-3">
                                 <p class="fs-14 mb-1">Available on Card</p>
-                                <span class="text-black font-w600 fs-18">{{ wallet.currency.iso_code }} {{ wallet.amount }}.</span>
+                                <span class="text-black font-w600 fs-18">{{ wallet.currency.iso_code }} {{ wallet.amount }}</span>
                             </div>
                             <div class="me-3 pb-3">
                                 <p class="fs-14 mb-1">Withdrawal limit</p>
@@ -54,7 +54,9 @@
                         </div>
                     </div>
                     <div class="card-footer border-0 pt-0">
+                        <a href="{% url 'payapp:topup-wallet' %}"  class="card-text d-inline">Topup Card</a>
                         <a href="{% url 'payapp:create-invoices' %}" class="card-link float-end">Create New Payment</a>
+
                     </div>
                 </div>
             </div>

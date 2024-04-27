@@ -1,5 +1,5 @@
 from django import forms
-from .models import User
+from .models import User, Currency, Wallet
 
 
 class UserForm(forms.ModelForm):
@@ -62,4 +62,25 @@ class UserForm(forms.ModelForm):
             'is_active',
             'last_login',
             'is_superuser'
+        ]
+
+
+
+class WalletTopupForm(forms.ModelForm):
+    CURRENCIES = (
+        (Currency.objects.get(iso_code='USD').id, 'USD - US Dollars'),
+        (Currency.objects.get(iso_code='GBP').id, 'GBP - British pounds sterling'),
+        (Currency.objects.get(iso_code='EUR').id, 'EUR - Euro'),
+        # Add more choices as needed
+    )
+
+    requested_currency = forms.ChoiceField(choices=CURRENCIES)
+    amount = forms.FloatField()
+    class Meta:
+        model = Wallet
+        # fields = "__all__"
+
+        fields = [
+            'requested_currency',
+            'amount'
         ]
