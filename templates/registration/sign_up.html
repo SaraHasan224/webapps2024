@@ -24,15 +24,6 @@
                                     {% endfor %}
                                     {% load crispy_forms_tags %}
                                     <form action="{% url 'auth:register' %}" method="post">
-                                        <div class="mb-5">
-                                            <label class="mb-1"><strong>Currency</strong></label>
-                                            <select class="me-sm-2 default-select form-control wide" id="inlineFormCustomSelect">
-                                                <option selected>Currency...</option>
-                                                <option value="1">One</option>
-                                                <option value="2">Two</option>
-                                                <option value="3">Three</option>
-                                            </select>
-                                        </div>
                                         {% csrf_token %}{{ form|crispy }}
                                         <div class="text-center mt-6" style="margin-top: 6rem !important;">
                                             <button type="submit" class="btn btn-primary btn-block">Sign me up</button>

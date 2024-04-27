@@ -20,7 +20,7 @@ class Profile(models.Model):
         null=True,
         related_name="assigned_profile",
     )
-    currency = models.OneToOneField(
+    currency = models.ForeignKey(
         Currency,
         on_delete=models.CASCADE,
         blank=True,
@@ -42,34 +42,40 @@ class Profile(models.Model):
 
 
 class Wallet(models.Model):
-    user_id = models.OneToOneField(
-        User, on_delete=models.CASCADE, blank=True, null=True
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="wallet_user",
     )
-    amount = models.DecimalField(default=0, decimal_places=2, max_digits=11)
-    currency = models.OneToOneField(
+    wallet_number = models.CharField(max_length=14, default=0)
+    withdrawal_limit = models.DecimalField(max_digits=11, decimal_places=2, default=0)
+    amount = models.DecimalField(max_digits=11, decimal_places=2,null=True)
+    currency = models.ForeignKey(
         Currency,
         on_delete=models.CASCADE,
         blank=True,
         null=True,
         related_name="wallet_currency",
+        unique=False,
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.user = None
-
     def __str__(self):
-        return str(self.user)
+        return self.user.username
 
 
 class Payee(models.Model):
-    sender_id = models.OneToOneField(
-        User, on_delete=models.CASCADE, blank=True, null=True
+    sender = models.ForeignKey(
+        User, on_delete=models.CASCADE, blank=True, null=True,
+        related_name="payee_sender_id",
+        unique=False
     )
-    payee_id = models.IntegerField()
-    # payee_id = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+    payee = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True,
+                                 related_name="payee_id",
+                                 unique=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
@@ -96,12 +102,15 @@ class Invoice(models.Model):
     transaction_status = models.CharField(
         max_length=1, default="0", choices=TRANSACTION_STATUS_OPTIONS
     )
-    transaction_id = models.CharField(max_length=50)
-    sender_id = models.OneToOneField(
-        User, on_delete=models.CASCADE, blank=True, null=True
+    transaction = models.CharField(max_length=50)
+    sender = models.ForeignKey(
+        User, on_delete=models.CASCADE, blank=True, null=True,
+        related_name="sender_id",
+        unique=False
     )
-    receiver_id = models.BigIntegerField()
-    # receiver_id = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True,
+                                    related_name="receiver_id",
+                                    unique=False)
     status = models.CharField(max_length=1, default="0", choices=STATUS_OPTIONS)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
@@ -115,10 +124,12 @@ class Invoice(models.Model):
 
 
 class Transaction(models.Model):
-    sender_id = models.OneToOneField(
-        User, on_delete=models.CASCADE, blank=True, null=True
+    sender = models.ForeignKey(
+        User, on_delete=models.CASCADE, blank=True,
+        null=True,
+        related_name="transaction_sender_id"
     )
-    sender_curr_id = models.OneToOneField(
+    sender_curr = models.ForeignKey(
         Currency,
         on_delete=models.CASCADE,
         blank=True,
@@ -127,21 +138,38 @@ class Transaction(models.Model):
     )
     sender_prev_bal = models.DecimalField(max_digits=11, decimal_places=2)
     sender_cur_bal = models.DecimalField(max_digits=11, decimal_places=2)
-    receiver_id = models.IntegerField()
-    receiver_curr_id = models.OneToOneField(
-        Currency,
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
-        related_name="assigned_receiver_currency",
-    )
-    # receiver_id = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True,
+                                 related_name="transaction_receiver_id")
+    # receiver_curr = models.ForeignKey(
+    #     Currency,
+    #     on_delete=models.CASCADE,
+    #     blank=True,
+    #     null=True,
+    #     related_name="assigned_receiver_currency",
+    # )
     receiver_prev_bal = models.DecimalField(max_digits=11, decimal_places=2)
     receiver_cur_bal = models.DecimalField(max_digits=11, decimal_places=2)
     amount_requested = models.DecimalField(max_digits=11, decimal_places=2)
     amount_sent = models.DecimalField(max_digits=11, decimal_places=2)
     comment = models.CharField(max_length=1000, null=True)
     status = models.SmallIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = None
+
+    def __str__(self):
+        return str(self.user)
+
+
+class RequestResponseLogs(models.Model):
+    url = models.TextField(null=True)
+    user = models.BigIntegerField(null=True)
+    request = models.TextField(null=True)
+    response = models.TextField(null=True)
+    response_code = models.TextField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 

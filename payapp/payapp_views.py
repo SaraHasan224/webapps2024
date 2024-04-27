@@ -1,9 +1,9 @@
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
 from payapp.forms import UserForm
-from payapp.models import Profile
+from payapp.models import Profile, Wallet, Transaction, Payee
 from register.decorators import allowed_users, admin_only
 
 
@@ -16,26 +16,22 @@ def index(request):
 
 @login_required(login_url='auth:login')
 def dashboard(request):
-
     profile = Profile.objects.get(user=request.user)
-    my_wallet = {
-        'usd': 2478,
-        'gbp': 983,
-        'eur': 1256,
-    }
-    my_balance = 497
-    my_payess = {
-        '1': 'ayesha',
-        '2': 'Sami',
-    }
-    my_transactions = {}
+    wallet = Wallet.objects.get(user_id=request.user.id)
+    payees = []
+    # payees = get_object_or_404(Payee, sender=request.user)
+    print('my_payees')
+    print(payees)
+    transactions = []
+    # transactions = get_object_or_404(Transaction, sender=request.user)
+    print('transactions')
+    print(transactions)
     context = {
         "page_title": "Dashboard",
-        "myPayees": my_payess,
-        "myBalance": my_balance,
-        "myWallet": my_wallet,
-        "myTransactions": my_transactions,
-        'profile': profile
+        'profile': profile,
+        "payees": payees,
+        "transactions": transactions,
+        'wallet': wallet
     }
     return render(request, 'payapps/dashboard.html', context)
 
@@ -258,10 +254,13 @@ def my_payees(request):
 @login_required(login_url='auth:login')
 @allowed_users(allowed_roles=['customer'])
 def my_wallet(request):
+
+    wallet = Wallet.objects.get(user_id=request.user.id)
     context = {
         "page_title": "My Wallet",
         "page_main_heading": "Wallet Top up",
-        "page_main_description": "Conveniently view your wallet"
+        "page_main_description": "Conveniently view your wallet",
+        'wallet': wallet
     }
     return render(request, 'payapps/payment/wallet.html', context)
 

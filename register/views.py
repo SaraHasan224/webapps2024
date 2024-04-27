@@ -1,9 +1,8 @@
 from django.contrib.auth.models import Group, User
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
-from django.urls import reverse
 
-from payapp.models import Profile, Currency
+from payapp.helpers import assign_wallet_on_registration
+from payapp.models import Profile, Currency, Wallet
 from .forms import RegistrationForm
 from django.contrib import messages, auth
 from django.contrib.auth import login, logout, authenticate
@@ -19,8 +18,6 @@ def page_register(request):
         if form.is_valid():
             # Save user to the database
             _currency = Currency.objects.get(id=form.cleaned_data.get('currency'))
-            print('_currency')
-            print(_currency.iso_code)
             form.currency = _currency
             # Create or update model user
             user = form.save(commit=False)
@@ -31,6 +28,10 @@ def page_register(request):
             user_profile.currency = _currency
             user_profile.save()
 
+            # Create a UserWallet for the transactions
+            wallet = assign_wallet_on_registration(user, user_profile)
+            print('wallet')
+            print(wallet)
             login(request, user)
             group = Group.objects.get(name='customer')
             user.groups.add(group)

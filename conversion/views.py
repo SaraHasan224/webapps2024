@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from django.http import JsonResponse
-# from rest_framework import permissions
+from rest_framework import permissions
 from .serializers import CurrencySerializer
 from payapp.models import Currency
 from decimal import Decimal
@@ -13,7 +13,7 @@ import requests
 
 
 # @APIView()
-# def get(request, currency1, currency2, amount_of_currency1):
+# def get(request, currency1, currency2, amount_of_currency):
 #     try:
 #         currency = Currency.objects.get(pk=currency1)
 #         serializer = CurrencySerializer(currency)
@@ -30,7 +30,7 @@ class ConversionApiView(APIView):
         List all the todo items for given requested user
         '''
         try:
-            amount = kwargs.get('amount_of_currency1')
+            amount = format(kwargs.get('amount_of_currency'))
             from_currency_code = kwargs.get('currency1')
             to_currency_code = kwargs.get('currency2')
 
@@ -38,7 +38,7 @@ class ConversionApiView(APIView):
             to_currency = get_object_or_404(Currency, code=to_currency_code)
 
             if from_currency.curr_rate == 0:
-                err = {"error": "Conversion rate for the source currency is zero"};
+                err = {"error": "Conversion rate for the source currency is zero"}
                 return Response(err, status=status.HTTP_400_BAD_REQUEST)
 
             exchange_rate = get_exchange_rate(from_currency_code, to_currency_code)
