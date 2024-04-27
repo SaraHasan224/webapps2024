@@ -5,16 +5,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 
-# class CustomUser(AbstractUser):
-#     CURRENCIES_OPTIONS = (
-#         ('USD', 'USD - US Dollars'),
-#         ('GBP', 'GBP - British pounds sterling'),
-#         ('EUR', 'EUR - Euro'),
-#     )
-#
-#     currency = models.CharField(max_length=3, default='0', choices=CURRENCIES_OPTIONS)
-
-
 class Currency(models.Model):
     name = models.CharField(max_length=100)
     iso_code = models.CharField(max_length=5)
@@ -30,9 +20,14 @@ class Profile(models.Model):
         null=True,
         related_name="assigned_profile",
     )
-    currency_id = models.IntegerField(null=True)
-    # currency_id = models.OneToOneField(Currency, on_delete=models.CASCADE, blank=True)
-    phone = models.CharField(default=200, max_length=12, blank=True, null=True)
+    currency = models.OneToOneField(
+        Currency,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="assigned_currency"
+    )
+    phone = models.CharField(max_length=12, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 

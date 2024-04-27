@@ -2,14 +2,14 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 
-from payapp.models import Profile
+from payapp.models import Profile, Currency
 
 
 class RegistrationForm(UserCreationForm):
     CURRENCIES = (
-        ('USD', 'USD - US Dollars'),
-        ('GBP', 'GBP - British pounds sterling'),
-        ('EUR', 'EUR - Euro'),
+        (Currency.objects.get(iso_code='USD').id, 'USD - US Dollars'),
+        (Currency.objects.get(iso_code='GBP').id, 'GBP - British pounds sterling'),
+        (Currency.objects.get(iso_code='EUR').id, 'EUR - Euro'),
         # Add more choices as needed
     )
 
@@ -26,21 +26,6 @@ class RegistrationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2']
-
-    # def save(self, commit=True):
-    #     user = super().save(commit=False)
-    #     user.save()
-    #
-    #     try:
-    #         currency = Currency.objects.get(iso_code=self.cleaned_data['currency'])
-    #     except Currency.DoesNotExist:
-    #         raise ValueError("One of the currency codes does not exist in the database")
-    #     if currency.curr_rate == 0:
-    #         raise ValueError("Conversion rate for the source currency is zero")
-    #
-    #     # profile = Profile.objects.create(user=user, currency=currency.id)
-    #     return user
-
 
 class ProfileForm(forms.ModelForm):
     class Meta:

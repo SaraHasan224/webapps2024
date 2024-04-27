@@ -18,7 +18,18 @@ def page_register(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             # Save user to the database
-            user = form.save()
+            _currency = Currency.objects.get(id=form.cleaned_data.get('currency'))
+            print('_currency')
+            print(_currency.iso_code)
+            form.currency = _currency
+            # Create or update model user
+            user = form.save(commit=False)
+            user.save()
+
+            # Create a UserProfile for the user
+            user_profile, _ = Profile.objects.get_or_create(user=user)
+            user_profile.currency = _currency
+            user_profile.save()
 
             login(request, user)
             group = Group.objects.get(name='customer')

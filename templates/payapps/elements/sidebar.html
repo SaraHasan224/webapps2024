@@ -9,14 +9,19 @@
                         <div>
                             {% if user.is_authenticated %}
                                 <span class="font-w700 d-block mb-2">{{ user.username }}</span>
+
                             {% endif %}
-                            <small class="text-end font-w400">
+                            <small class="text-end font-w400 text-capitalize">
+
+
                                 {% if user.is_superuser %}
                                     Super Admin
-                                {% elif user.is_staff == True %}
+                                {% elif user.is_staff %}
                                     Staff
                                 {% else %}
-                                    User
+                                    {% for group in user.groups.all %}
+                                        {{ group.name }}
+                                    {% endfor %}
                                 {% endif %}
                             </small>
                         </div>
@@ -70,7 +75,7 @@
                     </ul>
                 </li>
             {% endif %}
-            {% if not user.is_superuser and user.is_staff_user %}
+            {% if not user.is_superuser and not user.is_staff_user %}
                 <li><a href="{% url 'payapp:my-wallet' %}" class="" aria-expanded="false">
                     <i class="fas fa-file-alt"></i>
                     <span class="nav-text">My Wallet</span>
