@@ -14,6 +14,7 @@ from django.dispatch import receiver
 #
 #     currency = models.CharField(max_length=3, default='0', choices=CURRENCIES_OPTIONS)
 
+
 class Currency(models.Model):
     name = models.CharField(max_length=100)
     iso_code = models.CharField(max_length=5)
@@ -22,7 +23,13 @@ class Currency(models.Model):
 
 
 class Profile(models.Model):
-    user_id = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, related_name="assigned_profile")
+    user_id = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="assigned_profile",
+    )
     currency_id = models.IntegerField(null=True)
     # currency_id = models.OneToOneField(Currency, on_delete=models.CASCADE, blank=True)
     phone = models.CharField(default=200, max_length=12, blank=True, null=True)
@@ -32,30 +39,33 @@ class Profile(models.Model):
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
         if created:
-            # print("create",sender, instance,created,**kwargs)
-            Profile.objects.create(user=instance)
+            profile = Profile.objects.create(user_id=instance)
+            profile.save()
 
-    def save_user_profile(sender, instance, **kwargs):
-        # print("save",sender, instance,**kwargs)
-        instance.profile.save()
+    # No need
+    # def save_user_profile(sender, instance, **kwargs):
+    #     # print("save",sender, instance,**kwargs)
+    #     instance.profile.save()
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(args, kwargs)
-        self.user = None
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.user_id = None
 
     def __str__(self):
         return self.user.username
 
 
 class Wallet(models.Model):
-    user_id = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+    user_id = models.OneToOneField(
+        User, on_delete=models.CASCADE, blank=True, null=True
+    )
     amount = models.DecimalField(default=0, decimal_places=2, max_digits=11)
     currency_id = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
     def __init__(self, *args, **kwargs):
-        super().__init__(args, kwargs)
+        super().__init__(*args, **kwargs)
         self.user = None
 
     def __str__(self):
@@ -63,14 +73,16 @@ class Wallet(models.Model):
 
 
 class Payee(models.Model):
-    sender_id = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+    sender_id = models.OneToOneField(
+        User, on_delete=models.CASCADE, blank=True, null=True
+    )
     payee_id = models.IntegerField()
     # payee_id = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
     def __init__(self, *args, **kwargs):
-        super().__init__(args, kwargs)
+        super().__init__(*args, **kwargs)
         self.user = None
 
     def __str__(self):
@@ -79,27 +91,31 @@ class Payee(models.Model):
 
 class Invoice(models.Model):
     STATUS_OPTIONS = [
-        ('1', 'Active'),
-        ('0', 'In Active'),
+        ("1", "Active"),
+        ("0", "In Active"),
     ]
     TRANSACTION_STATUS_OPTIONS = [
-        ('1', 'Paid'),
-        ('0', 'Not paid'),
+        ("1", "Paid"),
+        ("0", "Not paid"),
     ]
     invoice_no = models.CharField(max_length=255, unique=True)
     invoice_date = models.DateField()
     transaction_date = models.DateField()
-    transaction_status = models.CharField(max_length=1, default='0', choices=TRANSACTION_STATUS_OPTIONS)
+    transaction_status = models.CharField(
+        max_length=1, default="0", choices=TRANSACTION_STATUS_OPTIONS
+    )
     transaction_id = models.CharField(max_length=50)
-    sender_id = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+    sender_id = models.OneToOneField(
+        User, on_delete=models.CASCADE, blank=True, null=True
+    )
     receiver_id = models.BigIntegerField()
     # receiver_id = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
-    status = models.CharField(max_length=1, default='0', choices=STATUS_OPTIONS)
+    status = models.CharField(max_length=1, default="0", choices=STATUS_OPTIONS)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
     def __init__(self, *args, **kwargs):
-        super().__init__(args, kwargs)
+        super().__init__(*args, **kwargs)
         self.user = None
 
     def __str__(self):
@@ -107,7 +123,9 @@ class Invoice(models.Model):
 
 
 class Transaction(models.Model):
-    sender_id = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+    sender_id = models.OneToOneField(
+        User, on_delete=models.CASCADE, blank=True, null=True
+    )
     sender_curr_id = models.IntegerField()
     sender_prev_bal = models.DecimalField(max_digits=11, decimal_places=2)
     sender_cur_bal = models.DecimalField(max_digits=11, decimal_places=2)
@@ -124,7 +142,7 @@ class Transaction(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
 
     def __init__(self, *args, **kwargs):
-        super().__init__(args, kwargs)
+        super().__init__(*args, **kwargs)
         self.user = None
 
     def __str__(self):

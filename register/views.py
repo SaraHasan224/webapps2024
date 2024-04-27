@@ -13,40 +13,39 @@ from .decorators import unauthenticated_user
 
 # Create your views here.
 
+
 def page_register(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = RegistrationForm(request.POST)
         if form.is_valid():
             # Save user to the database
             user = form.save()
-
             login(request, user)
-            group = Group.objects.get(name='customer')
+            group = Group.objects.get(name="customer")
             user.groups.add(group)
-            messages.success(request, 'Your payapp account has been created.')
-
-        return redirect('payapp:dashboard')
+            messages.success(request, "Your payapp account has been created.")
+            return redirect("payapp:dashboard")
     else:
         form = RegistrationForm()
-        return render(request, 'registration/sign_up.html', {'form': form})
+    return render(request, "registration/sign_up.html", {"form": form})
 
 
-@login_required(login_url='auth:login')
+@login_required(login_url="auth:login")
 def edit_profile(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = RegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('payapp:dashboard')
+            return redirect("payapp:dashboard")
     else:
         form = RegistrationForm()
-    return render(request, 'payapps/profile/app-profile.html', {'form': form})
+    return render(request, "payapps/profile/app-profile.html", {"form": form})
 
 
 def logout_user(request):
     logout(request)
-    return redirect('auth:login')
+    return redirect("auth:login")
 
 
 # def logout_user(request):
@@ -59,25 +58,25 @@ def logout_user(request):
 
 @unauthenticated_user
 def page_login(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
 
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
             login(request, user)
-            return redirect('/')
+            return redirect("/")
         else:
-            messages.error(request, 'Incorrect username or password')
+            messages.error(request, "Incorrect username or password")
 
     context = {}
-    return render(request, 'registration/login.html', context)
+    return render(request, "registration/login.html", context)
 
 
 @unauthenticated_user
 def page_forgot_password(request):
-    return render(request, 'auth/pages/page-forgot-password.html')
+    return render(request, "auth/pages/page-forgot-password.html")
 
 
 # USER
@@ -90,22 +89,22 @@ def transactions(request):
         if form.is_valid():
             try:
                 form.save()
-                return redirect('/show')
+                return redirect("/show")
             except:
                 pass
     else:
         form = EmployeeForm()
-    return render(request, 'index.html', {'form': form})
+    return render(request, "index.html", {"form": form})
 
 
 def transactionShow(request):
     employees = Employee.objects.all()
-    return render(request, "show.html", {'employees': employees})
+    return render(request, "show.html", {"employees": employees})
 
 
 def transactionEdit(request, id):
     employee = Employee.objects.get(id=id)
-    return render(request, 'edit.html', {'employee': employee})
+    return render(request, "edit.html", {"employee": employee})
 
 
 def transactionUpdate(request, id):
@@ -114,7 +113,7 @@ def transactionUpdate(request, id):
     if form.is_valid():
         form.save()
         return redirect("/show")
-    return render(request, 'edit.html', {'employee': employee})
+    return render(request, "edit.html", {"employee": employee})
 
 
 def transactionDestroy(request, id):
