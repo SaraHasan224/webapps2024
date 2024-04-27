@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from payapp.forms import UserForm
+from payapp.models import Profile
 from register.decorators import allowed_users, admin_only
 
 
@@ -15,6 +16,8 @@ def index(request):
 
 @login_required(login_url='auth:login')
 def dashboard(request):
+
+    profile = Profile.objects.get(user=request.user)
     my_wallet = {
         'usd': 2478,
         'gbp': 983,
@@ -32,6 +35,7 @@ def dashboard(request):
         "myBalance": my_balance,
         "myWallet": my_wallet,
         "myTransactions": my_transactions,
+        'profile': profile
     }
     return render(request, 'payapps/dashboard.html', context)
 
