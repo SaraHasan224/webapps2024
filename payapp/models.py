@@ -136,21 +136,22 @@ class Transaction(models.Model):
         null=True,
         related_name="assigned_sender_currency",
     )
-    sender_prev_bal = models.DecimalField(max_digits=11, decimal_places=2)
-    sender_cur_bal = models.DecimalField(max_digits=11, decimal_places=2)
+    sender_prev_bal = models.DecimalField(max_digits=11, decimal_places=2, null=True)
+    sender_cur_bal = models.DecimalField(max_digits=11, decimal_places=2, null=True)
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True,
                                  related_name="transaction_receiver_id")
-    # receiver_curr = models.ForeignKey(
-    #     Currency,
-    #     on_delete=models.CASCADE,
-    #     blank=True,
-    #     null=True,
-    #     related_name="assigned_receiver_currency",
-    # )
-    receiver_prev_bal = models.DecimalField(max_digits=11, decimal_places=2)
-    receiver_cur_bal = models.DecimalField(max_digits=11, decimal_places=2)
-    amount_requested = models.DecimalField(max_digits=11, decimal_places=2)
-    amount_sent = models.DecimalField(max_digits=11, decimal_places=2)
+    receiver_curr = models.ForeignKey(
+        Currency,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="assigned_receiver_currencies",
+        unique=False
+    )
+    receiver_prev_bal = models.DecimalField(max_digits=11, decimal_places=2, null=True)
+    receiver_cur_bal = models.DecimalField(max_digits=11, decimal_places=2, null=True)
+    amount_requested = models.DecimalField(max_digits=11, decimal_places=2, null=True)
+    amount_sent = models.DecimalField(max_digits=11, decimal_places=2, null=True)
     comment = models.CharField(max_length=1000, null=True)
     status = models.SmallIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)

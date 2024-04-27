@@ -1,7 +1,7 @@
 import requests
 from random import randint
 
-from payapp.models import RequestResponseLogs, Wallet, Currency
+from payapp.models import RequestResponseLogs, Wallet, Currency, Transaction
 
 
 def random_with_n_digits(n):
@@ -24,7 +24,7 @@ def get_exchange_rate(base_currency_code, base_rate, target_currency_code, userI
         print('base_rate')
         print(base_rate)
         base_url = "http://127.0.0.1:8000/"
-        url = base_url+f"conversion/{base_currency_code}/{target_currency_code}/{base_rate}"
+        url = base_url + f"conversion/{base_currency_code}/{target_currency_code}/{base_rate}"
         print("url")
         print(url)
         response = requests.get(url)
@@ -72,10 +72,41 @@ def assign_wallet_on_registration(user, profile):
         wallet = Wallet.objects.create()
         wallet.user_id = user.id
         wallet.wallet_number = random_with_n_digits(14)
-        wallet.withdrawal_limit = wallet_amt-withdrawal_limit
+        wallet.withdrawal_limit = wallet_amt - withdrawal_limit
         wallet.amount = wallet_amt
         wallet.currency_id = currency.id
         wallet.save()
         return wallet
     except Exception as e:
         return f"Error: {e}"
+
+
+def log_transaction(transaction_log):
+    print("log_transaction")
+    print(type(transaction_log))
+    print(transaction_log.get('sender_id'))
+    try:
+        transaction = Transaction.objects.create()
+        transaction.sender_id = transaction_log.get('sender_id')
+        transaction.sender_curr_id = transaction_log.get('sender_curr_id')
+        transaction.sender_prev_bal = transaction_log.get('sender_prev_bal')
+        transaction.sender_cur_bal = transaction_log.get('sender_cur_bal')
+        transaction.receiver_id = transaction_log.get('receiver_id')
+        transaction.receiver_curr_id = transaction_log.get('receiver_curr_id')
+        transaction.receiver_prev_bal = transaction_log.get('receiver_prev_bal')
+        transaction.receiver_cur_bal = transaction_log.get('receiver_cur_bal')
+        transaction.amount_requested = transaction_log.get('amount_requested')
+        transaction.amount_sent = transaction_log.get('amount_sent')
+        transaction.comment = transaction_log.get('comment')
+        transaction.status = transaction_log.get('status')
+        transaction.save()
+        return transaction
+    except Exception as e:
+        print(f"Transaction Error: {e}")
+
+
+def transaction_status():
+    return [
+        ("Transferred", 1),
+        ("Pending", 0),
+    ]

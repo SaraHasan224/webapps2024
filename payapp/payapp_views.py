@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
 from payapp.forms import UserForm, WalletTopupForm
-from payapp.helpers import get_exchange_rate, percentage
+from payapp.helpers import get_exchange_rate, percentage, log_transaction, transaction_status
 from payapp.models import Profile, Wallet, Transaction, Payee, Currency
 from register.decorators import allowed_users, admin_only
 
@@ -240,27 +240,15 @@ def topup(request):
             # Cleaned data
             selected_currency = form.cleaned_data.get("requested_currency")
             amount = form.cleaned_data.get("amount")
-
-            print('form')
-            print(form)
-            print('selected_currency')
-            print(selected_currency)
-            print('amount')
-            print(amount)
             currency = Currency.objects.get(id=selected_currency)
-            print('currency')
-            print(currency)
             try:
                 # Find user wallet first
                 wallet = Wallet.objects.get(user_id=request.user.id)
-                print('wallet')
-                print(wallet)
                 selected_currency = currency.iso_code
                 base_currency = wallet.currency.iso_code
                 # Check user base currency and convert the amount
                 if selected_currency != base_currency:
-                    conversion = get_exchange_rate(base_currency, amount, base_currency, request.user.id)
-                    print(conversion)
+                    conversion = get_exchange_rate(base_currency, amount, selected_currency, request.user.id)
                     wallet_amt = conversion.get("converted_amt")
                 else:
                     wallet_amt = amount
@@ -270,9 +258,21 @@ def topup(request):
                 updated_wallet_amount = float(my_wallet_amt)+float(wallet_amt)
                 withdrawal_limit = percentage(10, updated_wallet_amount)
 
-                wallet.amount = updated_wallet_amount
-                wallet.withdrawal_limit = updated_wallet_amount - withdrawal_limit
-                wallet.save()
+                try:
+                    wallet.amount = updated_wallet_amount
+                    wallet.withdrawal_limit = updated_wallet_amount - withdrawal_limit
+                    wallet.save()
+                except Exception as e:
+                    print(f"Wallet Error: {e}")
+                transaction_log = {'sender_id': request.user.id, "sender_curr_id": wallet.currency.id,
+                                   'sender_prev_bal': my_wallet_amt, 'sender_cur_bal': updated_wallet_amount,
+                                   'receiver_id': request.user.id, 'receiver_curr_id': currency.id,
+                                   'receiver_prev_bal': my_wallet_amt, 'receiver_cur_bal': updated_wallet_amount,
+                                   'amount_requested': amount, 'comment': "Topup my wallet balance",
+                                   'amount_sent': wallet_amt,
+                                   'status': 1}
+                log_transaction(transaction_log)
+
                 return redirect('payapp:my-wallet')
             except Exception as e:
                 return f"Error: {e}"

@@ -30,8 +30,6 @@ def page_register(request):
 
             # Create a UserWallet for the transactions
             wallet = assign_wallet_on_registration(user, user_profile)
-            print('wallet')
-            print(wallet)
             login(request, user)
             group = Group.objects.get(name='customer')
             user.groups.add(group)
