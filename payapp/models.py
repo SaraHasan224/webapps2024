@@ -1,8 +1,15 @@
 from django.conf import settings
 from django.db import models
-from django.contrib.auth.models import AbstractUser, User
+from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+
+
+class CustomUser(AbstractUser):
+    email = models.EmailField(unique=True)
+
+    def __str__(self):
+        return self.email
 
 
 class Currency(models.Model):
@@ -14,7 +21,7 @@ class Currency(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(
-        User,
+        CustomUser,
         on_delete=models.CASCADE,
         blank=True,
         null=True,
@@ -31,7 +38,7 @@ class Profile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
-    @receiver(post_save, sender=User)
+    @receiver(post_save, sender=CustomUser)
     def create_user_profile(sender, instance, created, **kwargs):
         if created:
             profile = Profile.objects.create(user=instance)
@@ -43,7 +50,7 @@ class Profile(models.Model):
 
 class Wallet(models.Model):
     user = models.ForeignKey(
-        User,
+        CustomUser,
         on_delete=models.CASCADE,
         blank=True,
         null=True,
@@ -51,7 +58,7 @@ class Wallet(models.Model):
     )
     wallet_number = models.CharField(max_length=14, default=0)
     withdrawal_limit = models.DecimalField(max_digits=11, decimal_places=2, default=0)
-    amount = models.DecimalField(max_digits=11, decimal_places=2,null=True)
+    amount = models.DecimalField(max_digits=11, decimal_places=2, null=True, default=0)
     currency = models.ForeignKey(
         Currency,
         on_delete=models.CASCADE,
@@ -69,13 +76,13 @@ class Wallet(models.Model):
 
 class Payee(models.Model):
     sender = models.ForeignKey(
-        User, on_delete=models.CASCADE, blank=True, null=True,
+        CustomUser, on_delete=models.CASCADE, blank=True, null=True,
         related_name="payee_sender_id",
         unique=False
     )
-    payee = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True,
-                                 related_name="payee_id",
-                                 unique=False)
+    payee = models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True,
+                              related_name="payee_id",
+                              unique=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
@@ -104,13 +111,13 @@ class Invoice(models.Model):
     )
     transaction = models.CharField(max_length=50)
     sender = models.ForeignKey(
-        User, on_delete=models.CASCADE, blank=True, null=True,
+        CustomUser, on_delete=models.CASCADE, blank=True, null=True,
         related_name="sender_id",
         unique=False
     )
-    receiver = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True,
-                                    related_name="receiver_id",
-                                    unique=False)
+    receiver = models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True,
+                                 related_name="receiver_id",
+                                 unique=False)
     status = models.CharField(max_length=1, default="0", choices=STATUS_OPTIONS)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
@@ -125,7 +132,7 @@ class Invoice(models.Model):
 
 class Transaction(models.Model):
     sender = models.ForeignKey(
-        User, on_delete=models.CASCADE, blank=True,
+        CustomUser, on_delete=models.CASCADE, blank=True,
         null=True,
         related_name="transaction_sender_id"
     )
@@ -138,7 +145,7 @@ class Transaction(models.Model):
     )
     sender_prev_bal = models.DecimalField(max_digits=11, decimal_places=2, null=True)
     sender_cur_bal = models.DecimalField(max_digits=11, decimal_places=2, null=True)
-    receiver = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True,
+    receiver = models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True,
                                  related_name="transaction_receiver_id")
     receiver_curr = models.ForeignKey(
         Currency,

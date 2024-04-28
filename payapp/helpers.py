@@ -15,7 +15,7 @@ def percentage(part, whole):
     # return 100 * float(part) / float(whole)
 
 
-def get_exchange_rate(base_currency_code, base_rate, target_currency_code, userId):
+def get_exchange_rate(request, base_currency_code, base_rate, target_currency_code, userId):
     try:
         print('base_currency')
         print(base_currency_code)
@@ -23,7 +23,7 @@ def get_exchange_rate(base_currency_code, base_rate, target_currency_code, userI
         print(target_currency_code)
         print('base_rate')
         print(base_rate)
-        base_url = "http://127.0.0.1:8000/"
+        base_url = request.build_absolute_uri('/')[:-1]  # Get the base URL of the current app
         url = base_url + f"conversion/{base_currency_code}/{target_currency_code}/{base_rate}"
         print("url")
         print(url)

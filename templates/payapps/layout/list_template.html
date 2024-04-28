@@ -16,9 +16,8 @@
                     <h4 class="fs-24 font-w800">{{ page_main_heading }}</h4>
                     <span class="fs-12">{{ page_main_description }}</span>
                 </div>
-                {% if show_add_new_btn %}
-                    <a href="javascript:void(0);" class="btn btn-outline-primary mb-3"><i class="fa fa-plus-circle me-3 scale3"></i>Add New</a>
-                {% endif %}
+                {% block show_add_new_btn %}
+                {% endblock %}
             </div>
             <div class="row">
                 <div class="col-xl-12">

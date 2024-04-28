@@ -1,0 +1,52 @@
+{% extends 'payapps/elements/layouts/admin.html' %}
+{% load static %}
+
+{% block additional_css %}
+{% endblock %}
+
+{% block content %}
+    <!--**********************************
+        Content body start
+    ***********************************-->
+    <div class="content-body">
+        <div class="container-fluid">
+            <div class="row page-titles">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active"><a href="javascript:void(0)">{{ parent_module }}</a></li>
+                    <li class="breadcrumb-item"><a href="javascript:void(0)">{{ child_module }}</a></li>
+                </ol>
+            </div>
+            <!-- row -->
+            <div class="row">
+                <div class="col-xl-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">{{ form_title}}</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Confirm User Deletion</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <h1></h1>
+                                    <p>Are you sure you want to delete user "{{ user.username }}"?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <a class="btn btn-danger light"  href="{% url 'payapp:users-list' %}">Go back</a>
+                                    <form action="{% url 'payapp:users-delete' user_id=user.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-primary">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--**********************************
+        Content body end
+    ***********************************-->
+{% endblock %}

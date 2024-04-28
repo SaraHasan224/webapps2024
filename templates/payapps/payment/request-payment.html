@@ -1,0 +1,41 @@
+{% extends 'payapps/layout/form_template.html' %}
+{% load static %}
+
+{% block additional_css %}
+{% endblock %}
+
+{% block form_content %}
+    {% load crispy_forms_tags %}
+    <form action="{% url 'payapp:topup-wallet' %}" method="POST">
+        {% csrf_token %}{{ form|crispy }}
+
+        <div class="mt-3 row float-md-left">
+            <div class="col-sm-10 text-left">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- JavaScript to validate float input -->
+    <script>
+        document.getElementById('id_amount').addEventListener('onkeypress', function() {
+            validate()
+        });
+
+        function validate() {
+            var returnString;
+            var text = document.getElementById('numbersOnly').value;
+            var regex = /[0-9]|\./;
+            var anArray = text.split('');
+            for (var i = 0; i < anArray.length; i++) {
+                if (!regex.test(anArray[i])) {
+                    anArray[i] = '';
+                }
+            }
+            for (var i = 0; i < anArray.length; i++) {
+                returnString += anArray[i];
+            }
+            document.getElementById('id_amount').value = returnString;
+        }
+    </script>
+{% endblock %}

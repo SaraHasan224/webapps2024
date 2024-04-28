@@ -1,8 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from django.contrib.auth.models import User
 
-from payapp.models import Profile, Currency
+from payapp.models import Profile, Currency, CustomUser
 
 
 class RegistrationForm(UserCreationForm):
@@ -24,7 +23,7 @@ class RegistrationForm(UserCreationForm):
         attrs={'class': 'form-control', 'placeholder': 'Enter your last name '}))
 
     class Meta:
-        model = User
+        model = CustomUser
         fields = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2']
 
 class ProfileForm(forms.ModelForm):
