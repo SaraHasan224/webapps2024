@@ -1,12 +1,16 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
+import logging
 from payapp.forms import UserForm, WalletTopupForm, RequestPaymentForm, MyPayeeForm, EditUserForm
-from payapp.helpers import get_exchange_rate, percentage, log_transaction, transaction_status
+from payapp.helpers import get_exchange_rate, percentage, log_transaction, transaction_status, \
+    assign_wallet_on_registration
 from payapp.models import Profile, Wallet, Transaction, Payee, Currency, CustomUser
 from register.decorators import allowed_users, admin_only
+
+logger = logging.getLogger(__name__)
 
 
 def index(request):
@@ -18,27 +22,44 @@ def index(request):
 
 @login_required(login_url='auth:login')
 def dashboard(request):
-    profile = Profile.objects.get(user=request.user)
-    try:
-        wallet = Wallet.objects.get(user_id=request.user.id)
-    except Wallet.DoesNotExist:
-        wallet = None
-    payees = []
-    # payees = get_object_or_404(Payee, sender=request.user)
-    print('my_payees')
-    print(payees)
-    transactions = []
-    # transactions = get_object_or_404(Transaction, sender=request.user)
-    print('transactions')
-    print(transactions)
-    context = {
-        "page_title": "Dashboard",
-        'profile': profile,
-        "payees": payees,
-        "transactions": transactions,
-        'wallet': wallet
-    }
-    return render(request, 'payapps/dashboard.html', context)
+    if not request.user.is_staff and not request.user.is_superuser:
+        profile = Profile.objects.get(user=request.user)
+        try:
+            wallet = Wallet.objects.get(user_id=request.user.id)
+        except Wallet.DoesNotExist:
+            wallet = None
+        payees = []
+        # payees = get_object_or_404(Payee, sender=request.user)
+        transactions = []
+        # transactions = get_object_or_404(Transaction, sender=request.user)
+        context = {
+            "page_title": "Dashboard",
+            'profile': profile,
+            "payees": payees,
+            "transactions": transactions,
+            'wallet': wallet
+        }
+        return render(request, 'payapps/dashboard.html', context)
+    else:
+
+        profile = Profile.objects.get(user=request.user)
+        try:
+            transactions = Transaction.objects.get()
+        except Transaction.DoesNotExist:
+            transactions = None
+
+        group_name = 'customer'  # Assuming the group name is 'customer'
+        group = Group.objects.get(name=group_name)
+        context = {
+            "page_title": "Dashboard",
+            'stats': {
+                'staff_users': CustomUser.objects.filter(is_staff=True, is_superuser=False).count(),
+                'admin_users': CustomUser.objects.filter(is_superuser=True).count(),
+                'customers': group.user_set.count()
+            },
+            "transactions": transactions,
+        }
+        return render(request, 'payapps/admin-dashboard.html', context)
 
 
 # Profile
@@ -68,8 +89,8 @@ def users_list(request):
 
 @login_required(login_url='auth:login')
 def users_show(request):
-    user = User.objects.all()
-    return render(request, "payapps/admin/users/show.html", {'user': user})
+    user = CustomUser.objects.all()
+    return render(request, "payapps/admin/users/show.html", {'selected_user': user})
 
 
 @login_required(login_url='auth:login')
@@ -78,32 +99,32 @@ def users_add(request):
     if request.method == "POST":
         form = UserForm(request.POST)
         if form.is_valid():
-            # Cleaned data
-            first_name = form.cleaned_data.get("first_name")
-            last_name = form.cleaned_data.get("last_name")
-            username = form.cleaned_data.get("username")
-            email = form.cleaned_data.get("email")
-            password1 = form.cleaned_data.get("password1")
-            password2 = form.cleaned_data.get("password2")
-            # curr = form.cleaned_data.get("currency")
-            # print(curr)
-            # currency = Currency.objects.get(iso_code=curr)
-            # print(currency)
-            # Additional data cleaning and processing if needed
-            user = CustomUser.objects.create_user(
-                first_name=form.cleaned_data.get("first_name"),
-                last_name=form.cleaned_data.get("last_name"),
-                username=form.cleaned_data.get("username"),
-                email=form.cleaned_data.get("email"),
-                password=form.cleaned_data.get("password1"),
-            )
-            # Profile.objects.create(
-            #     user=user,
-            #     currency_id=currency.id).save()
+            role = form.cleaned_data.get('role')
+            user_group = Group.objects.get(id=role)
             try:
                 # Save user to the database
-                user = form.save()
-                return redirect('/show')
+                _currency = Currency.objects.get(id=form.cleaned_data.get('currency'))
+                form.currency = _currency
+                # Create or update model user
+                user = form.save(commit=False)
+                # Set password manually
+                user.set_password(form.cleaned_data['password1'])
+                user.save()
+
+                # Create a UserProfile for the user
+                user_profile, _ = Profile.objects.get_or_create(user=user)
+                user_profile.currency = _currency
+                user_profile.save()
+
+                if user_group == 'customer':
+                    # Create a UserWallet for the transactions
+                    wallet = assign_wallet_on_registration(request, user, user_profile)
+                    group = Group.objects.get(name='customer')
+                    user.groups.add(group)
+                else:
+                    group = Group.objects.get(name=user_group.name)
+                    user.groups.add(group)
+                return redirect('payapp:users-list')
             except:
                 pass
     else:
@@ -128,19 +149,63 @@ def users_edit(request, id):
     if request.method == 'POST':
         form = EditUserForm(request.POST, instance=user)
         if form.is_valid():
-            form.save()
+
+            role = form.cleaned_data.get('role')
+            currency = form.cleaned_data.get('currency')
+            is_superuser = form.cleaned_data.get('is_superuser')
+            is_staff = form.cleaned_data.get('is_staff')
+
+            customer_group = Group.objects.get(name='customer')
+            user_group = Group.objects.get(id=role)
+            if user_group.id == customer_group.id and is_superuser:
+                role = Group.objects.get(name='superadmin').id
+            elif user_group.id == customer_group.id and is_staff:
+                role = Group.objects.get(name='staff').id
+
+            # Save user to the database
+            _currency = Currency.objects.get(id=currency)
+
+            # Create or update model user
+            form.currency = _currency
+            user = form.save(commit=False)
+            user.save()
+
+            # Create a UserProfile for the user
+            user_profile, _ = Profile.objects.get_or_create(user_id=user.id)
+            user_profile.currency = _currency
+            user_profile.save()
+
+            try:
+                if user_group.id == customer_group.id:
+                    try:
+                        wallet = Wallet.objects.get(user_id=user.id)
+                    except Wallet.DoesNotExist:
+                        wallet = None
+
+                    if wallet is None:
+                        # Assign a UserWallet if not already assigned
+                        assign_wallet_on_registration(request, user, user_profile)
+                    group = Group.objects.get(name='customer')
+                    user.groups.add(group)
+                else:
+                    group = Group.objects.get(id=user_group)
+                    user.groups.add(group)
+                return redirect('payapp:users-list')
+            except Exception as e:
+                return f"Error: {e}"
             return redirect('payapp:users-list')  # Redirect to user list page
     else:
-        form = EditUserForm(instance=user)
+        # Assuming 'group_id' is the field in the form where you want to select the group ID
+        form = EditUserForm(instance=user, initial={'group_id': user.groups.all()[0].id})
 
     context = {
         "page_title": "Users",
         'parent_module': "User",
-        'child_module': "@"+user.username,
+        'child_module': "@" + user.username,
         'form_title': "Edit User Form",
         'id': id,
         'form': form,
-        'user': user
+        'selected_user': user
     }
     return render(request, 'payapps/admin/users/edit.html', context)
 
@@ -155,11 +220,12 @@ def users_destroy(request, user_id):
     context = {
         "page_title": "Users",
         'parent_module': "Users",
-        'child_module': "@"+user.username,
-        'form_title': "Delete User @"+user.username,
-        'user': user
+        'child_module': "@" + user.username,
+        'form_title': "Delete User @" + user.username,
+        'selected_user': user
     }
     return render(request, 'payapps/admin/users/delete.html', context)
+
 
 # Transaction
 @login_required(login_url='auth:login')
@@ -199,7 +265,7 @@ def topup(request):
                 base_currency = wallet.currency.iso_code
                 # Check user base currency and convert the amount
                 if selected_currency != base_currency:
-                    conversion = get_exchange_rate(base_currency, amount, selected_currency, request.user.id)
+                    conversion = get_exchange_rate(request, base_currency, amount, selected_currency, request.user.id)
                     wallet_amt = conversion.get("converted_amt")
                 else:
                     wallet_amt = amount
@@ -276,14 +342,14 @@ def request_payment(request):
                 base_currency = profile.currency.iso_code
                 # Check user base currency and convert the amount
                 if selected_currency != base_currency:
-                    conversion = get_exchange_rate(base_currency, amount, selected_currency, request.user.id)
+                    conversion = get_exchange_rate(request, base_currency, amount, selected_currency, request.user.id)
                     wallet_amt = conversion.get("converted_amt")
                 else:
                     wallet_amt = amount
 
                 # Check receiver base currency and convert the amount
                 if selected_currency != base_currency:
-                    conversion = get_exchange_rate(receiver.profile.currency.iso_code, amount, selected_currency,
+                    conversion = get_exchange_rate(request, receiver.profile.currency.iso_code, amount, selected_currency,
                                                    receiver.user.id)
                     receiver_wallet_amt = conversion.get("converted_amt")
                 else:
@@ -339,8 +405,8 @@ def my_payees(request):
             payee = form.cleaned_data.get("payee")
             # If you want to retrieve a single record and you're sure there's only one matching record:
             try:
-                payee_exists = User.objects.get(email=payee)
-            except User.DoesNotExist:
+                payee_exists = CustomUser.objects.get(email=payee)
+            except CustomUser.DoesNotExist:
                 payee_exists = None
 
             if not payee_exists:

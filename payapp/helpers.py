@@ -17,13 +17,8 @@ def percentage(part, whole):
 
 def get_exchange_rate(request, base_currency_code, base_rate, target_currency_code, userId):
     try:
-        print('base_currency')
-        print(base_currency_code)
-        print('target_currency_code')
-        print(target_currency_code)
-        print('base_rate')
-        print(base_rate)
-        base_url = request.build_absolute_uri('/')[:-1]  # Get the base URL of the current app
+        print('--get_exchange_rate--')
+        base_url = "http://127.0.0.1:8000/"
         url = base_url + f"conversion/{base_currency_code}/{target_currency_code}/{base_rate}"
         print("url")
         print(url)
@@ -52,20 +47,32 @@ def get_exchange_rate(request, base_currency_code, base_rate, target_currency_co
         return f"Error: {e}"
 
 
-def assign_wallet_on_registration(user, profile):
+def assign_wallet_on_registration(request, user, profile):
     try:
         base_currency_charge = 1000.00
         base_currency = 'GBP'
         user_currency = profile.currency.iso_code
 
         user_id = profile.user_id
+
+        print('user_id')
+        print(user_id)
+        print('base_currency')
+        print(base_currency)
+        print('user_currency')
+        print(user_currency)
         if user_currency != base_currency:
-            conversion = get_exchange_rate(base_currency, base_currency_charge, user_currency, user_id)
+            print('Ready for conversion? ')
+            print(base_currency, base_currency_charge, user_currency, user_id)
+            conversion = get_exchange_rate(request, base_currency, base_currency_charge, user_currency, user_id)
+            print('conversion')
             print(conversion)
             wallet_amt = conversion.get("converted_amt")
         else:
             wallet_amt = base_currency_charge
 
+        print('wallet_amt')
+        print(wallet_amt)
         withdrawal_limit = percentage(10, wallet_amt)
         currency = Currency.objects.get(iso_code=user_currency)
 
@@ -76,9 +83,11 @@ def assign_wallet_on_registration(user, profile):
         wallet.amount = wallet_amt
         wallet.currency_id = currency.id
         wallet.save()
+        print('wallet setup ')
+        print(wallet)
         return wallet
     except Exception as e:
-        return f"Error: {e}"
+        return f"assign_wallet_on_registration Error: {e}"
 
 
 def log_transaction(transaction_log):

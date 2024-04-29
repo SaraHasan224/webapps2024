@@ -1,8 +1,11 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from django.contrib.auth.signals import user_logged_in
 from django.contrib.auth.models import User
-from .models import Profile
+
+from .helpers import assign_wallet_on_registration
+from .models import Profile, Wallet, CustomUser
 
 
 # @receiver(post_save, sender=User)
@@ -22,3 +25,25 @@ from .models import Profile
 #         instance.profile.save()
 #         print('Profile updated')
 # # post_save.connect(update_profile, sender=User)
+
+
+@receiver(user_logged_in)
+def user_login_handler(sender, request, user, **kwargs):
+    # Perform actions here before redirecting to LOGIN_REDIRECT_URL
+    print('user_login_handler')
+    print(user.id)
+    try:
+        wallet = Wallet.objects.get(user_id=user.id)
+    except Wallet.DoesNotExist:
+        wallet = None
+
+    print('wallet')
+    print(wallet)
+    if wallet is None:
+        # Assign a UserWallet if not already assigned
+        print('Assign a UserWallet if not already assigned')
+        print('profile')
+        print(user.assigned_profile)
+        assign_wallet_on_registration(request, user, user.assigned_profile)
+
+pass

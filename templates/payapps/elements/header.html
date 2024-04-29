@@ -8,7 +8,9 @@
 						{{page_title}}
 					</div>
 				</div>
-				<ul class="navbar-nav header-right">
+
+                {% if not user.is_superuser and not user.is_staff_user %}
+				    <ul class="navbar-nav header-right">
 
 					<li class="nav-item dropdown notification_dropdown">
 						<a class="nav-link" href="javascript:void(0);" role="button" data-bs-toggle="dropdown">
@@ -99,11 +101,14 @@
 							<a class="all-notification" href="javascript:void(0);">See all notifications <i class="ti-arrow-end"></i></a>
 						</div>
 					</li>
-					
-					<li class="nav-item invoices-btn">
-						<a href="{% url 'payapp:request-payment' %}" class="btn btn-primary ms-5"><i class="far fa-file-alt fs-20 me-2"></i>Create New Payment</a>
-					</li>
+
+                    {% if not user.is_superuser and not user.is_staff %}
+                        <li class="nav-item invoices-btn">
+                            <a href="{% url 'payapp:request-payment' %}" class="btn btn-primary ms-5"><i class="far fa-file-alt fs-20 me-2"></i>Request Payment</a>
+                        </li>
+                    {% endif %}
 				</ul>
+                {% endif %}
 			</div>
 		</nav>
 	</div>

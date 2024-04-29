@@ -26,6 +26,7 @@
             <th>Email Address</th>
             <th>Username</th>
             <th>Account holder Name</th>
+            <th>Default Currency</th>
             <th>Status</th>
             <th>Role</th>
             <th>Date joined</th>
@@ -49,6 +50,7 @@
                 <td><span class="text-black text-nowrap">{{  user.email}}</span></td>
                 <td><span class="text-black text-nowrap">{{  user.username}}</span></td>
                 <td><span class="text-black text-nowrap">{{ user.first_name }} {{ user.last_name }}</span></td>
+                <td><span class="text-black text-nowrap">{{ user.assigned_profile.currency.iso_code }}</span></td>
                 <td>
                     {% if user.is_active == True %}
                         <a href="javascript:void(0)" class="btn btn-success light">Active</a>
@@ -62,7 +64,7 @@
                     {% elif user.is_staff == True %}
                         <a href="javascript:void(0)" class="btn btn-dark light">Staff</a>
                     {% else %}
-                        <a href="javascript:void(0)" class="btn btn-light light">Staff</a>
+                        <a href="javascript:void(0)" class="btn btn-light light">Customer</a>
                     {% endif %}
                 </td>
                 <td><span class="text-black text-nowrap">{{  user.date_joined}}</span></td>
