@@ -1,0 +1,66 @@
+{% extends 'payapps/layout/list_template.html' %}
+{% load static %}
+
+{% block list_additional_css %}
+{% endblock %}
+
+{% block show_add_new_btn %}
+    <a href="{% url 'payapp:my-payees' %}" class="btn btn-outline-primary mb-3"><i class="fa fa-plus-circle me-3 scale3"></i>Add New Payee</a>
+{% endblock %}
+{% block list_content %}
+    <!--**********************************
+        Listing table start
+    ***********************************-->
+    <table class="table card-table display mb-4 dataTablesCard " id="example5">
+        <thead>
+        <tr>
+            <th>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="checkAll">
+                    <label class="form-check-label" for="checkAll">
+                    </label>
+                </div>
+            </th>
+            <th>ID Payee</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if payees %}
+            {% for payee in payees %}
+                <tr>
+                    <td>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2">
+                            <label class="form-check-label" for="flexCheckDefault2">
+                            </label>
+                        </div>
+                    </td>
+                    <td><span class="text-black font-w500">#{{ payee.id }}</span></td>
+                    <td><span class="text-black text-nowrap">@{{  payee.payee.username}}</span></td>
+                    <td><span class="text-black text-nowrap">{{  payee.payee.email}}</span></td>
+                    <td>
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-danger light sharp" data-bs-toggle="dropdown">
+                                <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{% url 'payapp:request-payee' user.id %}">Request Payment</a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr class="text-center">
+                <td colspan="10">No records found.</td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+    <!--**********************************
+        Listing table end
+    ***********************************-->
+{% endblock %}

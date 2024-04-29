@@ -39,7 +39,7 @@ class RequestPaymentForm(forms.ModelForm):
     )
 
     receiver = forms.EmailField(required=True, label='Payee Email', widget=forms.EmailInput(
-        attrs={'class': 'form-control', 'placeholder': 'Enter your payee email '}))
+        attrs={'class': 'form-control', 'placeholder': 'Enter your payee email '}), disabled=True)
     currency = forms.ChoiceField(choices=CURRENCIES)
     amount = forms.FloatField()
 
@@ -51,15 +51,30 @@ class RequestPaymentForm(forms.ModelForm):
             'amount',
         ]
 
+    def __init__(self, *args, **kwargs):
+        super(RequestPaymentForm, self).__init__(*args, **kwargs)
+
+        initial = kwargs.pop('initial', None)
+        super(RequestPaymentForm, self).__init__(*args, **kwargs)
+        # Check if initial contains email_addr
+        if initial is not None:
+            if 'email_addr' in initial:
+                email_addr = initial.get('email_addr')
+            else:
+                email_addr = None
+            if email_addr is not None:
+                self.fields['receiver'].initial = email_addr
+        else:
+            email_addr = None
 
 class MyPayeeForm(forms.ModelForm):
-    payee = forms.EmailField(required=True, label='Payee Email', widget=forms.EmailInput(
+    payee_email = forms.EmailField(required=True, label='Payee Email', widget=forms.EmailInput(
         attrs={'class': 'form-control', 'placeholder': 'Enter your payee email '}))
 
     class Meta:
         model = Payee
         fields = [
-            'payee',
+            'payee_email',
         ]
 
 

@@ -394,6 +394,89 @@ def request_payment(request):
     }
     return render(request, 'payapps/payment/request-payment.html', context)
 
+@login_required(login_url='auth:login')
+@allowed_users(allowed_roles=['customer'])
+def request_payment_from_payee(request, request_id):
+    user = CustomUser.objects.get(id=request_id)
+    if request.method == "POST":
+        form = RequestPaymentForm(request.POST)
+        if form.is_valid():
+            # Cleaned data
+            selected_currency = form.cleaned_data.get("currency")
+            amount = form.cleaned_data.get("amount")
+            receiver = form.cleaned_data.get("receiver")
+            currency = Currency.objects.get(id=selected_currency)
+            selected_currency = currency.iso_code
+            try:
+                # Find user wallet first
+                profile = Profile.objects.get(user_id=request.user.id)
+                base_currency = profile.currency.iso_code
+                # Check user base currency and convert the amount
+                if selected_currency != base_currency:
+                    conversion = get_exchange_rate(request, base_currency, amount, selected_currency, request.user.id)
+                    wallet_amt = conversion.get("converted_amt")
+                else:
+                    wallet_amt = amount
+
+                # Check receiver base currency and convert the amount
+                if selected_currency != base_currency:
+                    conversion = get_exchange_rate(request, receiver.profile.currency.iso_code, amount, selected_currency,
+                                                   receiver.user.id)
+                    receiver_wallet_amt = conversion.get("converted_amt")
+                else:
+                    receiver_wallet_amt = amount
+
+                wallet = Wallet.objects.get(user_id=request.user.id)
+                my_wallet_amt = wallet.amount
+
+                updated_wallet_amount = float(my_wallet_amt) + float(wallet_amt)
+                withdrawal_limit = percentage(10, updated_wallet_amount)
+
+                try:
+                    wallet.amount = updated_wallet_amount
+                    wallet.withdrawal_limit = updated_wallet_amount - withdrawal_limit
+                    wallet.save()
+                except Exception as e:
+                    print(f"Wallet Error: {e}")
+
+                transaction_log = {'sender_id': request.user.id, "sender_curr_id": profile.currency.id,
+                                   'sender_prev_bal': my_wallet_amt, 'sender_cur_bal': updated_wallet_amount,
+                                   'receiver': receiver, 'receiver_curr_id': receiver.currency.id,
+                                   'receiver_prev_bal': receiver.wallet.amount,
+                                   'receiver_cur_bal': receiver.wallet.amount - receiver_wallet_amt,
+                                   'amount_requested': amount,
+                                   'comment': f"Transfer from {request.user.username} to {receiver.username}",
+                                   'amount_sent': receiver_wallet_amt,
+                                   'status': 1}
+                log_transaction(transaction_log)
+
+                return redirect('payapp:my-wallet')
+            except Exception as e:
+                return f"Error: {e}"
+        return redirect('payapp:my-wallet')
+    else:
+        form = RequestPaymentForm(initial={'email_addr': user.email})
+    context = {
+        "page_title": "Request Payment",
+        'parent_module': "Wallet",
+        'child_module': "Request Payment",
+        'form_title': "Request Payment",
+        'form': form
+    }
+    return render(request, 'payapps/payment/request-payment.html', context)
+
+
+# Transaction
+@login_required(login_url='auth:login')
+def payees_list(request):
+    payees = Payee.objects.filter(sender_id=request.user.id)
+    context = {
+        "page_title": "Payee List",
+        "page_main_heading": "Payee List",
+        "page_main_description": "Easily add view, your payees",
+        'payees': payees
+    }
+    return render(request, 'payapps/payment/payee-list.html', context)
 
 @login_required(login_url='auth:login')
 @allowed_users(allowed_roles=['customer'])
@@ -401,38 +484,63 @@ def my_payees(request):
     if request.method == "POST":
         form = MyPayeeForm(request.POST)
         if form.is_valid():
+            print('form')
+            print(form)
             # Cleaned data
-            payee = form.cleaned_data.get("payee")
+            payee = form.cleaned_data.get("payee_email")
+            print('payee')
+            print(payee)
+
             # If you want to retrieve a single record and you're sure there's only one matching record:
             try:
-                payee_exists = CustomUser.objects.get(email=payee)
-            except CustomUser.DoesNotExist:
-                payee_exists = None
-
-            if not payee_exists:
-                messages.error(request, 'The entered payee details doesn\'t exist in our system. Ask your friend '
-                                        'to join PayGenius to transfer him payment.')
-            else:
                 try:
-                    # If you want to retrieve a single record and you're sure there's only one matching record:
+                    payee_exists = CustomUser.objects.get(email=payee)
+                except CustomUser.DoesNotExist:
+                    payee_exists = None
+                print('Create new payee if not exist')
+                print('payee_exists')
+                print(payee_exists)
+
+                if payee_exists is None:
+                    messages.error(request, 'The entered payee details doesn\'t exist in our system. Ask your friend '
+                                            'to join PayGenius to transfer him payment.')
+                    pass
+                else:
                     try:
-                        already_added = Payee.objects.get(sender_id=request.user.id, payee_id=payee_exists.id)
-                    except Payee.DoesNotExist:
-                        already_added = None
+                        if request.user.id == payee_exists.id:
+                            messages.error(request, 'Can\'t add self to as a payee.')
+                            pass
+                        else:
+                            # If you want to retrieve a single record and you're sure there's only one matching record:
+                            try:
+                                is_already_added = Payee.objects.get(sender_id=request.user.id, payee_id=payee_exists.id)
+                            except Payee.DoesNotExist:
+                                is_already_added = None
 
-                    if already_added:
-                        messages.error(request, 'Payee already added.')
-                    # Create new payee if not exist
-                    transaction = Payee.objects.create()
-
-                    return redirect('payapp:my-wallet')
-                except Exception as e:
-                    return f"Error: {e}"
+                            if is_already_added:
+                                messages.error(request, 'Payee already added.')
+                            else:
+                                print('Create new payee if not exist')
+                                # Create new payee if not exist
+                                payee = Payee.objects.create()
+                                payee.sender = request.user
+                                payee.payee = payee_exists
+                                payee.save()
+                                pass;
+                    except Exception as e:
+                        return f"Error: {e}"
+            except User.DoesNotExist:
+                payee_exists = None
     else:
         form = MyPayeeForm()
-        context = {
-            "page_title": "My Payees",
-            "page_main_heading": "Manage My Payees",
-            "page_main_description": "Conveniently view your payees and request payments from them"
-        }
-        return render(request, 'payapps/payment/payees.html', context)
+
+    context = {
+        "page_title": "My Payees",
+        "page_main_heading": "Manage My Payees",
+        "page_main_description": "Conveniently view your payees and request payments from them",
+        'parent_module': "Wallet",
+        'child_module': "My Payees",
+        'form_title': "My Payees",
+        "form": form
+    }
+    return render(request, 'payapps/payment/payees.html', context)

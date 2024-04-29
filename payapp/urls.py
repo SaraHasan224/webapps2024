@@ -18,9 +18,11 @@ urlpatterns = [
 
     path('transaction-history/', payapp_views.transaction_history, name="transaction-history"),
     path('my-wallet/', payapp_views.my_wallet, name="my-wallet"),
-    path('my-payees/', payapp_views.my_payees, name="my-payees"),
     path('top-up/', payapp_views.topup, name="topup-wallet"),
+    path('my-payees/', payapp_views.my_payees, name="my-payees"),
+    path('my-payees/list/', payapp_views.payees_list, name="my-payee-list"),
     path('request-payment/', payapp_views.request_payment, name="request-payment"),
+    path('request-payee/<str:request_id>', payapp_views.request_payment_from_payee, name="request-payee"),
     # Dashboard END
 
     path('app-profile/', payapp_views.app_profile, name="app-profile"),
