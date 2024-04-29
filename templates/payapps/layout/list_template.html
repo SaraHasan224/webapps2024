@@ -21,6 +21,27 @@
             </div>
             <div class="row">
                 <div class="col-xl-12">
+                    {% if messages %}
+                        <div class="alert alert-light solid alert-square">
+                            {% for message in messages %}
+                                <strong>Error!</strong> {{ message }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% if form.errors %}
+                        <div class="alert alert-warning solid alert-dismissible fade show">
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+                            </button>
+                            {% for field, errors in form.errors.items %}
+                                {% for error in errors %}
+                                    <strong>{{ field }}:</strong> {{ error }} <a href="#" class="badge badge-sm light badge-warning ms-1">Validation Error</a>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="col-xl-12">
                     <div class="table-responsive fs-14">
                         <!--**********************************
                             Listing table body start

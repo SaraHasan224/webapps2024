@@ -38,34 +38,52 @@ class RequestPaymentForm(forms.ModelForm):
         # Add more choices as needed
     )
 
-    receiver = forms.EmailField(required=True, label='Payee Email', widget=forms.EmailInput(
-        attrs={'class': 'form-control', 'placeholder': 'Enter your payee email '}), disabled=True)
+    payee_email = forms.EmailField(required=True, label='Payee Email', widget=forms.EmailInput(
+        attrs={'class': 'form-control', 'placeholder': 'Enter your payee email '}))
     currency = forms.ChoiceField(choices=CURRENCIES)
     amount = forms.FloatField()
 
     class Meta:
         model = Invoice
         fields = [
-            'receiver',
+            'payee_email',
             'currency',
             'amount',
         ]
 
-    def __init__(self, *args, **kwargs):
-        super(RequestPaymentForm, self).__init__(*args, **kwargs)
+class RequestPayeePaymentForm(forms.ModelForm):
+    CURRENCIES = (
+        (Currency.objects.get(iso_code='USD').id, 'USD - US Dollars'),
+        (Currency.objects.get(iso_code='GBP').id, 'GBP - British pounds sterling'),
+        (Currency.objects.get(iso_code='EUR').id, 'EUR - Euro'),
+        # Add more choices as needed
+    )
 
-        initial = kwargs.pop('initial', None)
-        super(RequestPaymentForm, self).__init__(*args, **kwargs)
-        # Check if initial contains email_addr
-        if initial is not None:
-            if 'email_addr' in initial:
-                email_addr = initial.get('email_addr')
-            else:
-                email_addr = None
-            if email_addr is not None:
-                self.fields['receiver'].initial = email_addr
-        else:
-            email_addr = None
+    currency = forms.ChoiceField(choices=CURRENCIES)
+    amount = forms.FloatField()
+
+    class Meta:
+        model = Invoice
+        fields = [
+            'currency',
+            'amount',
+        ]
+
+    # def __init__(self, *args, **kwargs):
+    #     super(RequestPayeePaymentForm, self).__init__(*args, **kwargs)
+    #
+    #     initial = kwargs.pop('initial', None)
+    #     super(RequestPayeePaymentForm, self).__init__(*args, **kwargs)
+    #     # Check if initial contains email_addr
+    #     if initial is not None:
+    #         if 'email_addr' in initial:
+    #             email_addr = initial.get('email_addr')
+    #         else:
+    #             email_addr = None
+    #         if email_addr is not None:
+    #             self.fields['receiver'].initial = email_addr
+    #     else:
+    #         email_addr = None
 
 class MyPayeeForm(forms.ModelForm):
     payee_email = forms.EmailField(required=True, label='Payee Email', widget=forms.EmailInput(

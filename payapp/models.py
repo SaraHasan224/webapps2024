@@ -94,43 +94,12 @@ class Payee(models.Model):
         return str(self.user)
 
 
-class Invoice(models.Model):
-    STATUS_OPTIONS = [
-        ("1", "Active"),
-        ("0", "In Active"),
-    ]
+
+class Transaction(models.Model):
     TRANSACTION_STATUS_OPTIONS = [
         ("1", "Paid"),
         ("0", "Not paid"),
     ]
-    invoice_no = models.CharField(max_length=255, unique=True)
-    invoice_date = models.DateField()
-    transaction_date = models.DateField()
-    transaction_status = models.CharField(
-        max_length=1, default="0", choices=TRANSACTION_STATUS_OPTIONS
-    )
-    transaction = models.CharField(max_length=50)
-    sender = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE, blank=True, null=True,
-        related_name="sender_id",
-        unique=False
-    )
-    receiver = models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True,
-                                 related_name="receiver_id",
-                                 unique=False)
-    status = models.CharField(max_length=1, default="0", choices=STATUS_OPTIONS)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.user = None
-
-    def __str__(self):
-        return str(self.user)
-
-
-class Transaction(models.Model):
     sender = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, blank=True,
         null=True,
@@ -176,7 +145,9 @@ class Transaction(models.Model):
     )
     amount_sent = models.DecimalField(max_digits=11, decimal_places=2, null=True)
     comment = models.CharField(max_length=1000, null=True)
-    status = models.SmallIntegerField()
+    status = models.CharField(
+        max_length=1, default="0", choices=TRANSACTION_STATUS_OPTIONS
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
@@ -187,6 +158,48 @@ class Transaction(models.Model):
     def __str__(self):
         return str(self.user)
 
+
+
+class Invoice(models.Model):
+    STATUS_OPTIONS = [
+        ("0", "Draft"),
+        ("1", "Sent"),
+        ("2", "Processing"),
+        ("3", "Processed"),
+    ]
+    TRANSACTION_STATUS_OPTIONS = [
+        ("1", "Paid"),
+        ("0", "Not paid"),
+    ]
+    invoice_no = models.CharField(max_length=255)
+    invoice_date = models.DateField(auto_now=True,blank=True)
+    transaction_date = models.DateField(blank=True, null=True)
+    transaction_status = models.CharField(
+        max_length=1, default="0", choices=TRANSACTION_STATUS_OPTIONS
+    )
+    transaction = models.ForeignKey(
+        Transaction, on_delete=models.CASCADE, blank=True, null=True,
+        related_name="transaction",
+        unique=False
+    )
+    sender = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, blank=True, null=True,
+        related_name="sender_id",
+        unique=False
+    )
+    receiver = models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True,
+                                 related_name="receiver_id",
+                                 unique=False)
+    status = models.CharField(max_length=1, default="0", choices=STATUS_OPTIONS)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = None
+
+    def __str__(self):
+        return str(self.user)
 
 class RequestResponseLogs(models.Model):
     url = models.TextField(null=True)
@@ -203,3 +216,24 @@ class RequestResponseLogs(models.Model):
 
     def __str__(self):
         return str(self.user)
+
+
+class Notification(models.Model):
+    sender = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, blank=True, null=True,
+        related_name="n_sender",
+        unique=False
+    )
+    receiver = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, blank=True, null=True,
+        related_name="n_receiver",
+        unique=False
+    )
+    is_read = models.TextField(null=True)
+    invoice = models.ForeignKey(
+        Invoice, on_delete=models.CASCADE, blank=True, null=True,
+        related_name="n_invoice",
+        unique=False
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)

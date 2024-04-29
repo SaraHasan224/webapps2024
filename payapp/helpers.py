@@ -1,7 +1,7 @@
 import requests
 from random import randint
 
-from payapp.models import RequestResponseLogs, Wallet, Currency, Transaction
+from payapp.models import RequestResponseLogs, Wallet, Currency, Transaction, CustomUser, Invoice
 
 
 def random_with_n_digits(n):
@@ -18,6 +18,9 @@ def percentage(part, whole):
 def get_exchange_rate(request, base_currency_code, base_rate, target_currency_code, userId):
     try:
         print('--get_exchange_rate--')
+        print(base_currency_code)
+        print(target_currency_code)
+        print(base_rate)
         base_url = "http://127.0.0.1:8000/"
         url = base_url + f"conversion/{base_currency_code}/{target_currency_code}/{base_rate}"
         print("url")
@@ -89,6 +92,45 @@ def assign_wallet_on_registration(request, user, profile):
     except Exception as e:
         return f"assign_wallet_on_registration Error: {e}"
 
+def create_invoice(invoice_data):
+    try:
+        transaction = invoice_data.get('transaction')
+        invoice = Invoice.objects.create()
+        invoice.invoice_no = invoice_data.get('invoice_no')
+        invoice.invoice_date = invoice_data.get('invoice_date')
+        invoice.transaction_date = invoice_data.get('transaction_date')
+        invoice.transaction_status = invoice_data.get('transaction_status')
+        invoice.transaction = transaction
+        invoice.sender = invoice_data.get('sender')
+        invoice.receiver = invoice_data.get('receiver')
+        invoice.status = invoice_data.get('status')
+        invoice.save()
+        return invoice
+    except Exception as e:
+        print(f"Transaction Error: {e}")
+
+def update_transaction(transaction_log, transaction_id):
+    print("log_transaction")
+    print(type(transaction_log))
+    print(transaction_log.get('sender_id'))
+    try:
+        transaction = Transaction.objects.get(id=transaction_id)
+        transaction.sender_id = transaction_log.get('sender_id')
+        transaction.sender_curr_id = transaction_log.get('sender_curr_id')
+        transaction.sender_prev_bal = transaction_log.get('sender_prev_bal')
+        transaction.sender_cur_bal = transaction_log.get('sender_cur_bal')
+        transaction.receiver_id = transaction_log.get('receiver_id')
+        transaction.receiver_curr_id = transaction_log.get('receiver_curr_id')
+        transaction.receiver_prev_bal = transaction_log.get('receiver_prev_bal')
+        transaction.receiver_cur_bal = transaction_log.get('receiver_cur_bal')
+        transaction.amount_requested = transaction_log.get('amount_requested')
+        transaction.amount_sent = transaction_log.get('amount_sent')
+        transaction.comment = transaction_log.get('comment')
+        transaction.status = transaction_log.get('status')
+        transaction.save()
+        return transaction
+    except Exception as e:
+        print(f"Transaction Error: {e}")
 
 def log_transaction(transaction_log):
     print("log_transaction")
@@ -107,7 +149,9 @@ def log_transaction(transaction_log):
         transaction.amount_requested = transaction_log.get('amount_requested')
         transaction.amount_sent = transaction_log.get('amount_sent')
         transaction.comment = transaction_log.get('comment')
-        transaction.status = transaction_log.get('status')
+        transaction.comment = transaction_log.get('comment')
+        transaction.requested_currency_id = transaction_log.get('requested_currency_id')
+        transaction.sent_currency_id = transaction_log.get('sent_currency_id')
         transaction.save()
         return transaction
     except Exception as e:
@@ -119,3 +163,32 @@ def transaction_status():
         ("Transferred", 1),
         ("Pending", 0),
     ]
+
+def find_customer_by_email(user_email):
+    try:
+        user = CustomUser.objects.get(email=user_email)
+    except CustomUser.DoesNotExist:
+        user = None
+    return user
+
+def update_sender_wallet(sender_wallet, transfer_wallet_amt, action):
+    if action == 'subtract':
+        updated_sender_wallet_amt = float(sender_wallet) - float(transfer_wallet_amt)
+    elif action == 'add':
+        updated_sender_wallet_amt = float(sender_wallet) + float(transfer_wallet_amt)
+
+    print('updated_sender_wallet_amt')
+    print(updated_sender_wallet_amt)
+    print('updated_sender_wallet_amt')
+    print(updated_sender_wallet_amt)
+    sender_withdrawal_limit = percentage(10, updated_sender_wallet_amt)
+    print('sender_withdrawal_limit')
+    print(sender_withdrawal_limit)
+    try:
+        sender_wallet.amount = updated_sender_wallet_amt
+        sender_wallet.withdrawal_limit = updated_sender_wallet_amt - sender_withdrawal_limit
+        sender_wallet.save()
+    except Exception as e:
+        print(f"Wallet Error: {e}")
+
+    return sender_wallet

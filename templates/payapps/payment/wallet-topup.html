@@ -6,7 +6,7 @@
 
 {% block form_content %}
     {% load crispy_forms_tags %}
-    <form action="{% url 'payapp:topup-wallet' %}" method="POST">
+    <form action="{% url 'payapp:topup-wallet-amt' %}" method="POST">
         {% csrf_token %}{{ form|crispy }}
 
         <div class="mt-3 row float-md-left">

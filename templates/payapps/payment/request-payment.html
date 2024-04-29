@@ -6,7 +6,11 @@
 
 {% block form_content %}
     {% load crispy_forms_tags %}
-    <form action="{% url 'payapp:request-payment' %}" method="POST">
+    {% if receiver is None %}
+        <form action="{% url 'payapp:request-payment' %}" method="POST">
+    {% else %}
+        <form action="{% url 'payapp:request-payee' request_id=receiver.id %}" method="POST">
+    {% endif %}
         {% csrf_token %}{{ form|crispy }}
 
         <div class="mt-3 row float-md-left">
@@ -15,7 +19,6 @@
             </div>
         </div>
     </form>
-
     <!-- JavaScript to validate float input -->
     <script>
         document.getElementById('id_amount').addEventListener('onkeypress', function() {

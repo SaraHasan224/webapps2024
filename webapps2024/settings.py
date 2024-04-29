@@ -134,3 +134,4 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap4'
 
 AUTH_USER_MODEL = 'payapp.CustomUser'
+BASE_URL = "http://127.0.0.1:8000/"
