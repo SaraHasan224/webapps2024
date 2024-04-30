@@ -53,13 +53,13 @@ def dashboard(request):
 
         try:
             payments = Invoice.objects.filter(sender_id=request.user.id).prefetch_related('receiver',
-                                                                                          'transaction').all()
+                                                                                          'transaction').order_by('-id').all()
         except Invoice.DoesNotExist:
             payments = None
 
         try:
             notifications = Notification.objects.filter(receiver_id=request.user.id).prefetch_related('sender',
-                                                                                                      'invoice').all()
+                                                                                                      'invoice').order_by('-id').all()
         except Notification.DoesNotExist:
             notifications = None
 
@@ -125,7 +125,7 @@ def users_list(request):
         'page_main_heading': "Users List",
         "page_main_description": "Manage users of your application",
         "show_add_new_btn": True,
-        'users': CustomUser.objects.all(),
+        'users': CustomUser.objects.all().order_by('-id'),
     }
     return render(request, 'payapps/admin/users/index.html', context)
 
@@ -133,7 +133,7 @@ def users_list(request):
 @login_required
 @transaction.atomic
 def users_show(request):
-    user = CustomUser.objects.all()
+    user = CustomUser.objects.filter(id=request.user)
     return render(request, "payapps/admin/users/show.html", {'selected_user': user})
 
 
@@ -268,17 +268,18 @@ def users_destroy(request, user_id):
 @transaction.atomic
 def transaction_history(request):
     if request.user.is_superuser:
-        transaction = Transaction.objects.all().order_by('id').values()
+        transaction = Transaction.objects.all().order_by('-id').values()
     elif request.user.is_staff:
-        transaction = Transaction.objects.all().order_by('id').values()
+        transaction = Transaction.objects.all().order_by('-id').values()
     else:
-        transaction = Transaction.objects.filter(sender_id=request.user.id).order_by('id').values()
+        transaction = Transaction.objects.filter(sender=request.user).order_by('-id').values()
 
     context = {
         "page_title": "Transaction History",
         "page_main_heading": "Wallet Transaction History",
         "page_main_description": "Easily add view, your wallet transaction history",
-        'transactions': transaction
+        'transactions': transaction,
+        'status': INVOICE_TRANSACTION_STATUS_OPTIONS
     }
     return render(request, 'payapps/payment/transaction-history.html', context)
 
@@ -426,7 +427,7 @@ def my_wallet(request):
 @allowed_users(allowed_roles=['customer'])
 def payment_requests(request):
     payment_requests = Invoice.objects.filter(sender_id=request.user.id).prefetch_related('receiver',
-                                                                                          'transaction').all()
+                                                                                          'transaction').order_by('-id').all()
     context = {
         "page_title": "Payment requests",
         "page_main_heading": "Requested Payments",

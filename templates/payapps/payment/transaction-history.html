@@ -30,7 +30,7 @@
         </tr>
         </thead>
         <tbody>
-        {% if records %}
+        {% if transactions %}
             {% for transaction in transactions %}
                 <tr>
                     <td>
@@ -41,38 +41,55 @@
                         </div>
                     </td>
                     <td><span class="text-black font-w500">#{{ transaction.id }}</span></td>
-                    <td><span class="text-black text-nowrap">#{{  transaction.created_at}}</span></td>
+                    <td><span class="text-black text-nowrap">#{{ transaction.created_at }}</span></td>
 
                     <td>
                         <div class="d-flex align-items-center">
-                            <img src="{% static 'payapps/images/avatar/1.jpg' %}" alt="" class="rounded me-3" width="50">
+                            <img src="{% static 'payapps/images/icons/2.png' %}" alt="" class="rounded me-3" width="30">
                             <div>
                                 <h6 class="fs-16 text-black font-w600 mb-0 text-nowrap">{{ transaction.sender.username }}</h6>
                                 <span class="fs-14">{{ transaction.sender.first_name }} {{ transaction.sender.last_name }}</span>
                                 <br/>
-                                <span class="fs-14">Prev bal: {{ transaction.sender_curr.iso_code}} {{ transaction.sender_prev_bal }}</span>
+                                <span class="fs-14"><b>Prev bal:</b> {{ transaction.sender_curr.iso_code }} {{ transaction.sender_prev_bal }}</span>
                                 <br/>
-                                <span class="fs-14">Current bal: {{ transaction.sender_curr.iso_code}} {{ transaction.sender_cur_bal }}</span>
+                                <span class="fs-14"><b>Current bal:</b> {{ transaction.sender_curr.iso_code }} {{ transaction.sender_cur_bal }}</span>
                             </div>
                         </div>
                     </td>
                     <td>
                         <div class="d-flex align-items-center">
-                            <img src="{% static 'payapps/images/avatar/1.jpg' %}" alt="" class="rounded me-3" width="50">
+                            <img src="{% static 'payapps/images/icons/1.png' %}" alt="" class="rounded me-3" width="30">
                             <div>
                                 <h6 class="fs-16 text-black font-w600 mb-0 text-nowrap">{{ transaction.receiver.username }}</h6>
                                 <span class="fs-14">{{ transaction.receiver.first_name }} {{ transaction.receiver.last_name }}</span>
                                 <br/>
-                                <span class="fs-14">Prev bal: {{ transaction.receiver_curr.iso_code}} {{ transaction.receiver_prev_bal }}</span>
+                                <span class="fs-14"><b>Prev bal:</b> {{ transaction.receiver_curr.iso_code }} {{ transaction.receiver_prev_bal }}</span>
                                 <br/>
-                                <span class="fs-14">Current bal: {{ transaction.receiver_curr.iso_code}} {{ transaction.receiver_cur_bal }}</span>
+                                <span class="fs-14"><b>Current bal:</b> {{ transaction.receiver_curr.iso_code }} {{ transaction.receiver_cur_bal }}</span>
                             </div>
                         </div>
                     </td>
-                    <td class="text-center"><span class="text-black">{{ transaction.requested_currency.iso_code }}{{ transaction.amount_requested}}</span></td>
-                    <td class="text-center"><span class="text-black">{{ transaction.sent_currency.iso_code }}{{ transaction.amount_sent}} </span></td>
+                    <td class="text-center"><span
+                            class="text-black">{{ transaction.requested_currency.iso_code }}{{ transaction.amount_requested }}</span>
+                    </td>
+                    <td class="text-center"><span
+                            class="text-black">{{ transaction.sent_currency.iso_code }}{{ transaction.amount_sent }} </span>
+                    </td>
                     <td class="text-left"><span class="text-black">{{ transaction.comment }} </span></td>
-                    <td><a href="javascript:void(0)" class="btn btn-success light">{{ transaction.status }}</a></td>
+
+                    {% if transaction.status == '0' %}
+                        <td><a href="javascript:void(0)" class="badge badge-warning light">
+                            <span class="fs-16 font-w500 text-end d-block text-warning">
+                                                                            Pending
+                                                                            </span>
+                        </a></td>
+                    {% elif transaction.status == '1' %}
+                        <td><a href="javascript:void(0)" class="badge badge-success light">
+                            <span class="fs-16 font-w500 text-end d-block text-success">
+                                                                            Paid
+                                                                            </span>
+                        </a></td>
+                    {% endif %}
                 </tr>
             {% endfor %}
         {% else %}
