@@ -111,14 +111,10 @@
     <script src="{% static jsurl %}"></script>
     {% endfor %}
     
-    {% for jsurl in dz_array.pagelevel.payapps.payapps_views.js|getdata:request.path %}
-    <script src="{% static jsurl %}"></script>
-    {% endfor %}
-    
     {% for jsurl in dz_array.global.js.bottom %}
     <script src="{% static jsurl %}"></script>
     {% endfor %}
-    
+
     {% block additional_js %}
     {% endblock %}
 

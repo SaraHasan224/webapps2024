@@ -166,6 +166,7 @@ class Invoice(models.Model):
         ("1", "Sent"),
         ("2", "Processing"),
         ("3", "Processed"),
+        ("4", "Rejected"),
     ]
     TRANSACTION_STATUS_OPTIONS = [
         ("1", "Paid"),
