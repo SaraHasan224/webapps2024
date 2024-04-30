@@ -17,6 +17,7 @@ urlpatterns = [
     path('users/list/', payapp_views.users_list, name="users-list"),
     path('users/add-new', payapp_views.users_add, name="users-add-new"),
     path('users/edit/<str:id>', payapp_views.users_edit, name="users-edit"),
+    path('users-tr-history/<str:user_id>', payapp_views.users_transaction_history, name="users-tr-history"),
     path('users/delete/<str:user_id>', payapp_views.users_destroy, name="users-delete"),
 
     path('transaction-history/', payapp_views.transaction_history, name="transaction-history"),

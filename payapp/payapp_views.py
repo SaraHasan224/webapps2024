@@ -157,12 +157,24 @@ def app_profile(request):
 @login_required
 @transaction.atomic
 def users_list(request):
+    wallets_data = None
+    usersArray = []
+    users = CustomUser.objects.prefetch_related('wallet_user').all().order_by('-id')
+    for user in users:
+        try:
+            wallet = Wallet.objects.get(user=user)
+            user.currency = wallet.currency.iso_code
+            user.balance = wallet.amount
+        except Wallet.DoesNotExist:
+            user.balance = None
+        usersArray.append(users)
+
     context = {
         "page_title": "Users",
         'page_main_heading': "Users List",
         "page_main_description": "Manage users of your application",
         "show_add_new_btn": True,
-        'users': CustomUser.objects.all().order_by('-id'),
+        'users': users,
     }
     return render(request, 'payapps/admin/users/index.html', context)
 
@@ -298,6 +310,22 @@ def users_destroy(request, user_id):
     if request.method == 'POST':
         user.delete()
         return redirect('payapp:users-list')  # Redirect to user list page after deletion
+
+
+@login_required
+@transaction.atomic
+def users_transaction_history(request, user_id):
+    user = CustomUser.objects.get(id=user_id)
+    transaction = Transaction.objects.filter(sender=user).order_by('-id').values()
+
+    context = {
+        "page_title": "Transaction History",
+        "page_main_heading": "Wallet Transaction History",
+        "page_main_description": "Easily add view, your wallet transaction history",
+        'transactions': transaction,
+        'status': INVOICE_TRANSACTION_STATUS_OPTIONS
+    }
+    return render(request, 'payapps/payment/transaction-history.html', context)
 
 
 # Transaction
