@@ -48,7 +48,7 @@ def index(request):
 @login_required
 @transaction.atomic
 def dashboard(request):
-    if not request.user.is_staff and not request.user.is_superuser:
+    # if not request.user.is_staff and not request.user.is_superuser:
         profile = Profile.objects.get(user=request.user)
         try:
             wallet = Wallet.objects.get(user_id=request.user.id)
@@ -89,21 +89,6 @@ def dashboard(request):
             'invoice_transaction_status': INVOICE_TRANSACTION_STATUS_OPTIONS,
         }
         return render(request, 'payapps/dashboard.html', context)
-    else:
-        try:
-            transactions = Transaction.objects.get().order_by('-id').all()
-        except Transaction.DoesNotExist:
-            transactions = None
-
-        group_name = 'customer'  # Assuming the group name is 'customer'
-        group = Group.objects.get(name=group_name)
-        context = {
-            "page_title": "Dashboard",
-            'stats': {
-            },
-            "transactions": transactions,
-        }
-        return render(request, 'payapps/admin-dashboard.html', context)
 
 
 # Profile
@@ -444,17 +429,15 @@ def payment_requests(request):
 @login_required
 @transaction.atomic
 def action_payment_requests(request, action, transaction_id):
-    transaction = Transaction.objects.get(id=transaction_id)
-    print('transaction')
-    print(transaction)
-    print('transaction.id')
-    print(transaction.id)
-    try:
-        invoice = Invoice.objects.filter(transaction)
-    except Invoice.DoesNotExist:
-        invoice = None
+    # transaction = Transaction.objects.get(id=transaction_id)
+    # print('transaction')
+    # print(transaction)
+    # print('transaction.id')
+    # print(transaction.id)
+    invoice = Invoice.objects.filter(id=transaction_id)
     print('invoice')
     print(invoice)
+    print(invoice.id)
 
     if invoice is None:
         return redirect('payapp:request-payment')
@@ -606,6 +589,8 @@ def request_payment(request):
                     print('transaction_log')
                     print(transaction_log)
                     transaction = log_transaction(transaction_log)
+                    print('transaction')
+                    print(transaction)
                     invoice_data = {
                         'invoice_no': invoice_no,
                         'transaction_date': timezone.now().date(),
@@ -620,7 +605,7 @@ def request_payment(request):
                     invoice.save()
 
                     notification = Notification.objects.create()
-                    notification.is_read = 0
+                    notification.is_read = '0'
                     notification.receiver = receiver
                     notification.sender = sender
                     notification.invoice = invoice
@@ -647,7 +632,7 @@ def request_payment(request):
 @transaction.atomic
 @allowed_users(allowed_roles=['customer'])
 def request_payment_from_payee(request, request_id):
-    receiver = CustomUser.objects.get(id=request_id)
+    receiver = CustomUser.objects.get(pk=request_id)
 
     print('request_payment_from_payee')
     print(request_id)
@@ -655,6 +640,7 @@ def request_payment_from_payee(request, request_id):
     print(receiver)
 
     if request.method == "POST":
+        print(45545646545)
         try:
             print('POST FORM')
             sender = request.user
@@ -695,8 +681,8 @@ def request_payment_from_payee(request, request_id):
                             messages.error(request, 'Can\'t add self to as a payee.')
                         else:
                             try:
-                                # Check user base currency and convert the amount as per currency in which user want to transact the amount
-                                # and then sender's wallet
+                                # Check user base currency and convert the amount as per currency in which user want
+                                # to transact the amount and then sender's wallet
                                 print('transaction_currency')
                                 print(transaction_currency)
                                 print('sender_currency')
@@ -771,12 +757,12 @@ def request_payment_from_payee(request, request_id):
                             print(receiver)
                             print(sender)
                             try:
-                                # notification = Notification.objects.get_or_create(invoice_id=invoice.id)
-                                # notification.is_read = 0
-                                # notification.receiver = receiver
-                                # notification.sender = sender
-                                # notification.invoice = invoice
-                                # notification.save()
+                                notification = Notification.objects.get_or_create(invoice_id=invoice.id)
+                                notification.is_read = '0'
+                                notification.receiver = receiver
+                                notification.sender = sender
+                                notification.invoice = invoice
+                                notification.save()
                                 print('notification')
                                 print('11665465')
                             except Exception as e:
@@ -785,7 +771,7 @@ def request_payment_from_payee(request, request_id):
                             messages.success(request, 'Payment request has been made to ' + receiver.username)
             except Exception as e:
                 print(f"request-payment: {e}")
-            return redirect('payapp:request-payment')
+            return redirect('payapp:payment-action-requested')
         except Exception as e:
             print(f"Transaction Error: {e}")
     else:

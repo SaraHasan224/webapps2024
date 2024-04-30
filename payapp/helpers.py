@@ -9,18 +9,17 @@ from thriftpy2.rpc import make_client
 from thriftpy2.thrift import TException
 
 from payapp.models import RequestResponseLogs, Wallet, Currency, Transaction, CustomUser, Invoice
-
-timestamp_thrift = thriftpy2.load('timestamp.thrift', module_name='timestamp_thrift')
-Timestamp = timestamp_thrift.TimestampService
+from timestampservice.timestampclient import TimestampClient
 
 
 def get_timestamp():
-    client = make_client(Timestamp, '127.0.0.1', 9090)
-    print("This is client", client)
-    print("This is getCurrentTimestamp", client.getCurrentTimestamp())
-    timestamp = datetime.fromtimestamp(int(str(client.getCurrentTimestamp())))
-    print("This is timestamp", timestamp)
-    return timestamp
+    timestamp_client = TimestampClient()
+    timestamp = timestamp_client.get_current_timestamp()
+    if timestamp:
+        return timestamp
+    else:
+        return JsonResponse({'error': 'Unable to fetch timestamp'}, status=500)
+
 
 def random_with_n_digits(n):
     range_start = 10 ** (n - 1)
@@ -135,25 +134,25 @@ def log_transaction(transaction_log):
     print(type(transaction_log))
     print(transaction_log.get('sender_id'))
     try:
-        transaction = Transaction.objects.create()
-        transaction.sender_id = transaction_log.get('sender_id')
-        transaction.sender_curr_id = transaction_log.get('sender_curr_id')
-        transaction.sender_prev_bal = transaction_log.get('sender_prev_bal')
-        transaction.sender_cur_bal = transaction_log.get('sender_cur_bal')
-        transaction.receiver_id = transaction_log.get('receiver_id')
-        transaction.receiver_curr_id = transaction_log.get('receiver_curr_id')
-        transaction.receiver_prev_bal = transaction_log.get('receiver_prev_bal')
-        transaction.receiver_cur_bal = transaction_log.get('receiver_cur_bal')
-        transaction.amount_requested = transaction_log.get('amount_requested')
-        transaction.amount_sent = transaction_log.get('amount_sent')
-        transaction.comment = transaction_log.get('comment')
-        transaction.comment = transaction_log.get('comment')
-        transaction.requested_currency_id = transaction_log.get('requested_currency_id')
-        transaction.sent_currency_id = transaction_log.get('sent_currency_id')
-        print("Marker")
-        transaction.created_at = get_timestamp()
-        print("Marker done")
+        transaction = Transaction.objects.create(
+            sender_id=transaction_log.get('sender_id'),
+            sender_curr_id=transaction_log.get('sender_curr_id'),
+            sender_prev_bal=transaction_log.get('sender_prev_bal'),
+            sender_cur_bal=transaction_log.get('sender_cur_bal'),
+            receiver_id=transaction_log.get('receiver_id'),
+            receiver_curr_id=transaction_log.get('receiver_curr_id'),
+            receiver_prev_bal=transaction_log.get('receiver_prev_bal'),
+            receiver_cur_bal=transaction_log.get('receiver_cur_bal'),
+            amount_requested=transaction_log.get('amount_requested'),
+            amount_sent=transaction_log.get('amount_sent'),
+            comment=transaction_log.get('comment'),
+            status="0",
+            requested_currency_id=transaction_log.get('requested_currency_id'),
+            sent_currency_id=transaction_log.get('sent_currency_id'),
+            created_at=get_timestamp(),
+        )
         transaction.save()
+        print('saved transaction: ', transaction)
         return transaction
     except Exception as e:
         print(f"Transaction Error: {e}")

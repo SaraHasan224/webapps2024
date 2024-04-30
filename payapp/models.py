@@ -94,7 +94,6 @@ class Payee(models.Model):
         return str(self.user)
 
 
-
 class Transaction(models.Model):
     TRANSACTION_STATUS_OPTIONS = [
         ("1", "Paid"),
@@ -148,16 +147,13 @@ class Transaction(models.Model):
     status = models.CharField(
         max_length=1, default="0", choices=TRANSACTION_STATUS_OPTIONS
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+    completed_at = models.DateTimeField(auto_now_add=False, null=True)
+    created_at = models.DateTimeField(auto_now_add=False, null=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.user = None
-
-    def __str__(self):
-        return str(self.user)
-
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        return self
 
 
 class Invoice(models.Model):
@@ -178,7 +174,7 @@ class Invoice(models.Model):
         ("0", "Not paid"),
     ]
     invoice_no = models.CharField(max_length=255)
-    invoice_date = models.DateField(auto_now=True,blank=True)
+    invoice_date = models.DateField(auto_now=True, blank=True)
     transaction_date = models.DateField(blank=True, null=True)
     transaction_status = models.CharField(
         max_length=1, default="0", choices=TRANSACTION_STATUS_OPTIONS
@@ -198,7 +194,7 @@ class Invoice(models.Model):
                                  unique=False)
     action = models.CharField(max_length=1, default="0", choices=ACTIONS_OPTIONS)
     status = models.CharField(max_length=1, default="0", choices=STATUS_OPTIONS)
-    created_at = models.DateTimeField(auto_now_add=False)
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
     def __init__(self, *args, **kwargs):
@@ -207,6 +203,7 @@ class Invoice(models.Model):
 
     def __str__(self):
         return str(self.user)
+
 
 class RequestResponseLogs(models.Model):
     url = models.TextField(null=True)
@@ -226,6 +223,10 @@ class RequestResponseLogs(models.Model):
 
 
 class Notification(models.Model):
+    STATUS_OPTIONS = [
+        ("1", "Read"),
+        ("0", "Unread"),
+    ]
     sender = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, blank=True, null=True,
         related_name="n_sender",
@@ -236,7 +237,9 @@ class Notification(models.Model):
         related_name="n_receiver",
         unique=False
     )
-    is_read = models.TextField(null=True)
+    is_read = models.CharField(
+        max_length=1, default="0", choices=STATUS_OPTIONS
+    )
     invoice = models.ForeignKey(
         Invoice, on_delete=models.CASCADE, blank=True, null=True,
         related_name="n_invoice",
