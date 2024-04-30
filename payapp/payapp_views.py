@@ -17,7 +17,6 @@ from payapp.helpers import get_exchange_rate, percentage, log_transaction, assig
     find_customer_by_email, random_with_n_digits, create_invoice
 from payapp.models import Profile, Wallet, Transaction, Payee, Currency, CustomUser, Notification, Invoice
 from register.decorators import allowed_users, admin_only
-from timestampservice.timestampclient import TimestampClient
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +26,11 @@ INVOICE_STATUS_OPTIONS = [
     ("1", "Sent"),
     ("2", "Processing"),
     ("3", "Processed"),
+]
+ACTIONS_OPTIONS = [
+    ("0", "Void"),
+    ("1", "Credit"),
+    ("2", "Debit"),
 ]
 INVOICE_TRANSACTION_STATUS_OPTIONS = [
     ("1", "Paid"),
@@ -380,7 +384,8 @@ def topup_wallet_request(request):
                     'amount_sent': wallet_amt,
                     'requested_currency_id': currency.id,
                     'sent_currency_id': wallet.currency.id,
-                    'status': 1
+                    'status': 1,
+                    'action': ACTIONS_OPTIONS[1]
                 }
 
                 log_transaction(transaction_log)
@@ -438,26 +443,26 @@ def payment_requests(request):
 
 @login_required
 @transaction.atomic
-def action_payment_requests(request, invoice_no):
+def action_payment_requests(request, action, transaction_id):
+    transaction = Transaction.objects.get(id=transaction_id)
+    print('transaction')
+    print(transaction)
+    print('transaction.id')
+    print(transaction.id)
     try:
-        invoice = Invoice.objects.get(invoice_no=invoice_no)
+        invoice = Invoice.objects.filter(transaction)
     except Invoice.DoesNotExist:
         invoice = None
+    print('invoice')
+    print(invoice)
 
     if invoice is None:
         return redirect('payapp:request-payment')
     print('invoice')
     print(invoice)
 
-    # Check if the query parameter 'my_param' exists in the request
-    if 'status' in request.GET:
-        action = request.GET.get('status')
-    else:
-        action = None
-    print(action)
-
     if request.method == 'POST':
-        if action == '0':
+        if action != 'accept':
             invoice.status = 4
             invoice.save()
             messages.error(request, 'Payment request has been rejected.')
@@ -547,17 +552,18 @@ def request_payment(request):
                     request.session['errors'] = errors
                     return redirect('payapp:request-payment')
                 else:
+                    print('receiver')
+                    print(receiver)
+                    print('sender')
+                    print(sender)
                     # Add payee if not already added
+                    # Query the database to find the payee based on sender and receiver
                     try:
-                        payee = Payee.objects.filter(sender=sender, payee=receiver)
-                    except Invoice.DoesNotExist:
-                        payee = None
-                    if payee is None:
-                        payee = Payee.objects.create()
-                        payee.sender = sender
-                        payee.payee = receiver
-                        payee.save()
-                        print('payee created')
+                        payee = Payee.objects.get(sender=sender, payee=receiver)
+                    except Payee.DoesNotExist:
+                        # If payee does not exist, create a new payee
+                        payee = Payee.objects.create(sender=sender, payee=receiver)
+
                     print('payee')
                     print(payee)
                     # Check user base currency and convert the amount as per currency in which user want to transact the amount
@@ -590,11 +596,12 @@ def request_payment(request):
                         'receiver_prev_bal': receiver_wallet_amt,
                         'receiver_cur_bal': receiver_wallet_amt,
                         'amount_requested': transfer_wallet_amt,
-                        'comment': f"Transfer {transaction_currency.iso_code}{transfer_wallet_amt} from {sender.username} to {receiver.username}",
+                        'comment': f"{sender.username} requested payment of amount {transaction_currency.iso_code}{transfer_wallet_amt} from {receiver.username}",
                         'amount_sent': transfer_wallet_amt,
                         'status': 0,
                         'requested_currency_id': transaction_currency.id,
                         'sent_currency_id': receiver_currency.id,
+                        'action': ACTIONS_OPTIONS[0]
                     }
                     print('transaction_log')
                     print(transaction_log)
@@ -623,7 +630,7 @@ def request_payment(request):
                     messages.success(request, 'Payment request has been made to ' + receiver.username)
         except Exception as e:
             print(f"Transaction Error: {e}")
-        return redirect('payapp:payment-requests')
+        return redirect('payapp:payment-action-requested')
     else:
         form = RequestPaymentForm()
         context = {
@@ -736,6 +743,7 @@ def request_payment_from_payee(request, request_id):
                                 'status': 0,
                                 'requested_currency_id': transaction_currency.id,
                                 'sent_currency_id': sender.id,
+                                'action': ACTIONS_OPTIONS[0]
                             }
                             print('transaction_log')
                             print(transaction_log)

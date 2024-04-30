@@ -23,8 +23,8 @@ urlpatterns = [
     path('my-wallet/', payapp_views.my_wallet, name="my-wallet"),
 
     path('request-payment/', payapp_views.request_payment, name="request-payment"),
-    path('payment-requests/', payapp_views.payment_requests, name="payment-requests"),
-    path('payment-requests/<str:invoice_no>/', payapp_views.action_payment_requests, name="pay-request-action"),
+    path('payment-action/', payapp_views.payment_requests, name="payment-action-requested"),
+    path('payment-action/<str:action>/<str:transaction_id>/', payapp_views.action_payment_requests, name="payment-action"),
 
     path('top-up/', payapp_views.topup, name="topup-wallet"),
     path('top-up-wallet/', payapp_views.topup_wallet_request, name="topup-wallet-amt"),

@@ -4,7 +4,7 @@
         <div class="dropdown header-profile2 ">
             <a class="nav-link " href="javascript:void(0);" role="button" data-bs-toggle="dropdown">
                 <div class="header-info2 d-flex align-items-center border">
-                    <img src="{% static 'payapps/images/profile/pic1.jpg' %}" alt=""/>
+                    <img src="{% static 'payapps/images/icons/avatar.png' %}" alt=""/>
                     <div class="d-flex align-items-center sidebar-info">
                         <div>
                             {% if user.is_authenticated %}
@@ -89,7 +89,7 @@
                     <span class="nav-text">Wallet Topup</span>
                 </a>
                 </li>
-                <li><a href="{% url 'payapp:payment-requests' %}" class="" aria-expanded="false">
+                <li><a href="{% url 'payapp:payment-action-requested' %}" class="" aria-expanded="false">
                     <i class="fas fa-heart"></i>
                     <span class="nav-text">Payment requests</span>
                 </a>

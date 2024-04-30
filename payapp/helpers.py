@@ -2,21 +2,25 @@ import os
 
 import requests
 from random import randint
-
+from datetime import datetime
 from django.http import JsonResponse
+import thriftpy2
+from thriftpy2.rpc import make_client
+from thriftpy2.thrift import TException
 
 from payapp.models import RequestResponseLogs, Wallet, Currency, Transaction, CustomUser, Invoice
-from timestampservice.timestampclient import TimestampClient
+
+timestamp_thrift = thriftpy2.load('timestamp.thrift', module_name='timestamp_thrift')
+Timestamp = timestamp_thrift.TimestampService
 
 
 def get_timestamp():
-    timestamp_client = TimestampClient()
-    timestamp = timestamp_client.get_current_timestamp()
-    if timestamp:
-        return JsonResponse({'timestamp': timestamp})
-    else:
-        return JsonResponse({'error': 'Unable to fetch timestamp'}, status=500)
-
+    client = make_client(Timestamp, '127.0.0.1', 9090)
+    print("This is client", client)
+    print("This is getCurrentTimestamp", client.getCurrentTimestamp())
+    timestamp = datetime.fromtimestamp(int(str(client.getCurrentTimestamp())))
+    print("This is timestamp", timestamp)
+    return timestamp
 
 def random_with_n_digits(n):
     range_start = 10 ** (n - 1)
@@ -125,6 +129,7 @@ def create_invoice(invoice_data):
     except Exception as e:
         print(f"Transaction Error: {e}")
 
+
 def log_transaction(transaction_log):
     print("log_transaction")
     print(type(transaction_log))
@@ -145,7 +150,9 @@ def log_transaction(transaction_log):
         transaction.comment = transaction_log.get('comment')
         transaction.requested_currency_id = transaction_log.get('requested_currency_id')
         transaction.sent_currency_id = transaction_log.get('sent_currency_id')
-        # transaction.created_at = get_timestamp()
+        print("Marker")
+        transaction.created_at = get_timestamp()
+        print("Marker done")
         transaction.save()
         return transaction
     except Exception as e:

@@ -168,6 +168,11 @@ class Invoice(models.Model):
         ("3", "Processed"),
         ("4", "Rejected"),
     ]
+    ACTIONS_OPTIONS = [
+        ("0", "Void"),
+        ("1", "Credit"),
+        ("2", "Debit"),
+    ]
     TRANSACTION_STATUS_OPTIONS = [
         ("1", "Paid"),
         ("0", "Not paid"),
@@ -191,8 +196,9 @@ class Invoice(models.Model):
     receiver = models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True,
                                  related_name="receiver_id",
                                  unique=False)
+    action = models.CharField(max_length=1, default="0", choices=ACTIONS_OPTIONS)
     status = models.CharField(max_length=1, default="0", choices=STATUS_OPTIONS)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=False)
     updated_at = models.DateTimeField(auto_now_add=True)
 
     def __init__(self, *args, **kwargs):
