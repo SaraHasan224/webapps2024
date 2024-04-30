@@ -20,6 +20,8 @@ urlpatterns = [
     path('users/delete/<str:user_id>', payapp_views.users_destroy, name="users-delete"),
 
     path('transaction-history/', payapp_views.transaction_history, name="transaction-history"),
+    path('request-logs/', payapp_views.request_logs, name="request-logs"),
+
     path('my-wallet/', payapp_views.my_wallet, name="my-wallet"),
 
     path('request-payment/', payapp_views.request_payment, name="request-payment"),

@@ -1,0 +1,67 @@
+{% extends 'payapps/layout/list_template.html' %}
+{% load static %}
+
+{% block list_additional_css %}
+{% endblock %}
+
+{% block list_content %}
+    <!--**********************************
+        Listing table start
+    ***********************************-->
+    <table class="table card-table display mb-4 dataTablesCard " id="example5">
+        <thead>
+        <tr>
+            <th>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="checkAll">
+                    <label class="form-check-label" for="checkAll">
+                    </label>
+                </div>
+            </th>
+            <th>ID Request</th>
+            <th>URL</th>
+            <th>Response code</th>
+            <th>Response</th>
+            <th>Created at</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if transactions %}
+            {% for transaction in transactions %}
+                <tr>
+                    <td>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2">
+                            <label class="form-check-label" for="flexCheckDefault2">
+                            </label>
+                        </div>
+                    </td>
+                    <td><span class="text-black font-w500">#{{ transaction.id }}</span></td>
+                    <td><span class="text-black text-nowrap">#{{ transaction.url }}</span></td>
+
+                    <td>
+                        <div class="d-flex align-items-center">
+                            {{ transaction.response_code }}
+                        </div>
+                    </td>
+
+                    <td>
+                        <div class="d-flex align-items-center">
+                            {{ transaction.response }}
+                        </div>
+                    </td>
+                    <td class="text-left"><span class="text-black">{{ transaction.created_at }} </span></td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr class="text-center">
+                <td colspan="10">No records found.</td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+    <!--**********************************
+        Listing table end
+    ***********************************-->
+{% endblock %}

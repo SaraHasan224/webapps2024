@@ -15,7 +15,8 @@ from payapp.forms import UserForm, WalletTopupForm, RequestPaymentForm, MyPayeeF
     RequestPayeePaymentForm
 from payapp.helpers import get_exchange_rate, percentage, log_transaction, assign_wallet_on_registration, \
     find_customer_by_email, random_with_n_digits, create_invoice, get_timestamp
-from payapp.models import Profile, Wallet, Transaction, Payee, Currency, CustomUser, Notification, Invoice
+from payapp.models import Profile, Wallet, Transaction, Payee, Currency, CustomUser, Notification, Invoice, \
+    RequestResponseLogs
 from register.decorators import allowed_users, admin_only
 
 logger = logging.getLogger(__name__)
@@ -100,6 +101,12 @@ def dashboard(request):
                     'receiver').values()
             except Transaction.DoesNotExist:
                 transactions = None
+            try:
+                payments = Invoice.objects.prefetch_related('receiver','transaction').order_by('-id').all()
+            except Invoice.DoesNotExist:
+                payments = None
+            print('payments')
+            print(payments)
             notification_count = None
             group_name = 'customer'  # Assuming the group name is 'customer'
             group = Group.objects.get(name=group_name)
@@ -312,6 +319,23 @@ def transaction_history(request):
         'status': INVOICE_TRANSACTION_STATUS_OPTIONS
     }
     return render(request, 'payapps/payment/transaction-history.html', context)
+
+
+@login_required
+@transaction.atomic
+def request_logs(request):
+    if request.user.is_superuser:
+        transaction = RequestResponseLogs.objects.all().order_by('-id').values()
+    else:
+        transaction = None
+
+    context = {
+        "page_title": "Request Response Logs",
+        "page_main_heading": "Transaction Request Response Logs History",
+        "page_main_description": "Easily add view, your request transaction logs history",
+        'transactions': transaction
+    }
+    return render(request, 'payapps/payment/request-response-logs.html', context)
 
 
 # Topup

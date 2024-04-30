@@ -101,6 +101,11 @@
                     <span class="nav-text">Transaction History</span>
                 </a>
                 </li>
+                <li><a href="{% url 'payapp:request-logs' %}" class="" aria-expanded="false">
+                    <i class="fas fa-chart-line"></i>
+                    <span class="nav-text">Request Logs</span>
+                </a>
+                </li>
             {% elif user.is_staff_user %}
                 <li><a href="{% url 'payapp:transaction-history' %}" class="" aria-expanded="false">
                     <i class="fas fa-chart-line"></i>
