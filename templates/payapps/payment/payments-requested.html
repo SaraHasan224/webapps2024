@@ -87,8 +87,8 @@
                                 </svg>
                             </button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="{% url 'payapp:pay-request-action' request.invoice_no %}?status=1&">Accept</a>
-                                <a class="dropdown-item" href="{% url 'payapp:pay-request-action' request.invoice_no %}?status=0&">Reject</a>
+                                <a class="dropdown-item" href="{% url 'pay-request-action' request.invoice_no %}?status=1&">Accept</a>
+                                <a class="dropdown-item" href="{% url 'pay-request-action' request.invoice_no %}?status=0&">Reject</a>
                             </div>
                         </div>
                     </td>

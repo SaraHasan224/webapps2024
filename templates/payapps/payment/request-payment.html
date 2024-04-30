@@ -6,9 +6,9 @@
 {% block form_content %}
     {% load crispy_forms_tags %}
     {% if receiver is None %}
-        <form action="{% url 'payapp:request-payment' %}" method="POST">
+        <form action="{% url 'request-payment' %}" method="POST">
     {% else %}
-        <form action="{% url 'payapp:request-payee' request_id=receiver.id %}" method="POST">
+        <form action="{% url 'request-payee' request_id=receiver.id %}" method="POST">
     {% endif %}
         {% csrf_token %}{{ form|crispy }}
 

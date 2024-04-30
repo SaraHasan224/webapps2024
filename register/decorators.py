@@ -5,7 +5,7 @@ from django.shortcuts import redirect
 def unauthenticated_user(view_func):
     def wrapper_func(request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect('payapp:dashboard')
+            return redirect('dashboard')
         return view_func(request, *args, **kwargs)
 
     return wrapper_func
@@ -17,9 +17,8 @@ def allowed_users(allowed_roles=[]):
             group = None
             if request.user.groups.exists():
                 group = request.user.groups.all()[0].name
-            if group in allowed_roles:
-                group = view_func(request, *args, **kwargs)
-            else:
+            if not group in allowed_roles:
+
                 return HttpResponse('You are not permitted to use this page.')
             return view_func(request, *args, **kwargs)
 

@@ -19,8 +19,6 @@
 	<!-- PAGE TITLE HERE -->
 	<title>{{ dz_array.public.title }}</title>
 	
-	<!-- FAVICONS ICON -->
-	<link rel="shortcut icon" type="image/png" href="{% static dz_array.public.favicon  %}" />
 	{% for cssurl in dz_array.pagelevel.payapps.payapps_views.css|getdata:request.path %}
 	<link rel="stylesheet" href="{% static cssurl %}" >
 	{% endfor %}
@@ -42,7 +40,7 @@
                         <h4><i class="fa fa-thumbs-down text-danger"></i> Bad Request</h4>
                         <p>Your Request resulted in an error</p>
 						<div>
-                            <a class="btn btn-primary" href="{% url 'payapp:index' %}">Back to Home</a>
+                            <a class="btn btn-primary" href="{% url 'index' %}">Back to Home</a>
                         </div>
                     </div>
                 </div>

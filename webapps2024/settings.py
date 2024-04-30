@@ -67,7 +67,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                # 'django.template.context_processors.debug',
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -139,5 +139,3 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap4'
 AUTH_USER_MODEL = 'payapp.CustomUser'
 
 RUNSERVERPLUS_SERVER_ADDRESS_PORT = '0.0.0.0:8000'
-
-print(os.getpid())

@@ -19,8 +19,6 @@
 	<!-- PAGE TITLE HERE -->
 	<title>{{ dz_array.public.title }}</title>
 	
-	<!-- FAVICONS ICON -->
-	<link rel="shortcut icon" type="image/png" href="{% static dz_array.public.favicon  %}" />
 	{% for cssurl in dz_array.pagelevel.payapps.payapps_views.css|getdata:request.path %}
 	<link rel="stylesheet" href="{% static cssurl %}" >
 	{% endfor %}
@@ -42,10 +40,10 @@
                             <div class="col-xl-12">
                                 <div class="auth-form">
 									<div class="text-center mb-3">
-										<a href="{% url 'payapp:index' %}"><img src="{% static 'payapps/images/portal-icon.png' %}" alt=""></a>
+										<a href="{% url 'index' %}"><img src="{% static 'payapps/images/portal-icon.png' %}" alt=""></a>
 									</div>
                                     <h4 class="text-center mb-4">Sign in your account</h4>
-                                    <form action="{% url 'payapp:index' %}">
+                                    <form action="{% url 'index' %}">
                                         <div class="mb-3">
                                             <label class="mb-1"><strong>Email</strong></label>
                                             <input type="email" class="form-control" value="hello@example.com">
