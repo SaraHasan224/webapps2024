@@ -14,7 +14,7 @@ from django.views.decorators.http import require_POST
 from payapp.forms import UserForm, WalletTopupForm, RequestPaymentForm, MyPayeeForm, EditUserForm, \
     RequestPayeePaymentForm
 from payapp.helpers import get_exchange_rate, percentage, log_transaction, assign_wallet_on_registration, \
-    find_customer_by_email, random_with_n_digits, create_invoice
+    find_customer_by_email, random_with_n_digits, create_invoice, get_timestamp
 from payapp.models import Profile, Wallet, Transaction, Payee, Currency, CustomUser, Notification, Invoice
 from register.decorators import allowed_users, admin_only
 
@@ -48,33 +48,75 @@ def index(request):
 @login_required
 @transaction.atomic
 def dashboard(request):
-    # if not request.user.is_staff and not request.user.is_superuser:
+        print('I am user')
         profile = Profile.objects.get(user=request.user)
-        try:
-            wallet = Wallet.objects.get(user_id=request.user.id)
-        except Wallet.DoesNotExist:
-            wallet = None
 
-        try:
-            payments = Invoice.objects.filter(sender_id=request.user.id).prefetch_related('receiver',
-                                                                                          'transaction').order_by('-id').all()
-        except Invoice.DoesNotExist:
-            payments = None
-
-        try:
-            notifications = Notification.objects.filter(receiver_id=request.user.id).prefetch_related('sender',
-                                                                                                      'invoice').order_by('-id').all()
-        except Notification.DoesNotExist:
-            notifications = None
-
+        payments = None
+        wallet = None
+        notifications = None
         payees = []
-        try:
-            transactions = Transaction.objects.filter(sender=request.user).order_by('-id').prefetch_related('receiver').values()
-        except Transaction.DoesNotExist:
-            transactions = None
+        stats = None
+        if not request.user.is_staff and not request.user.is_superuser:
+            try:
+                transactions = Transaction.objects.filter(sender=request.user).order_by('-id').prefetch_related(
+                    'receiver').values()
+            except Transaction.DoesNotExist:
+                transactions = None
 
-        # transactions = get_object_or_404(Transaction, sender=request.user)
-        print(payments)
+            try:
+                payments = Invoice.objects.filter(sender_id=request.user.id).prefetch_related('receiver',
+                                                                                              'transaction').order_by(
+                    '-id').all()
+            except Invoice.DoesNotExist:
+                payments = None
+            try:
+                wallet = Wallet.objects.get(user_id=request.user.id)
+            except Wallet.DoesNotExist:
+                wallet = None
+            try:
+                notifications = Notification.objects.filter(receiver_id=request.user.id).prefetch_related('sender',
+                                                                                                          'invoice').order_by(
+                    '-id').all()
+            except Notification.DoesNotExist:
+                notifications = None
+            notification_count = notifications.count()
+            stats = {
+                'c': {
+                    'title': 'Payments Requested',
+                    'value':  payments.count(),
+                },
+                'b': {
+                    'title': 'Transfers',
+                    'value': f"{profile.currency.iso_code}"
+                },
+                'a': {
+                    'title': 'My Wallet',
+                    'value': f"{profile.currency.iso_code} {wallet.amount}"
+                },
+            }
+        else:
+            try:
+                transactions = Transaction.objects.filter().order_by('-id').prefetch_related(
+                    'receiver').values()
+            except Transaction.DoesNotExist:
+                transactions = None
+            notification_count = None
+            group_name = 'customer'  # Assuming the group name is 'customer'
+            group = Group.objects.get(name=group_name)
+            stats = {
+                'c': {
+                    'title': 'Total Customers',
+                    'value':  CustomUser.objects.filter(is_superuser=True).count(),
+                },
+                'b': {
+                    'title': 'Staff Member Count',
+                    'value': CustomUser.objects.filter(is_staff=True, is_superuser=False).count()
+                },
+                'a': {
+                    'title': 'Super admin count',
+                    'value': group.user_set.count()
+                },
+            }
         context = {
             "page_title": "Dashboard",
             'profile': profile,
@@ -83,10 +125,10 @@ def dashboard(request):
             'payments': payments,
             'wallet': wallet,
             'notifications': notifications,
-            'payment_request_count': payments.count(),
-            'notification_count': notifications.count(),
+            'notification_count': notification_count,
             'invoice_status': INVOICE_STATUS_OPTIONS,
             'invoice_transaction_status': INVOICE_TRANSACTION_STATUS_OPTIONS,
+            'stats': stats,
         }
         return render(request, 'payapps/dashboard.html', context)
 
@@ -415,13 +457,13 @@ def my_wallet(request):
 @transaction.atomic
 @allowed_users(allowed_roles=['customer'])
 def payment_requests(request):
-    payment_requests = Invoice.objects.filter(sender_id=request.user.id).prefetch_related('receiver',
-                                                                                          'transaction').order_by('-id').all()
+    invoice = Invoice.objects.filter(sender_id=request.user.id).prefetch_related('receiver',
+                                                                                 'transaction').order_by('-id').all()
     context = {
         "page_title": "Payment requests",
         "page_main_heading": "Requested Payments",
         "page_main_description": "Seamless Requests, Swift Payments: Discover Payments Requested",
-        'requests': payment_requests
+        'requests': invoice
     }
     return render(request, 'payapps/payment/payments-requested.html', context)
 
@@ -429,67 +471,71 @@ def payment_requests(request):
 @login_required
 @transaction.atomic
 def action_payment_requests(request, action, transaction_id):
-    # transaction = Transaction.objects.get(id=transaction_id)
-    # print('transaction')
-    # print(transaction)
-    # print('transaction.id')
-    # print(transaction.id)
-    invoice = Invoice.objects.filter(id=transaction_id)
-    print('invoice')
-    print(invoice)
-    print(invoice.id)
+    try:
+        invoice = Invoice.objects.get(id=transaction_id)
+    except Invoice.DoesNotExist:
+        return redirect('payapp:payment-action-requested')
+    print('bjbkjbkj', invoice.status)
 
-    if invoice is None:
-        return redirect('payapp:request-payment')
-    print('invoice')
-    print(invoice)
+    transaction = invoice.transaction
 
-    if request.method == 'POST':
-        if action != 'accept':
-            invoice.status = 4
-            invoice.save()
-            messages.error(request, 'Payment request has been rejected.')
-        else:
-            invoice.status = 2
-            invoice = invoice.save()
-            #
-            # # Check user base currency and convert the amount as per receiver_currency
-            # # and then deduct this transfer_amt from sender's wallet
-            # if transaction_currency != receiver_currency:
-            #     print('Check user base currency and convert the amount as per receiver_currency')
-            #     print(receiver_currency, transfer_wallet_amt, transaction_currency, sender.id)
-            #     transfer_amt = get_exchange_rate(request, receiver_currency, transfer_wallet_amt,
-            #                                      transaction_currency, sender.id)
-            #     print(transfer_amt)
-            #     transfer_amt = transfer_amt.get("converted_amt")
-            # else:
-            #     # If transaction currency and reciever's wallet currency is same then no need to convert
-            #     # amount
-            #     transfer_amt = amount
-            #
-            # print('transfer_amt without exchange rate', transfer_amt)
-            # print(request, receiver_currency.iso_code, amount, transaction_currency,
-            #       receiver.id)
-            #
-            # # Deduct amount from sender wallet
-            # sender_wallet = update_sender_wallet(sender_wallet, transfer_wallet_amt, 'subtract')
-            # # Add amount to receiver wallet
-            # receiver_wallet = update_sender_wallet(receiver, transfer_amt, 'subtract')
-            #
-            # # Update transaction log
-            # transaction.sender_cur_bal = sender_wallet.amount
-            # transaction.receiver_cur_bal = receiver_wallet.amount
-            # transaction.amount_sent = transfer_amt
-            # transaction.status = 1
-            # transaction = transaction.save()
-            # print('updated transaction')
-            # print(transaction)
-            #
-            # if transaction.status == 1:
-            #     invoice.status = 3
-            #     invoice.save()
+    sender = transaction.sender
+    receiver = transaction.receiver
+
+    if action != 'accept':
+        invoice.status = '4'
+        invoice.save()
+
+        transaction.status = '2'
+        transaction.completed_at = get_timestamp(),
+        transaction = transaction.save()
+
+
+        notification = Notification.objects.create()
+        notification.is_read = '1'
+        notification.receiver = receiver
+        notification.sender = sender
+        notification.invoice = invoice
+        notification.comment = f'{receiver.username} has rejected your payment request of {transaction.sent_currency.iso_code} {transaction.amount_sent}'
+        notification.save()
+        print('updated transaction')
+        print(transaction)
+        request.session['form_errors'] = 'Payment request has been rejected'
     else:
-        return ('payapp:dashboard')
+        invoice.status = '2'
+        invoice.save()
+        print('invoice--')
+        print(invoice)
+        print(invoice.transaction)
+        print('invoice transaction--')
+        print(transaction)
+
+        print('sender--', sender)
+        print('receiver--', receiver)
+        sender_wallet = Wallet.objects.get(user=sender)
+        receiver_wallet = Wallet.objects.get(user=receiver)
+
+        print('sender wallet: ', sender_wallet)
+        print('receiver wallet: ', receiver_wallet)
+
+        # # Update transaction log
+        # transaction.status = 1
+        # completed_at=get_timestamp(),
+        # transaction = transaction.save()
+        # print('updated transaction')
+        # print(transaction)
+        #
+        # if transaction.status == 1:
+        #     invoice.status = 3
+        #     invoice.save()
+        #
+        # notification = Notification.objects.create()
+        # notification.is_read = '0'
+        # notification.receiver = receiver
+        # notification.sender = sender
+        # notification.invoice = invoice
+        # notification.save()
+    return redirect('payapp:payment-action-requested')
 
 
 @login_required
@@ -553,15 +599,18 @@ def request_payment(request):
                     # and then sender's wallet
                     try:
                         print('transaction_currency')
-                        print(transaction_currency)
+                        print(transaction_currency, transaction_currency.iso_code)
                         print('sender_currency')
-                        print(sender_currency)
+                        print(sender_currency, sender_currency.iso_code)
                         if transaction_currency.iso_code != sender_currency.iso_code:
-                            amt_to_transfer = get_exchange_rate(request, receiver_currency.iso_code, amount,
+                            amt_to_transfer = get_exchange_rate(request, sender_currency.iso_code, amount,
                                                                 transaction_currency.iso_code, sender.id)
+                            print('amt_to_transfer')
+                            print(amt_to_transfer)
                             transfer_wallet_amt = amt_to_transfer.get("converted_amt")
                         else:
-                            # If transaction currency and reciever's wallet currency is same then no need to convert amount
+                            # If transaction currency and reciever's wallet currency is same then no need to convert
+                            # amount
                             transfer_wallet_amt = amount
                     except Exception as e:
                         print(f"Error: {e}")

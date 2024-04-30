@@ -29,8 +29,8 @@
 										</svg>
 									</span>
                                         <div class="invoices">
-                                            <h4>{{ profile.currency.iso_code }} {{ wallet.amount }} </h4>
-                                            <span>My Wallet</span>
+                                            <h4>{{ stats.a.value }}</h4>
+                                            <span>{{ stats.a.title }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -64,8 +64,8 @@
 														</svg>
 									</span>
                                         <div class="invoices">
-                                            <h4>{{ profile.currency.iso_code }} 1,256</h4>
-                                            <span>Transfers</span>
+                                            <h4>{{ stats.b.value }}</h4>
+                                            <span>{{ stats.b.title }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -88,8 +88,8 @@
 														</svg>
 									</span>
                                         <div class="invoices">
-                                            <h4>{{ payment_request_count }}</h4>
-                                            <span>Payments Requested</span>
+                                            <h4>{{ stats.c.value }}</h4>
+                                            <span>{{ stats.c.title }}</span>
                                         </div>
                                     </div>
                                 </div>

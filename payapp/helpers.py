@@ -5,6 +5,7 @@ from random import randint
 from datetime import datetime
 from django.http import JsonResponse
 import thriftpy2
+from django_extensions import settings
 from thriftpy2.rpc import make_client
 from thriftpy2.thrift import TException
 
@@ -39,7 +40,7 @@ def get_exchange_rate(request, base_currency_code, base_rate, target_currency_co
         print(target_currency_code)
         print(base_rate)
         # base_url = os.environ.get('BASE_URL')
-        base_url = os.environ.get('BASE_URL')
+        base_url = "http://127.0.0.1:8000/"
         url = base_url + f"conversion/{base_currency_code}/{target_currency_code}/{base_rate}"
         print("url")
         print(url)
@@ -65,7 +66,7 @@ def get_exchange_rate(request, base_currency_code, base_rate, target_currency_co
         else:
             return "Failed to retrieve exchange rates."
     except Exception as e:
-        return f"Error: {e}"
+        return f"Exchange api Error: {e}"
 
 
 def assign_wallet_on_registration(request, user, profile):

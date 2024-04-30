@@ -98,6 +98,7 @@ class Transaction(models.Model):
     TRANSACTION_STATUS_OPTIONS = [
         ("1", "Paid"),
         ("0", "Not paid"),
+        ("2", "Rejected"),
     ]
     sender = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, blank=True,
@@ -171,6 +172,7 @@ class Invoice(models.Model):
     ]
     TRANSACTION_STATUS_OPTIONS = [
         ("1", "Paid"),
+        ("2", "Rejected"),
         ("0", "Not paid"),
     ]
     invoice_no = models.CharField(max_length=255)
@@ -196,13 +198,9 @@ class Invoice(models.Model):
     status = models.CharField(max_length=1, default="0", choices=STATUS_OPTIONS)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.user = None
-
-    def __str__(self):
-        return str(self.user)
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        return self
 
 
 class RequestResponseLogs(models.Model):
@@ -237,6 +235,7 @@ class Notification(models.Model):
         related_name="n_receiver",
         unique=False
     )
+    comment = models.TextField(null=True)
     is_read = models.CharField(
         max_length=1, default="0", choices=STATUS_OPTIONS
     )
