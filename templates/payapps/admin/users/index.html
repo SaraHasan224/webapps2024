@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block show_add_new_btn %}
-    <a href="{% url 'users-add-new' %}" class="btn btn-outline-primary mb-3"><i class="fa fa-plus-circle me-3 scale3"></i>Add New</a>
+    <a href="{% url 'payapp:users-add-new' %}" class="btn btn-outline-primary mb-3"><i class="fa fa-plus-circle me-3 scale3"></i>Add New</a>
 {% endblock %}
 {% block list_content %}
     <!--**********************************
@@ -75,8 +75,8 @@
                                 <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg>
                             </button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="{% url 'users-edit' user.id %}">Edit</a>
-                                <a class="dropdown-item" href="{% url 'users-delete' user.id %}">Delete</a>
+                                <a class="dropdown-item" href="{% url 'payapp:users-edit' user.id %}">Edit</a>
+                                <a class="dropdown-item" href="{% url 'payapp:users-delete' user.id %}">Delete</a>
                             </div>
                         </div>
                     </td>

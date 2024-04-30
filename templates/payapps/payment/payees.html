@@ -5,7 +5,7 @@
 
 {% block form_content %}
     {% load crispy_forms_tags %}
-    <form action="{% url 'my-payees' %}" method="POST">
+    <form action="{% url 'payapp:my-payees' %}" method="POST">
         {% csrf_token %}{{ form|crispy }}
 
         <div class="mt-3 row float-md-left">

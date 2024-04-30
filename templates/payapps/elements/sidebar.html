@@ -31,7 +31,7 @@
                 </div>
             </a>
             <div class="dropdown-menu dropdown-menu-end">
-                <a href="{% url 'app-profile' %}" class="dropdown-item ai-icon ">
+                <a href="{% url 'payapp:app-profile' %}" class="dropdown-item ai-icon ">
                     <svg xmlns="http://www.w3.org/2000/svg" class="text-primary" width="18" height="18"
                          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                          stroke-linejoin="round">
@@ -58,7 +58,7 @@
             </div>
         </div>
         <ul class="metismenu" id="menu">
-            <li><a href="{% url 'dashboard' %}" class="" aria-expanded="false">
+            <li><a href="{% url 'payapp:dashboard' %}" class="" aria-expanded="false">
                 <i class="fas fa-tachometer-alt"></i>
                 <span class="nav-text">Dashboard</span>
             </a>
@@ -69,46 +69,46 @@
                     <span class="nav-text">Admin Management</span>
                 </a>
                     <ul aria-expanded="false">
-                        <li><a href="{% url 'users-list' %}">Users</a></li>
+                        <li><a href="{% url 'payapp:users-list' %}">Users</a></li>
                     </ul>
                 </li>
             {% endif %}
             {% if not user.is_superuser and not user.is_staff_user %}
-                <li><a href="{% url 'my-wallet' %}" class="" aria-expanded="false">
+                <li><a href="{% url 'payapp:my-wallet' %}" class="" aria-expanded="false">
                     <i class="fas fa-file-alt"></i>
                     <span class="nav-text">My Wallet</span>
                 </a>
                 </li>
-                <li><a href="{% url 'my-payee-list' %}" class="" aria-expanded="false">
+                <li><a href="{% url 'payapp:my-payee-list' %}" class="" aria-expanded="false">
                     <i class="fas fa-user-check"></i>
                     <span class="nav-text">My Payees</span>
                 </a>
                 </li>
-                <li><a href="{% url 'topup-wallet' %}" class="" aria-expanded="false">
+                <li><a href="{% url 'payapp:topup-wallet' %}" class="" aria-expanded="false">
                     <i class="fas fa-heart"></i>
                     <span class="nav-text">Wallet Topup</span>
                 </a>
                 </li>
-                <li><a href="{% url 'payment-requests' %}" class="" aria-expanded="false">
+                <li><a href="{% url 'payapp:payment-requests' %}" class="" aria-expanded="false">
                     <i class="fas fa-heart"></i>
                     <span class="nav-text">Payment requests</span>
                 </a>
                 </li>
             {% endif %}
             {% if user.is_superuser %}
-                <li><a href="{% url 'transaction-history' %}" class="" aria-expanded="false">
+                <li><a href="{% url 'payapp:transaction-history' %}" class="" aria-expanded="false">
                     <i class="fas fa-chart-line"></i>
                     <span class="nav-text">Transaction History</span>
                 </a>
                 </li>
             {% elif user.is_staff_user %}
-                <li><a href="{% url 'transaction-history' %}" class="" aria-expanded="false">
+                <li><a href="{% url 'payapp:transaction-history' %}" class="" aria-expanded="false">
                     <i class="fas fa-chart-line"></i>
                     <span class="nav-text">Transaction History</span>
                 </a>
                 </li>
             {% else %}
-                <li><a href="{% url 'transaction-history' %}" class="" aria-expanded="false">
+                <li><a href="{% url 'payapp:transaction-history' %}" class="" aria-expanded="false">
                     <i class="fas fa-chart-line"></i>
                     <span class="nav-text">My Transaction History</span>
                 </a>

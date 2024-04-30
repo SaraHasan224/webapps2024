@@ -33,8 +33,8 @@
                                     <p>Are you sure you want to delete user "{{ selected_user.username }}"?</p>
                                 </div>
                                 <div class="modal-footer">
-                                    <a class="btn btn-danger light"  href="{% url 'users-list' %}">Go back</a>
-                                    <form action="{% url 'users-delete' user_id=selected_user.id %}" method="post">
+                                    <a class="btn btn-danger light"  href="{% url 'payapp:users-list' %}">Go back</a>
+                                    <form action="{% url 'payapp:users-delete' user_id=selected_user.id %}" method="post">
                                         {% csrf_token %}
                                         <button type="submit" class="btn btn-primary">Delete</button>
                                     </form>

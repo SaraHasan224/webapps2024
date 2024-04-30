@@ -35,7 +35,7 @@ def page_register(request):
             user.groups.add(group)
             messages.success(request, 'Your payapp account has been created.')
 
-        return redirect('dashboard')
+        return redirect('payapp:dashboard')
     else:
         form = RegistrationForm()
         return render(request, 'registration/sign_up.html', {'form': form})
@@ -48,7 +48,7 @@ def edit_profile(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('dashboard')
+            return redirect('payapp:dashboard')
     else:
         form = RegistrationForm()
     return render(request, 'payapps/profile/app-profile.html', {'form': form})

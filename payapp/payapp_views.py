@@ -65,7 +65,7 @@ def dashboard(request):
 
         payees = []
         try:
-            transactions = Transaction.objects.filter(sender=request.user).order_by('-id').values()
+            transactions = Transaction.objects.filter(sender=request.user).order_by('-id').prefetch_related('receiver').values()
         except Transaction.DoesNotExist:
             transactions = None
 
@@ -79,6 +79,7 @@ def dashboard(request):
             'payments': payments,
             'wallet': wallet,
             'notifications': notifications,
+            'payment_request_count': payments.count(),
             'notification_count': notifications.count(),
             'invoice_status': INVOICE_STATUS_OPTIONS,
             'invoice_transaction_status': INVOICE_TRANSACTION_STATUS_OPTIONS,
@@ -169,7 +170,7 @@ def users_add(request):
                     user.groups.add(group)
             except:
                 pass
-            return redirect('users-list')
+            return redirect('payapp:users-list')
     else:
         form = UserForm()
         context = {
@@ -235,7 +236,7 @@ def users_edit(request, id):
                     user.groups.add(group)
             except Exception as e:
                 return f"Error: {e}"
-        return redirect('users-list')  # Redirect to user list page
+        return redirect('payapp:users-list')  # Redirect to user list page
     else:
         # Assuming 'group_id' is the field in the form where you want to select the group ID
         form = EditUserForm(instance=user, initial={'group_id': user.groups.all()[0].id})
@@ -258,7 +259,7 @@ def users_destroy(request, user_id):
     user = CustomUser.objects.get(id=user_id)
     if request.method == 'POST':
         user.delete()
-        return redirect('users-list')  # Redirect to user list page after deletion
+        return redirect('payapp:users-list')  # Redirect to user list page after deletion
 
 
 # Transaction
@@ -387,7 +388,7 @@ def topup_wallet_request(request):
                 print(f"log_transaction Error: {e}")
             print('final wallet')
             print(wallet.amount)
-            return redirect('dashboard')
+            return redirect('payapp:dashboard')
     else:
         form = WalletTopupForm()
         context = {
@@ -444,7 +445,7 @@ def action_payment_requests(request, invoice_no):
         invoice = None
 
     if invoice is None:
-        return redirect('request-payment')
+        return redirect('payapp:request-payment')
     print('invoice')
     print(invoice)
 
@@ -500,7 +501,7 @@ def action_payment_requests(request, invoice_no):
             #     invoice.status = 3
             #     invoice.save()
     else:
-        return ('dashboard')
+        return ('payapp:dashboard')
 
 
 @login_required
@@ -538,13 +539,13 @@ def request_payment(request):
                     errors = 'Can\'t add self to as a payee.'
                     # Store errors in session
                     request.session['errors'] = errors
-                    return redirect('request-payment')
+                    return redirect('payapp:request-payment')
                 elif receiver is None:
                     errors = 'The entered payee details doesn\'t exist in our system. Ask your friend '
                     'to join PayGenius to transfer him payment.'
                     # Store errors in session
                     request.session['errors'] = errors
-                    return redirect('request-payment')
+                    return redirect('payapp:request-payment')
                 else:
                     # Add payee if not already added
                     try:
@@ -622,7 +623,7 @@ def request_payment(request):
                     messages.success(request, 'Payment request has been made to ' + receiver.username)
         except Exception as e:
             print(f"Transaction Error: {e}")
-        return redirect('request-payment')
+        return redirect('payapp:payment-requests')
     else:
         form = RequestPaymentForm()
         context = {
@@ -776,7 +777,7 @@ def request_payment_from_payee(request, request_id):
                             messages.success(request, 'Payment request has been made to ' + receiver.username)
             except Exception as e:
                 print(f"request-payment: {e}")
-            return redirect('request-payment')
+            return redirect('payapp:request-payment')
         except Exception as e:
             print(f"Transaction Error: {e}")
     else:
@@ -787,13 +788,13 @@ def request_payment_from_payee(request, request_id):
             # Clear any existing error messages
             messages.error(request, None)
             messages.error(request, 'The entered payee details belongs to a restricted user.')
-            return redirect('my-payee-list')
+            return redirect('payapp:my-payee-list')
         elif receiver.is_staff == True:
             request.session['form_errors'] = form.errors
             # Clear any existing error messages
             messages.error(request, None)
             messages.error(request, 'The entered payee details belongs to a restricted user.')
-            return redirect('my-payee-list')
+            return redirect('payapp:my-payee-list')
         else:
             # Clear any existing error messages
             messages.error(request, None)
@@ -817,7 +818,7 @@ def delete_payee(request, request_id):
     receiver = CustomUser.objects.get(id=request_id)
     payee = Payee.objects.filter(sender=request.user, payee=receiver)
     payee.delete()
-    return redirect('my-payee-list')
+    return redirect('payapp:my-payee-list')
 
 
 # Transaction
