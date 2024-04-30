@@ -37,9 +37,10 @@ urlpatterns = [
     path('', payapp_views.index, name="index"),
 
     path('dashboard/', payapp_views.dashboard, name="dashboard"),
+    path('dashboard/', payapp_views.dashboard, name="admin-dashboard"),
     # # Admin Management
     path('users/list/', payapp_views.users_list, name="users-list"),
-    path('users/add-new', payapp_views.users_add, name="users-add-new"),
+    path('users/add-new', payapp_views.users_add, name="users-add-new"),0
     path('users/edit/<str:id>', payapp_views.users_edit, name="users-edit"),
     path('users/delete/<str:user_id>', payapp_views.users_destroy, name="users-delete"),
 

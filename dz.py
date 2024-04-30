@@ -3,6 +3,7 @@ folder_name = "payapps"
 
 dz_array = {
     "public": {
+        "favicon": f"{folder_name}/images/favicon.png",
         "description": "PayGenius",
         "og_title": "PayGenius",
         "og_description": "PayGenius",

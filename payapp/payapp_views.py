@@ -64,8 +64,11 @@ def dashboard(request):
             notifications = None
 
         payees = []
-        # payees = get_object_or_404(Payee, sender=request.user)
-        transactions = []
+        try:
+            transactions = Transaction.objects.filter(sender=request.user).order_by('-id').values()
+        except Transaction.DoesNotExist:
+            transactions = None
+
         # transactions = get_object_or_404(Transaction, sender=request.user)
         print(payments)
         context = {
@@ -82,10 +85,8 @@ def dashboard(request):
         }
         return render(request, 'payapps/dashboard.html', context)
     else:
-
-        profile = Profile.objects.get(user=request.user)
         try:
-            transactions = Transaction.objects.get()
+            transactions = Transaction.objects.get().order_by('-id').all()
         except Transaction.DoesNotExist:
             transactions = None
 
@@ -94,9 +95,6 @@ def dashboard(request):
         context = {
             "page_title": "Dashboard",
             'stats': {
-                'staff_users': CustomUser.objects.filter(is_staff=True, is_superuser=False).count(),
-                'admin_users': CustomUser.objects.filter(is_superuser=True).count(),
-                'customers': group.user_set.count()
             },
             "transactions": transactions,
         }

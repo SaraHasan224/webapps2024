@@ -593,6 +593,8 @@
         }
     }</style>
 
+    <!-- Favicon-->
+{#    <link rel="icon" type="image/x-icon" href="{% static 'payapps/images/home/favicon.ico' %}" />#}
     <!-- Bootstrap icons-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
     <!-- Core theme CSS (includes Bootstrap)-->
@@ -601,6 +603,8 @@
     <!-- PAGE TITLE HERE -->
     <title>{{ dz_array.public.title }}</title>
 
+    <!-- FAVICONS ICON -->
+    <link rel="shortcut icon" type="image/png" href="{% static dz_array.public.favicon  %}" />
     {% for cssurl in dz_array.pagelevel.payapps.payapps_views.css|getdata:request.path %}
         <link rel="stylesheet" href="{% static cssurl %}" >
     {% endfor %}
