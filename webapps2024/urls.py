@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from payapp import payapp_views
+# from payapp import payapp_views
 
 handler404 = 'payapp.views.page_error_404'
 handler500 = 'payapp.views.page_error_500'
@@ -28,9 +28,9 @@ handler400 = 'payapp.views.page_error_400'
 urlpatterns = [
     # Other URL patterns...
     path('admin/', admin.site.urls),
-    path('', include('payapp.urls', namespace='payapp')),
-    path('', include('register.urls', namespace='auth')),
-    path('conversion/', include('conversion.urls', namespace='conversion')),
+    # path('', include('payapp.urls', namespace='payapp')),
+    # path('', include('register.urls', namespace='auth')),
+    # path('conversion/', include('conversion.urls', namespace='conversion')),
 
 ]
 
