@@ -77,7 +77,7 @@ def page_login(request):
 
         if user is not None:
             login(request, user)
-            return redirect('/')
+            return redirect('payapp:dashboard')
         else:
             messages.error(request, 'Incorrect username or password')
 
