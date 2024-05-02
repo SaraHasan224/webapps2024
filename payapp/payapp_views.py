@@ -12,6 +12,7 @@ import logging
 
 from django.urls import reverse
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_POST
 
 from payapp.forms import UserForm, WalletTopupForm, RequestPaymentForm, MyPayeeForm, EditUserForm, \
@@ -50,6 +51,7 @@ def index(request):
 
 
 @login_required
+@csrf_protect
 @transaction.atomic
 def dashboard(request):
     print('I am user')
@@ -135,6 +137,7 @@ def dashboard(request):
 
 
 @login_required
+@csrf_protect
 @transaction.atomic
 def notification_read(request, id):
     notification = Notification.objects.filter(id=id).update(
@@ -146,6 +149,7 @@ def notification_read(request, id):
 # Profile
 
 @login_required
+@csrf_protect
 @transaction.atomic
 # @allowed_users(allowed_roles=['customer'])
 def app_profile(request):
@@ -159,6 +163,7 @@ def app_profile(request):
 
 @login_required
 @transaction.atomic
+@csrf_protect
 def users_list(request):
     wallets_data = None
     usersArray = []
@@ -191,7 +196,8 @@ def users_show(request):
 
 @login_required
 @transaction.atomic
-# @admin_only
+@csrf_protect
+@admin_only
 def users_add(request):
     if request.method == "POST":
         form = UserForm(request.POST)
@@ -239,7 +245,7 @@ def users_add(request):
 @login_required
 @transaction.atomic
 @user_passes_test(lambda u: u.is_superuser, login_url='auth:login')
-# @admin_only
+@admin_only
 def users_edit(request, id):
     user = CustomUser.objects.get(id=id)
 
@@ -308,6 +314,7 @@ def users_edit(request, id):
 @login_required
 @user_passes_test(lambda u: u.is_superuser, login_url='auth:login')
 @transaction.atomic
+@csrf_protect
 def users_destroy(request, user_id):
     user = CustomUser.objects.get(id=user_id)
     if request.method == 'POST':
@@ -317,6 +324,7 @@ def users_destroy(request, user_id):
 
 @login_required
 @transaction.atomic
+@csrf_protect
 def users_transaction_history(request, user_id):
     user = CustomUser.objects.get(id=user_id)
     transaction = Transaction.objects.filter(sender=user).prefetch_related(
@@ -335,6 +343,7 @@ def users_transaction_history(request, user_id):
 # Transaction
 @login_required
 @transaction.atomic
+@csrf_protect
 def transaction_history(request):
     if request.user.is_superuser:
         transaction = Transaction.objects.all().prefetch_related(
@@ -358,6 +367,7 @@ def transaction_history(request):
 
 @login_required
 @transaction.atomic
+@csrf_protect
 def request_logs(request):
     if request.user.is_superuser:
         transaction = RequestResponseLogs.objects.all().order_by('-id').values()
@@ -379,6 +389,7 @@ def request_logs(request):
 @login_required
 @transaction.atomic
 @allowed_users(allowed_roles=['customer'])
+@csrf_protect
 # @transaction.atomic
 def topup(request):
     form = WalletTopupForm()
@@ -399,6 +410,7 @@ def topup(request):
 @allowed_users(allowed_roles=['customer'])
 # @transaction.atomic
 @require_POST
+@csrf_protect
 def topup_wallet_request(request):
     print('---topup_wallet_request----')
     print(timezone.now())
@@ -498,6 +510,7 @@ def topup_wallet_request(request):
 @transaction.atomic
 @allowed_users(allowed_roles=['customer'])
 # @transaction.atomic
+@csrf_protect
 def my_wallet(request):
     try:
         wallet = Wallet.objects.get(user_id=request.user.id)
@@ -515,6 +528,7 @@ def my_wallet(request):
 @login_required
 @transaction.atomic
 @allowed_users(allowed_roles=['customer'])
+@csrf_protect
 def payment_requests(request):
     sender_requests = Invoice.objects.filter(sender_id=request.user.id).prefetch_related('sender', 'receiver',
                                                                                          'transaction').all()
@@ -534,6 +548,7 @@ def payment_requests(request):
 
 @login_required
 @transaction.atomic
+@csrf_protect
 def action_payment_requests(request, action, transaction_id):
     try:
         invoice = Invoice.objects.get(id=transaction_id)
@@ -669,6 +684,7 @@ def action_payment_requests(request, action, transaction_id):
 @transaction.atomic
 @allowed_users(allowed_roles=['customer'])
 # @transaction.atomic
+@csrf_protect
 def request_payment(request):
     if request.method == "POST":
         try:
@@ -785,6 +801,7 @@ def request_payment(request):
 
 @login_required
 @transaction.atomic
+@csrf_protect
 @allowed_users(allowed_roles=['customer'])
 def request_payment_from_payee(request, request_id):
     receiver = CustomUser.objects.get(pk=request_id)
@@ -959,6 +976,7 @@ def request_payment_from_payee(request, request_id):
 
 
 @login_required
+@csrf_protect
 @transaction.atomic
 @allowed_users(allowed_roles=['customer'])
 def delete_payee(request, request_id):
@@ -973,6 +991,7 @@ def delete_payee(request, request_id):
 # Transaction
 @login_required
 @transaction.atomic
+@csrf_protect
 def payees_list(request):
     payees = Payee.objects.filter(sender_id=request.user.id)
     context = {
@@ -986,6 +1005,7 @@ def payees_list(request):
 
 @login_required
 @transaction.atomic
+@csrf_protect
 @allowed_users(allowed_roles=['customer'])
 def my_payees(request):
     if request.method == "POST":
