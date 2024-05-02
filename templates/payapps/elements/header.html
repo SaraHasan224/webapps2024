@@ -33,16 +33,23 @@
                                     {% if notifications %}
                                         {% for notification in notifications %}
 									        <li>
-                                                <div class="timeline-panel">
-                                                    <div class="media me-2">
-                                                        <img alt="image" width="50"
-                                                             src="{% static 'payapps/images/icons/avatar.png' %}">
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <h6 class="mb-1">{{ notification.comment }}</h6>
-                                                        <small class="d-block">29 July 2020 - 02:26 PM [{{ notification.is_read }}]</small>
-                                                    </div>
+                                                <a href="{% url 'payapp:notification' notification.id %}">
+                                                <div class="timeline-panel" >
+                                                        <div class="media me-2">
+                                                            <img alt="image" width="50"
+                                                                 src="{% static 'payapps/images/icons/notification.png' %}">
+                                                        </div>
+                                                        <div class="media-body">
+                                                            <h6 class="mb-1">{{ notification.comment }}</h6>
+                                                            <small class="d-block">{{ notification.created_at }}</small>
+                                                            {% if notification.is_read == '1' %}
+                                                                <span class="fs-16 font-w500 text-end d-block text-success">Read</span>
+                                                            {% else %}
+                                                                <span class="fs-16 font-w500 text-end d-block text-warning">Action required</span>
+                                                            {% endif %}
+                                                        </div>
                                                 </div>
+                                                </a>
                                             </li>
 
                                         {% endfor %}

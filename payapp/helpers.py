@@ -147,7 +147,7 @@ def log_transaction(transaction_log):
             amount_requested=transaction_log.get('amount_requested'),
             amount_sent=transaction_log.get('amount_sent'),
             comment=transaction_log.get('comment'),
-            status="0",
+            status=transaction_log.get('status'),
             requested_currency_id=transaction_log.get('requested_currency_id'),
             sent_currency_id=transaction_log.get('sent_currency_id'),
             created_at=get_timestamp(),

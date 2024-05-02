@@ -12,7 +12,7 @@ urlpatterns = [
     path('', payapp_views.index, name="index"),
 
     path('dashboard/', payapp_views.dashboard, name="dashboard"),
-    path('admin-dashboard/', payapp_views.dashboard, name="admin-dashboard"),
+    path('notification/<str:id>', payapp_views.notification_read, name="notification"),
     # # Admin Management
     path('users/list/', payapp_views.users_list, name="users-list"),
     path('users/add-new', payapp_views.users_add, name="users-add-new"),

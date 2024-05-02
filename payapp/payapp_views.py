@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.contrib.auth.models import User, Group
 from django.contrib import messages
 from django.db import transaction
@@ -49,96 +51,96 @@ def index(request):
 @login_required
 @transaction.atomic
 def dashboard(request):
-        print('I am user')
-        profile = Profile.objects.get(user=request.user)
+    print('I am user')
+    profile = Profile.objects.get(user=request.user)
 
-        payments = None
-        wallet = None
-        notifications = None
-        payees = []
-        stats = None
-        if not request.user.is_staff and not request.user.is_superuser:
-            try:
-                transactions = Transaction.objects.filter(sender=request.user).order_by('-id').prefetch_related(
-                    'receiver').values()
-            except Transaction.DoesNotExist:
-                transactions = None
+    payments = None
+    wallet = None
+    notifications = None
+    payees = []
+    stats = None
+    if not request.user.is_staff and not request.user.is_superuser:
+        try:
+            transactions = Transaction.objects.filter(sender=request.user).order_by('-id').prefetch_related(
+                'receiver').values()
+        except Transaction.DoesNotExist:
+            transactions = None
 
-            try:
-                payments = Invoice.objects.filter(sender_id=request.user.id).prefetch_related('receiver',
-                                                                                              'transaction').order_by(
-                    '-id').all()
-            except Invoice.DoesNotExist:
-                payments = None
-            try:
-                wallet = Wallet.objects.get(user_id=request.user.id)
-            except Wallet.DoesNotExist:
-                wallet = None
-            try:
-                notifications = Notification.objects.filter(receiver_id=request.user.id).prefetch_related('sender',
-                                                                                                          'invoice').order_by(
-                    '-id').all()
-            except Notification.DoesNotExist:
-                notifications = None
-            notification_count = notifications.count()
-            stats = {
-                'c': {
-                    'title': 'Payments Requested',
-                    'value':  payments.count(),
-                },
-                'b': {
-                    'title': 'Transfers',
-                    'value': f"{profile.currency.iso_code}"
-                },
-                'a': {
-                    'title': 'My Wallet',
-                    'value': f"{profile.currency.iso_code} {wallet.amount}"
-                },
-            }
-        else:
-            try:
-                transactions = Transaction.objects.filter().order_by('-id').prefetch_related(
-                    'receiver').values()
-            except Transaction.DoesNotExist:
-                transactions = None
-            try:
-                payments = Invoice.objects.prefetch_related('receiver','transaction').order_by('-id').all()
-            except Invoice.DoesNotExist:
-                payments = None
-            print('payments')
-            print(payments)
-            notification_count = None
-            group_name = 'customer'  # Assuming the group name is 'customer'
-            group = Group.objects.get(name=group_name)
-            stats = {
-                'c': {
-                    'title': 'Total Customers',
-                    'value':  CustomUser.objects.filter(is_superuser=True).count(),
-                },
-                'b': {
-                    'title': 'Staff Member Count',
-                    'value': CustomUser.objects.filter(is_staff=True, is_superuser=False).count()
-                },
-                'a': {
-                    'title': 'Super admin count',
-                    'value': group.user_set.count()
-                },
-            }
-        context = {
-            "page_title": "Dashboard",
-            'profile': profile,
-            "payees": payees,
-            "transactions": transactions,
-            'payments': payments,
-            'wallet': wallet,
-            'notifications': notifications,
-            'notification_count': notification_count,
-            'invoice_status': INVOICE_STATUS_OPTIONS,
-            'invoice_transaction_status': INVOICE_TRANSACTION_STATUS_OPTIONS,
-            'stats': stats,
+        try:
+            payments = Invoice.objects.filter(sender_id=request.user.id).prefetch_related('receiver',
+                                                                                          'transaction').order_by(
+                '-id').all()
+        except Invoice.DoesNotExist:
+            payments = None
+        try:
+            wallet = Wallet.objects.get(user_id=request.user.id)
+        except Wallet.DoesNotExist:
+            wallet = None
+        stats = {
+            'c': {
+                'title': 'Payments Requested',
+                'value': payments.count(),
+            },
+            'b': {
+                'title': 'Transfers',
+                'value': f"{profile.currency.iso_code}"
+            },
+            'a': {
+                'title': 'My Wallet',
+                'value': f"{profile.currency.iso_code} {wallet.amount}"
+            },
         }
-        return render(request, 'payapps/dashboard.html', context)
+    else:
+        try:
+            transactions = Transaction.objects.all().prefetch_related(
+                'receiver', 'sender').order_by('-id')
+        except Transaction.DoesNotExist:
+            transactions = None
+        try:
+            payments = Invoice.objects.prefetch_related('receiver', 'sender', 'transaction').order_by('-id').all()
+        except Invoice.DoesNotExist:
+            payments = None
+        print('payments')
+        print(payments)
+        notification_count = None
+        group_name = 'customer'  # Assuming the group name is 'customer'
+        group = Group.objects.get(name=group_name)
+        stats = {
+            'c': {
+                'title': 'Total Customers',
+                'value': group.user_set.count(),
+            },
+            'b': {
+                'title': 'Staff Member Count',
+                'value': CustomUser.objects.filter(is_staff=True, is_superuser=False).count()
+            },
+            'a': {
+                'title': 'Super admin count',
+                'value': CustomUser.objects.filter(is_superuser=True).count()
+            },
+        }
+    context = {
+        "page_title": "Dashboard",
+        'profile': profile,
+        "payees": payees,
+        "transactions": transactions,
+        'payments': payments,
+        'wallet': wallet,
+        'invoice_status': INVOICE_STATUS_OPTIONS,
+        'invoice_transaction_status': INVOICE_TRANSACTION_STATUS_OPTIONS,
+        'stats': stats,
+    }
+    return render(request, 'payapps/dashboard.html', context)
 
+
+@login_required
+@transaction.atomic
+def notification_read(request, id):
+    notification = Notification.objects.filter(id=id).update(
+        is_read='1'
+    )
+    print()
+    return redirect('payapp:payment-action-requested')
 
 # Profile
 
@@ -316,7 +318,8 @@ def users_destroy(request, user_id):
 @transaction.atomic
 def users_transaction_history(request, user_id):
     user = CustomUser.objects.get(id=user_id)
-    transaction = Transaction.objects.filter(sender=user).order_by('-id').values()
+    transaction = Transaction.objects.filter(sender=user).prefetch_related(
+        'receiver', 'sender').order_by('-id').values()
 
     context = {
         "page_title": "Transaction History",
@@ -333,11 +336,14 @@ def users_transaction_history(request, user_id):
 @transaction.atomic
 def transaction_history(request):
     if request.user.is_superuser:
-        transaction = Transaction.objects.all().order_by('-id').values()
+        transaction = Transaction.objects.all().prefetch_related(
+            'receiver', 'sender').order_by('-id')
     elif request.user.is_staff:
-        transaction = Transaction.objects.all().order_by('-id').values()
+        transaction = Transaction.objects.all().prefetch_related(
+            'receiver', 'sender').order_by('-id')
     else:
-        transaction = Transaction.objects.filter(sender=request.user).order_by('-id').values()
+        transaction = Transaction.objects.prefetch_related(
+            'receiver', 'sender').filter(sender=request.user).order_by('-id')
 
     context = {
         "page_title": "Transaction History",
@@ -509,13 +515,18 @@ def my_wallet(request):
 @transaction.atomic
 @allowed_users(allowed_roles=['customer'])
 def payment_requests(request):
-    invoice = Invoice.objects.filter(sender_id=request.user.id).prefetch_related('receiver',
-                                                                                 'transaction').order_by('-id').all()
+    sender_requests = Invoice.objects.filter(sender_id=request.user.id).prefetch_related('sender', 'receiver',
+                                                                                         'transaction').all()
+    receiver_requests = Invoice.objects.filter(receiver_id=request.user.id).prefetch_related('receiver', 'sender'
+                                                                                                         'transaction').all()
+
+    # Merge the query sets
+    requests = sender_requests.union(receiver_requests)
     context = {
         "page_title": "Payment requests",
         "page_main_heading": "Requested Payments",
         "page_main_description": "Seamless Requests, Swift Payments: Discover Payments Requested",
-        'requests': invoice
+        'requests': requests
     }
     return render(request, 'payapps/payment/payments-requested.html', context)
 
@@ -542,7 +553,6 @@ def action_payment_requests(request, action, transaction_id):
         transaction.completed_at = get_timestamp(),
         transaction = transaction.save()
 
-
         notification = Notification.objects.create()
         notification.is_read = '1'
         notification.receiver = receiver
@@ -567,26 +577,90 @@ def action_payment_requests(request, action, transaction_id):
         sender_wallet = Wallet.objects.get(user=sender)
         receiver_wallet = Wallet.objects.get(user=receiver)
 
-        print('sender wallet: ', sender_wallet)
+        print('sender wallet: ')
+        print(sender_wallet)
         print('receiver wallet: ', receiver_wallet)
 
-        # # Update transaction log
-        # transaction.status = 1
-        # completed_at=get_timestamp(),
-        # transaction = transaction.save()
-        # print('updated transaction')
-        # print(transaction)
-        #
-        # if transaction.status == 1:
-        #     invoice.status = 3
-        #     invoice.save()
-        #
-        # notification = Notification.objects.create()
-        # notification.is_read = '0'
-        # notification.receiver = receiver
-        # notification.sender = sender
-        # notification.invoice = invoice
-        # notification.save()
+        # Check user base currency and convert the amount as per currency in which user want to transact the amount
+        # and then sender's wallet
+        transaction_currency = transaction.requested_currency
+        try:
+            receiver_curr = transaction.receiver_curr
+            amount = transaction.amount_requested
+            print('transaction_currency')
+            print(transaction_currency, transaction_currency.iso_code)
+            print('receiver_curr')
+            print(receiver_curr, receiver_curr.iso_code)
+            amount_to_send = None
+            if transaction_currency.iso_code != receiver_curr.iso_code:
+                amt_to_transfer = get_exchange_rate(request, receiver_curr.iso_code, amount,
+                                                    transaction_currency.iso_code, sender.id)
+                print('amt_to_transfer')
+                print(amt_to_transfer)
+                amount_to_send = amt_to_transfer.get("converted_amt")
+            else:
+                # If transaction currency and reciever's wallet currency is same then no need to convert
+                # amount
+                amount_to_send = amount
+        except Exception as e:
+            print(f"Error: {e}")
+        print('amount_to_send')
+        print(amount_to_send)
+        if receiver_wallet.amount < amount_to_send:
+            errors = 'You don\'t have enough amount in your wallet to transfer.'
+            # Store errors in session
+            request.session['errors'] = errors
+            return redirect('payapp:request-payment')
+
+        # Deduct from sender wallet
+        updated_sender_wallet_amt = Decimal(sender_wallet.amount)-Decimal(amount_to_send)
+        print('updated_sender_wallet_amt')
+        print(updated_sender_wallet_amt)
+        updated_withdrawal_limit_per = percentage(10, updated_sender_wallet_amt)
+        updated_withdrawal_limit = updated_sender_wallet_amt * updated_withdrawal_limit_per
+
+        Wallet.objects.filter(user_id=sender.id).update(
+            amount=format(updated_sender_wallet_amt),
+            withdrawal_limit=format(updated_sender_wallet_amt - updated_withdrawal_limit)
+        )
+
+        print('updated sender wallet')
+        print(sender_wallet.amount)
+        # Add in receiver wallet
+        updated_receiver_wallet_amt = Decimal(receiver_wallet.amount)+Decimal(amount_to_send)
+        updated_withdrawal_limit_per = percentage(10, updated_receiver_wallet_amt)
+        updated_withdrawal_limit = updated_receiver_wallet_amt * updated_withdrawal_limit_per
+        Wallet.objects.filter(user_id=receiver.id).update(
+            amount=format(updated_receiver_wallet_amt),
+            withdrawal_limit=format(updated_receiver_wallet_amt - updated_withdrawal_limit)
+        )
+        print('bjsdbkfjbndskjfbkjdsnfkj')
+        print('updated receiver wallet')
+        print(receiver_wallet.amount)
+        # Create Transaction and notification
+        print(updated_sender_wallet_amt, updated_receiver_wallet_amt, amount_to_send)
+        print(type(updated_sender_wallet_amt), type(updated_receiver_wallet_amt), type(amount_to_send))
+        # Update transaction log
+        Transaction.objects.filter(id=invoice.transaction_id).update(
+            status='1',
+            sender_cur_bal=Decimal(updated_sender_wallet_amt),
+            receiver_cur_bal=Decimal(updated_receiver_wallet_amt),
+            amount_sent=Decimal(amount_to_send),
+            sent_currency_id=transaction_currency.id,
+            completed_at=get_timestamp()
+        )
+        print('updated transaction')
+
+        invoice.status = 3
+        invoice.save()
+
+        notification = Notification.objects.create()
+        notification.is_read = '1'
+        notification.receiver = sender
+        notification.sender = receiver
+        notification.invoice = invoice
+        notification.comment = f"{receiver.username} has paid you {transaction_currency.iso_code} {amount_to_send}"
+        notification.save()
     return redirect('payapp:payment-action-requested')
 
 
@@ -615,7 +689,7 @@ def request_payment(request):
                 receiver = find_customer_by_email(receiver)
                 receiver_profile = receiver.assigned_profile
                 receiver_currency = receiver_profile.currency
-                receiver_wallet = Wallet.objects.get(user_id=sender.id)
+                receiver_wallet = Wallet.objects.get(user_id=receiver.id)
                 receiver_wallet_amt = receiver_wallet.amount
 
                 invoice_no = random_with_n_digits(15)
@@ -633,10 +707,6 @@ def request_payment(request):
                     request.session['errors'] = errors
                     return redirect('payapp:request-payment')
                 else:
-                    print('receiver')
-                    print(receiver)
-                    print('sender')
-                    print(sender)
                     # Add payee if not already added
                     # Query the database to find the payee based on sender and receiver
                     try:
@@ -647,44 +717,26 @@ def request_payment(request):
 
                     print('payee')
                     print(payee)
-                    # Check user base currency and convert the amount as per currency in which user want to transact the amount
-                    # and then sender's wallet
-                    try:
-                        print('transaction_currency')
-                        print(transaction_currency, transaction_currency.iso_code)
-                        print('sender_currency')
-                        print(sender_currency, sender_currency.iso_code)
-                        if transaction_currency.iso_code != sender_currency.iso_code:
-                            amt_to_transfer = get_exchange_rate(request, sender_currency.iso_code, amount,
-                                                                transaction_currency.iso_code, sender.id)
-                            print('amt_to_transfer')
-                            print(amt_to_transfer)
-                            transfer_wallet_amt = amt_to_transfer.get("converted_amt")
-                        else:
-                            # If transaction currency and reciever's wallet currency is same then no need to convert
-                            # amount
-                            transfer_wallet_amt = amount
-                    except Exception as e:
-                        print(f"Error: {e}")
-                    print('transfer_wallet_amt')
-                    print(transfer_wallet_amt)
+
+                    comment = f"{sender.username} requested payment of amount {transaction_currency.iso_code}{amount} from {receiver.username}"
                     # Create a unpaid transaction log with just sender details
                     # and extend it further on after transacting amt and update the transaction amt after deducting it from wallet
                     transaction_log = {
                         'sender_id': sender.id,
-                        "sender_curr_id": transaction_currency.id,
+                        "sender_curr_id": sender_currency.id,
                         'sender_prev_bal': sender_wallet_amt,
                         'sender_cur_bal': sender_wallet_amt,
                         'receiver': receiver,
+                        'receiver_id': receiver.id,
                         'receiver_curr_id': receiver_currency.id,
                         'receiver_prev_bal': receiver_wallet_amt,
                         'receiver_cur_bal': receiver_wallet_amt,
-                        'amount_requested': transfer_wallet_amt,
-                        'comment': f"{sender.username} requested payment of amount {transaction_currency.iso_code}{transfer_wallet_amt} from {receiver.username}",
-                        'amount_sent': transfer_wallet_amt,
+                        'amount_requested': amount,
+                        'comment': comment,
+                        'amount_sent': 0,
                         'status': 0,
                         'requested_currency_id': transaction_currency.id,
-                        'sent_currency_id': receiver_currency.id,
+                        'sent_currency_id': None,
                         'action': ACTIONS_OPTIONS[0]
                     }
                     print('transaction_log')
@@ -710,6 +762,7 @@ def request_payment(request):
                     notification.receiver = receiver
                     notification.sender = sender
                     notification.invoice = invoice
+                    notification.comment = f"{sender.username} requested payment of amount {transaction_currency.iso_code}{amount}"
                     notification.save()
                     # Clear any existing error messages
                     messages.error(request, None)
@@ -827,7 +880,7 @@ def request_payment_from_payee(request, request_id):
                                 'amount_requested': transfer_wallet_amt,
                                 'comment': f"Transfer {transaction_currency.iso_code}{transfer_wallet_amt} from {sender.username} to {receiver.username}",
                                 'amount_sent': transfer_wallet_amt,
-                                'status': 0,
+                                'status': 1,
                                 'requested_currency_id': transaction_currency.id,
                                 'sent_currency_id': sender.id,
                                 'action': ACTIONS_OPTIONS[0]

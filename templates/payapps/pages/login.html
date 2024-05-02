@@ -20,7 +20,7 @@
 	<title>{{ dz_array.public.title }}</title>
 	
 	<!-- FAVICONS ICON -->
-{#	<link rel="shortcut icon" type="image/png" href="{% static dz_array.public.favicon  %}" />#}
+	<link rel="shortcut icon" type="image/png" href="{% static dz_array.public.favicon  %}" />
 	{% for cssurl in dz_array.pagelevel.payapps.payapps_views.css|getdata:request.path %}
 	<link rel="stylesheet" href="{% static cssurl %}" >
 	{% endfor %}

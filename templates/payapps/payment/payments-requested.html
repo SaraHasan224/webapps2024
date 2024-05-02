@@ -20,7 +20,7 @@
             </th>
             <th>ID Payee</th>
             <th>Name</th>
-            <th>Transaction Time</th>
+            <th>Transaction Request Time</th>
             <th>Amount</th>
             <th>Status</th>
         </tr>
@@ -37,46 +37,63 @@
                         </div>
                     </td>
                     <td><span class="text-black font-w500">#{{ request.id }}</span></td>
-                    <td><span class="text-black font-w500">
-                                                                <h6 class="fs-16 font-w600 mb-0">@<a
-                                                                        href="javascript:void(0);"
-                                                                        class="text-black">{{ request.receiver.username }}
-                                                                    </a>
-                                                                <br/>
-                                                                    {{ request.receiver.email }}
-                                                                </h6>
-                                                                <span class="fs-14">Requested</span></span></td>
-                    <td><span class="text-black font-w500">{{ request.transaction.created_at }}</span></td>
+                    <td>
+                        <span class="text-black font-w500">
+                            <h6 class="fs-16 font-w600 mb-0">
+
+                                {% if request.receiver.id == user.id %}
+                                    <span class="fs-16 font-w500 d-block text-info"> Requested from</span>
+                                {% elif request.sender.id == user.id %}
+                                    <span class="fs-16 font-w500  d-block text-indigo"> Request sent</span>
+                                {% endif %}
+
+                                @<a
+                                    href="javascript:void(0);"
+                                    class="text-black">
+                                {% if request.receiver.id == user.id %}
+                                {{ request.sender.username }}
+                                <br/>
+                                {{ request.sender.email }}
+                            {% elif request.sender.id == user.id %}
+                                {{ request.receiver.username }}
+                                <br/>
+                                {{ request.receiver.email }}
+                            {% endif %}
+                            </a>
+                            </h6>
+                            {% if request.receiver.id == user.id and request.status == '3' %}
+                                <span class="fs-16 font-w500 d-block text-success"> Paid</span>
+                            {% elif request.sender.id == user.id and request.status == '3' %}
+                                <span class="fs-16 font-w500  d-block text-success"> Received</span>
+                            {% else %}
+                                <span class="fs-16 font-w500  d-block text-warning"> Action Pending</span>
+                            {% endif %}
+                        </span>
+                    </td>
+                    <td><span class="text-black font-w500 text-end">{{ request.transaction.created_at }}</span></td>
                     <td><span
-                            class="text-black text-nowrap">+{{ request.transaction.sent_currency.iso_code }} {{ request.transaction.amount_requested }}</span>
+                            class="text-black text-nowrap">+{{ request.transaction.requested_currency.iso_code }} {{ request.transaction.amount_requested }}</span>
                     </td>
                     <td>
                         {% if request.status == '0' %}
-                            <span class="fs-16 font-w500 text-end d-block text-light">
-                                                                            Draft
-                                                                            </span>
+                            <span class="fs-16 font-w500 d-block text-light"> Draft</span>
                         {% elif request.status == '1' %}
-                            <span class="fs-16 font-w500 text-end d-block text-info">
-                                                                            Requested
-                                                                            </span>
-
+                            <span class="fs-16 font-w500 d-block text-info">
+                                {% if request.receiver.id == user.id %}  Requested
+                                {% elif request.sender.id == user.id %} Sent
+                                {% endif %}
+                            </span>
                         {% elif request.status == '2' %}
-                            <span class="fs-16 font-w500 text-end d-block text-warning">
-                                                                            Processing
-                                                                            </span>
+                            <span class="fs-16 font-w500 d-block text-warning">Processing</span>
 
                         {% elif request.status == '3' %}
-                            <span class="fs-16 font-w500 text-end d-block text-success">
-                                                                            Processed
-                                                                            </span>
+                            <span class="fs-16 font-w500 d-block text-success">Accepted</span>
                         {% elif request.status == '4' %}
-                            <span class="fs-16 font-w500 text-end d-block text-danger">
-                                                                            Rejected
-                                                                            </span>
+                            <span class="fs-16 font-w500 d-block text-danger">Rejected</span>
                         {% endif %}
                     </td>
                     <td>
-                        {% if request.status != '4' %}
+                        {% if request.status != '4' and request.status != '3' and request.receiver.id == user.id %}
                             <div class="dropdown">
                                 <button type="button" class="btn btn-danger light sharp" data-bs-toggle="dropdown">
                                     <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1">
