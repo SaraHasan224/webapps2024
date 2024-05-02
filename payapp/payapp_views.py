@@ -3,6 +3,7 @@ from decimal import Decimal
 from django.contrib.auth.models import User, Group
 from django.contrib import messages
 from django.db import transaction
+from django.db.models import F, Sum, Count
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -76,14 +77,16 @@ def dashboard(request):
             wallet = Wallet.objects.get(user_id=request.user.id)
         except Wallet.DoesNotExist:
             wallet = None
+            # Query to add up received_amount where sender and receiver are different
+        total_received_amount = Transaction.objects.filter(sender=F('receiver'), receiver_id=request.user.id).aggregate(record_count=Count('id'))
         stats = {
             'c': {
                 'title': 'Payments Requested',
                 'value': payments.count(),
             },
             'b': {
-                'title': 'Transfers',
-                'value': f"{profile.currency.iso_code}"
+                'title': 'Pending Payment Action',
+                'value': f"{profile.currency.iso_code} {total_received_amount['record_count']}"
             },
             'a': {
                 'title': 'My Wallet',
@@ -100,9 +103,6 @@ def dashboard(request):
             payments = Invoice.objects.prefetch_related('receiver', 'sender', 'transaction').order_by('-id').all()
         except Invoice.DoesNotExist:
             payments = None
-        print('payments')
-        print(payments)
-        notification_count = None
         group_name = 'customer'  # Assuming the group name is 'customer'
         group = Group.objects.get(name=group_name)
         stats = {
@@ -119,6 +119,7 @@ def dashboard(request):
                 'value': CustomUser.objects.filter(is_superuser=True).count()
             },
         }
+
     context = {
         "page_title": "Dashboard",
         'profile': profile,
